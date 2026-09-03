@@ -16,6 +16,11 @@ ui-debug.log*
 .runtimecache
 emulator-data/
 
+# User notes and documentation
+.agents/TASKS.md
+.agents/*.docx
+*.docx
+
 # Dependencies
 node_modules/
 .pnp
