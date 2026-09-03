@@ -1,4 +1,3 @@
-import React from 'react';
 import { Routes, Route, Link } from 'react-router-dom';
 import { BookOpen, PlusCircle, Search, Compass } from 'lucide-react';
 
