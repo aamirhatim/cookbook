@@ -35,8 +35,9 @@ A web-based, mobile-first recipe book application for creating, managing, organi
 ---
 
 ## Development Commands
-- `npm run dev` — Start the Vite frontend development server (`http://localhost:5173`)
-- `npm run emulators` — Start the Firebase local emulators with Java 25 configured
+- `npm start` (or `npm run dev:all`) — **Recommended**: Run both Firebase emulators and Vite frontend server concurrently in a single command
+- `npm run dev` — Start only the Vite frontend development server (`http://localhost:5173`)
+- `npm run emulators` — Start only the Firebase local emulators with Java 25 configured
 - `npm run emulators:export` — Export test data from emulators to persist local testing states
 - `npm run build` — TypeScript type-check and Vite production build
 - `npm run preview` — Locally preview the production build
@@ -76,3 +77,4 @@ recipe-book/
 - **Instructions**: Represented as ordered steps `{ stepNumber: number, instruction: string, timerMinutes?: number }`.
 - **Metadata**: Every recipe includes `prepTimeMinutes`, `cookTimeMinutes`, `servings`, `difficulty`, `tags`, and `authorId`.
 - **Security**: Public recipes can be read by anyone; edit/delete permissions are strictly restricted to the `authorId`.
+

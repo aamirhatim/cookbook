@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:all": "concurrently -k -n \"firebase,vite\" -c \"yellow.bold,cyan.bold\" \"npm run emulators\" \"npm run dev\"",
+    "start": "npm run dev:all",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "emulators": "JAVA_HOME=/Library/Java/JavaVirtualMachines/temurin-25.jdk/Contents/Home firebase emulators:start",
@@ -22,6 +24,7 @@
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react": "^4.3.4",
     "autoprefixer": "^10.4.21",
+    "concurrently": "^10.0.5",
     "postcss": "^8.5.3",
     "tailwindcss": "^3.4.17",
     "typescript": "~5.7.3",
