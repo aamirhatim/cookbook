@@ -35,10 +35,10 @@ A web-based, mobile-first recipe book application for creating, managing, organi
 ---
 
 ## Development Commands
-- `npm start` (or `npm run dev:all`) — **Recommended**: Run both Firebase emulators and Vite frontend server concurrently in a single command
+- `npm start` (or `npm run dev:all`) — **Recommended**: Run both Firebase emulators and Vite frontend server concurrently in a single command (auto-saves and reloads emulator data from `./emulator-data`)
 - `npm run dev` — Start only the Vite frontend development server (`http://localhost:5173`)
-- `npm run emulators` — Start only the Firebase local emulators with Java 25 configured
-- `npm run emulators:export` — Export test data from emulators to persist local testing states
+- `npm run emulators` — Start only the Firebase local emulators with automatic import/export from `./emulator-data`
+- `npm run emulators:export` — Manually export test data from emulators to persist local testing states
 - `npm run build` — TypeScript type-check and Vite production build
 - `npm run preview` — Locally preview the production build
 
