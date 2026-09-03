@@ -71,3 +71,4 @@ export interface RecipeFilters {
   includePrivate?: boolean;
   limitCount?: number;
 }
+
