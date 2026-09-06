@@ -1,6 +1,9 @@
 import { Routes, Route, Link } from 'react-router-dom';
-import { BookOpen, PlusCircle, Search, Compass } from 'lucide-react';
-
+import { BookOpen, PlusCircle, Search, Compass, Settings } from 'lucide-react';
+import { AuthProvider } from './contexts/AuthContext';
+import { ProtectedRoute } from './components/ProtectedRoute';
+import { Login } from './pages/Login';
+import { Admin } from './pages/Admin';
 function Home() {
   return (
     <div className="space-y-6">
@@ -54,28 +57,43 @@ function Home() {
 
 export default function App() {
   return (
-    <div className="max-w-lg mx-auto min-h-screen flex flex-col justify-between px-4 pb-20 pt-4">
-      <main className="flex-1">
-        <Routes>
-          <Route path="/" element={<Home />} />
-        </Routes>
-      </main>
+    <AuthProvider>
+      <div className="max-w-lg mx-auto min-h-screen flex flex-col justify-between px-4 pb-20 pt-4">
+        <main className="flex-1">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute>
+                  <Admin />
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+        </main>
 
-      {/* Mobile-first bottom navigation bar */}
-      <nav className="fixed bottom-0 left-0 right-0 max-w-lg mx-auto bg-white/95 backdrop-blur border-t border-stone-200 px-6 py-2 flex items-center justify-around z-50">
-        <Link to="/" className="flex flex-col items-center text-amber-600 font-medium text-xs space-y-1 py-1">
-          <BookOpen className="w-5 h-5" />
-          <span>Recipes</span>
-        </Link>
-        <button className="flex flex-col items-center text-stone-400 hover:text-stone-600 font-medium text-xs space-y-1 py-1 transition-colors">
-          <Compass className="w-5 h-5" />
-          <span>Discover</span>
-        </button>
-        <button className="flex flex-col items-center text-stone-400 hover:text-stone-600 font-medium text-xs space-y-1 py-1 transition-colors">
-          <PlusCircle className="w-5 h-5" />
-          <span>Add</span>
-        </button>
-      </nav>
-    </div>
+        {/* Mobile-first bottom navigation bar */}
+        <nav className="fixed bottom-0 left-0 right-0 max-w-lg mx-auto bg-white/95 backdrop-blur border-t border-stone-200 px-6 py-2 flex items-center justify-around z-50">
+          <Link to="/" className="flex flex-col items-center text-amber-600 font-medium text-xs space-y-1 py-1">
+            <BookOpen className="w-5 h-5" />
+            <span>Recipes</span>
+          </Link>
+          <button className="flex flex-col items-center text-stone-400 hover:text-stone-600 font-medium text-xs space-y-1 py-1 transition-colors">
+            <Compass className="w-5 h-5" />
+            <span>Discover</span>
+          </button>
+          <button className="flex flex-col items-center text-stone-400 hover:text-stone-600 font-medium text-xs space-y-1 py-1 transition-colors">
+            <PlusCircle className="w-5 h-5" />
+            <span>Add</span>
+          </button>
+          <Link to="/admin" className="flex flex-col items-center text-stone-400 hover:text-stone-600 font-medium text-xs space-y-1 py-1 transition-colors">
+            <Settings className="w-5 h-5" />
+            <span>Admin</span>
+          </Link>
+        </nav>
+      </div>
+    </AuthProvider>
   );
 }
