@@ -11,7 +11,7 @@ export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
     if (loading) {
         return (
             <div className="flex justify-center items-center h-full pt-20">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-amber-600"></div>
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
             </div>
         );
     }
