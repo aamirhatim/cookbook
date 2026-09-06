@@ -19,6 +19,7 @@ firebase-export-*
 
 # User notes and documentation
 .agents/TASKS.md
+.agents/BACKLOG.md
 .agents/*.docx
 *.docx
 
