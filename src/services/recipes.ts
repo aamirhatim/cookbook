@@ -134,6 +134,10 @@ function buildRecipeQueryConstraints(filters: RecipeFilters = {}): QueryConstrai
         constraints.push(where('isPrivate', '==', false));
     }
 
+    if (filters.cuisine) {
+        constraints.push(where('cuisine', '==', filters.cuisine));
+    }
+
     if (filters.tag) {
         constraints.push(where('tags', 'array-contains', filters.tag));
     }

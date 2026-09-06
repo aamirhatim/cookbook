@@ -44,6 +44,7 @@ export interface Recipe {
  */
 export interface CreateRecipeInput {
     title: string;
+    cuisine: string;
     description: string;
     prepTimeMinutes: number;
     cookTimeMinutes: number;
@@ -68,6 +69,7 @@ export type UpdateRecipeInput = Partial<Omit<CreateRecipeInput, 'authorId'>>;
  */
 export interface RecipeFilters {
     authorId?: string;
+    cuisine?: string;
     tag?: string;
     difficulty?: Difficulty;
     includePrivate?: boolean;
