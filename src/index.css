@@ -4,6 +4,6 @@
 
 /* Mobile touch responsiveness and base styling */
 html, body {
-  -webkit-tap-highlight-color: transparent;
+    -webkit-tap-highlight-color: transparent;
 }
 

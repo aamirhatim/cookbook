@@ -1,6 +1,6 @@
 {
-  "projects": {
-    "default": "your-project-id"
-  }
+    "projects": {
+        "default": "your-project-id"
+    }
 }
 

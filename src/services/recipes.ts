@@ -1,35 +1,35 @@
 import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  setDoc,
-  updateDoc,
-  deleteDoc,
-  query,
-  where,
-  orderBy,
-  limit,
-  serverTimestamp,
-  onSnapshot,
-  QueryConstraint,
-  Unsubscribe,
-  Timestamp,
-  UpdateData,
-  DocumentData
+    collection,
+    doc,
+    getDoc,
+    getDocs,
+    setDoc,
+    updateDoc,
+    deleteDoc,
+    query,
+    where,
+    orderBy,
+    limit,
+    serverTimestamp,
+    onSnapshot,
+    QueryConstraint,
+    Unsubscribe,
+    Timestamp,
+    UpdateData,
+    DocumentData
 } from 'firebase/firestore';
 import {
-  ref,
-  uploadBytes,
-  getDownloadURL,
-  deleteObject
+    ref,
+    uploadBytes,
+    getDownloadURL,
+    deleteObject
 } from 'firebase/storage';
 import { db, storage } from '../lib/firebase';
 import type {
-  Recipe,
-  CreateRecipeInput,
-  UpdateRecipeInput,
-  RecipeFilters
+    Recipe,
+    CreateRecipeInput,
+    UpdateRecipeInput,
+    RecipeFilters
 } from '../types/recipe';
 
 const RECIPES_COLLECTION = 'recipes';
@@ -39,130 +39,130 @@ const RECIPES_COLLECTION = 'recipes';
  * Saves to path: recipes/{recipeId}/{timestamp}_{filename}
  */
 export async function uploadRecipeImage(
-  recipeId: string,
-  file: File
+    recipeId: string,
+    file: File
 ): Promise<{ imageUrl: string; storagePath: string }> {
-  const sanitizedName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
-  const storagePath = `recipes/${recipeId}/${Date.now()}_${sanitizedName}`;
-  const storageRef = ref(storage, storagePath);
+    const sanitizedName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
+    const storagePath = `recipes/${recipeId}/${Date.now()}_${sanitizedName}`;
+    const storageRef = ref(storage, storagePath);
 
-  const snapshot = await uploadBytes(storageRef, file, {
-    contentType: file.type
-  });
-  const imageUrl = await getDownloadURL(snapshot.ref);
+    const snapshot = await uploadBytes(storageRef, file, {
+        contentType: file.type
+    });
+    const imageUrl = await getDownloadURL(snapshot.ref);
 
-  return { imageUrl, storagePath };
+    return { imageUrl, storagePath };
 }
 
 /**
  * Deletes a file from Firebase Cloud Storage by its storage path.
  */
 export async function deleteRecipeImage(storagePath: string): Promise<void> {
-  try {
-    const storageRef = ref(storage, storagePath);
-    await deleteObject(storageRef);
-  } catch (error) {
-    // If the file was already deleted or doesn't exist, log and proceed gracefully
-    console.warn(`Could not delete storage object at ${storagePath}:`, error);
-  }
+    try {
+        const storageRef = ref(storage, storagePath);
+        await deleteObject(storageRef);
+    } catch (error) {
+        // If the file was already deleted or doesn't exist, log and proceed gracefully
+        console.warn(`Could not delete storage object at ${storagePath}:`, error);
+    }
 }
 
 /**
  * Creates a new recipe in Firestore, optionally uploading a cover photo to Storage.
  */
 export async function createRecipe(
-  input: CreateRecipeInput,
-  imageFile?: File
+    input: CreateRecipeInput,
+    imageFile?: File
 ): Promise<Recipe> {
-  const recipeRef = doc(collection(db, RECIPES_COLLECTION));
-  const recipeId = recipeRef.id;
+    const recipeRef = doc(collection(db, RECIPES_COLLECTION));
+    const recipeId = recipeRef.id;
 
-  let imageUrl: string | undefined;
-  let imageStoragePath: string | undefined;
+    let imageUrl: string | undefined;
+    let imageStoragePath: string | undefined;
 
-  if (imageFile) {
-    const uploadResult = await uploadRecipeImage(recipeId, imageFile);
-    imageUrl = uploadResult.imageUrl;
-    imageStoragePath = uploadResult.storagePath;
-  }
+    if (imageFile) {
+        const uploadResult = await uploadRecipeImage(recipeId, imageFile);
+        imageUrl = uploadResult.imageUrl;
+        imageStoragePath = uploadResult.storagePath;
+    }
 
-  const recipeData = {
-    ...input,
-    id: recipeId,
-    isPrivate: input.isPrivate ?? false,
-    imageUrl: imageUrl ?? null,
-    imageStoragePath: imageStoragePath ?? null,
-    createdAt: serverTimestamp(),
-    updatedAt: serverTimestamp()
-  };
+    const recipeData = {
+        ...input,
+        id: recipeId,
+        isPrivate: input.isPrivate ?? false,
+        imageUrl: imageUrl ?? null,
+        imageStoragePath: imageStoragePath ?? null,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp()
+    };
 
-  await setDoc(recipeRef, recipeData);
+    await setDoc(recipeRef, recipeData);
 
-  return {
-    ...recipeData,
-    createdAt: Timestamp.now(),
-    updatedAt: Timestamp.now(),
-    imageUrl,
-    imageStoragePath
-  } as Recipe;
+    return {
+        ...recipeData,
+        createdAt: Timestamp.now(),
+        updatedAt: Timestamp.now(),
+        imageUrl,
+        imageStoragePath
+    } as Recipe;
 }
 
 /**
  * Fetches a single recipe by its document ID.
  */
 export async function getRecipe(recipeId: string): Promise<Recipe | null> {
-  const recipeRef = doc(db, RECIPES_COLLECTION, recipeId);
-  const snapshot = await getDoc(recipeRef);
+    const recipeRef = doc(db, RECIPES_COLLECTION, recipeId);
+    const snapshot = await getDoc(recipeRef);
 
-  if (!snapshot.exists()) {
-    return null;
-  }
+    if (!snapshot.exists()) {
+        return null;
+    }
 
-  return { id: snapshot.id, ...snapshot.data() } as Recipe;
+    return { id: snapshot.id, ...snapshot.data() } as Recipe;
 }
 
 /**
  * Helper to construct query constraints based on filters.
  */
 function buildRecipeQueryConstraints(filters: RecipeFilters = {}): QueryConstraint[] {
-  const constraints: QueryConstraint[] = [];
+    const constraints: QueryConstraint[] = [];
 
-  if (filters.authorId) {
-    constraints.push(where('authorId', '==', filters.authorId));
-  } else if (!filters.includePrivate) {
-    // If querying globally without authorId, default to public recipes only
-    constraints.push(where('isPrivate', '==', false));
-  }
+    if (filters.authorId) {
+        constraints.push(where('authorId', '==', filters.authorId));
+    } else if (!filters.includePrivate) {
+        // If querying globally without authorId, default to public recipes only
+        constraints.push(where('isPrivate', '==', false));
+    }
 
-  if (filters.tag) {
-    constraints.push(where('tags', 'array-contains', filters.tag));
-  }
+    if (filters.tag) {
+        constraints.push(where('tags', 'array-contains', filters.tag));
+    }
 
-  if (filters.difficulty) {
-    constraints.push(where('difficulty', '==', filters.difficulty));
-  }
+    if (filters.difficulty) {
+        constraints.push(where('difficulty', '==', filters.difficulty));
+    }
 
-  // Order by most recently created
-  constraints.push(orderBy('createdAt', 'desc'));
+    // Order by most recently created
+    constraints.push(orderBy('createdAt', 'desc'));
 
-  if (filters.limitCount && filters.limitCount > 0) {
-    constraints.push(limit(filters.limitCount));
-  }
+    if (filters.limitCount && filters.limitCount > 0) {
+        constraints.push(limit(filters.limitCount));
+    }
 
-  return constraints;
+    return constraints;
 }
 
 /**
  * One-time fetch of multiple recipes matching the given filters.
  */
 export async function getRecipes(filters: RecipeFilters = {}): Promise<Recipe[]> {
-  const constraints = buildRecipeQueryConstraints(filters);
-  const q = query(collection(db, RECIPES_COLLECTION), ...constraints);
-  const snapshot = await getDocs(q);
+    const constraints = buildRecipeQueryConstraints(filters);
+    const q = query(collection(db, RECIPES_COLLECTION), ...constraints);
+    const snapshot = await getDocs(q);
 
-  return snapshot.docs.map(
-    (docSnap) => ({ id: docSnap.id, ...docSnap.data() } as Recipe)
-  );
+    return snapshot.docs.map(
+        (docSnap) => ({ id: docSnap.id, ...docSnap.data() } as Recipe)
+    );
 }
 
 /**
@@ -170,26 +170,26 @@ export async function getRecipes(filters: RecipeFilters = {}): Promise<Recipe[]>
  * Returns an unsubscribe function to be called when unmounting components.
  */
 export function subscribeToRecipes(
-  filters: RecipeFilters = {},
-  onUpdate: (recipes: Recipe[]) => void,
-  onError?: (error: Error) => void
+    filters: RecipeFilters = {},
+    onUpdate: (recipes: Recipe[]) => void,
+    onError?: (error: Error) => void
 ): Unsubscribe {
-  const constraints = buildRecipeQueryConstraints(filters);
-  const q = query(collection(db, RECIPES_COLLECTION), ...constraints);
+    const constraints = buildRecipeQueryConstraints(filters);
+    const q = query(collection(db, RECIPES_COLLECTION), ...constraints);
 
-  return onSnapshot(
-    q,
-    (snapshot) => {
-      const recipes = snapshot.docs.map(
-        (docSnap) => ({ id: docSnap.id, ...docSnap.data() } as Recipe)
-      );
-      onUpdate(recipes);
-    },
-    (error) => {
-      console.error('Error listening to recipe changes:', error);
-      if (onError) onError(error);
-    }
-  );
+    return onSnapshot(
+        q,
+        (snapshot) => {
+            const recipes = snapshot.docs.map(
+                (docSnap) => ({ id: docSnap.id, ...docSnap.data() } as Recipe)
+            );
+            onUpdate(recipes);
+        },
+        (error) => {
+            console.error('Error listening to recipe changes:', error);
+            if (onError) onError(error);
+        }
+    );
 }
 
 /**
@@ -197,44 +197,44 @@ export function subscribeToRecipes(
  * If a new image file is provided, replaces the old image in Storage.
  */
 export async function updateRecipe(
-  recipeId: string,
-  input: UpdateRecipeInput,
-  newImageFile?: File
+    recipeId: string,
+    input: UpdateRecipeInput,
+    newImageFile?: File
 ): Promise<void> {
-  const recipeRef = doc(db, RECIPES_COLLECTION, recipeId);
+    const recipeRef = doc(db, RECIPES_COLLECTION, recipeId);
 
-  const updates: UpdateData<DocumentData> = {
-    ...input,
-    updatedAt: serverTimestamp()
-  };
+    const updates: UpdateData<DocumentData> = {
+        ...input,
+        updatedAt: serverTimestamp()
+    };
 
-  if (newImageFile) {
-    // Fetch existing doc to check for an old image to remove
-    const existing = await getRecipe(recipeId);
-    const uploadResult = await uploadRecipeImage(recipeId, newImageFile);
+    if (newImageFile) {
+        // Fetch existing doc to check for an old image to remove
+        const existing = await getRecipe(recipeId);
+        const uploadResult = await uploadRecipeImage(recipeId, newImageFile);
 
-    updates.imageUrl = uploadResult.imageUrl;
-    updates.imageStoragePath = uploadResult.storagePath;
+        updates.imageUrl = uploadResult.imageUrl;
+        updates.imageStoragePath = uploadResult.storagePath;
 
-    if (existing?.imageStoragePath) {
-      await deleteRecipeImage(existing.imageStoragePath);
+        if (existing?.imageStoragePath) {
+            await deleteRecipeImage(existing.imageStoragePath);
+        }
     }
-  }
 
-  await updateDoc(recipeRef, updates);
+    await updateDoc(recipeRef, updates);
 }
 
 /**
  * Deletes a recipe document from Firestore and its associated cover photo from Storage.
  */
 export async function deleteRecipe(recipeId: string): Promise<void> {
-  // First, check if the recipe has an image in Cloud Storage
-  const existing = await getRecipe(recipeId);
-  if (existing?.imageStoragePath) {
-    await deleteRecipeImage(existing.imageStoragePath);
-  }
+    // First, check if the recipe has an image in Cloud Storage
+    const existing = await getRecipe(recipeId);
+    if (existing?.imageStoragePath) {
+        await deleteRecipeImage(existing.imageStoragePath);
+    }
 
-  // Delete the Firestore document
-  const recipeRef = doc(db, RECIPES_COLLECTION, recipeId);
-  await deleteDoc(recipeRef);
+    // Delete the Firestore document
+    const recipeRef = doc(db, RECIPES_COLLECTION, recipeId);
+    await deleteDoc(recipeRef);
 }
