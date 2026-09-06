@@ -31,6 +31,15 @@ A web-based, mobile-first recipe book application for creating, managing, organi
      - **Auth**: `9099`
      - **Storage**: `9199`
      - **Emulator UI**: `4000`
+4. **Atomic Design & Modularity (No "God Components")**:
+   - **Strict Modularity**: Avoid large "god components". Deconstruct complex interfaces and forms into small, single-responsibility, reusable components. Keep component files focused and concise (aim for under 150 lines).
+   - **Atomic Hierarchy**:
+     - **Atoms**: Fundamental UI elements with no recipe business logic (buttons, inputs, badges, typography, icons, spinners).
+     - **Molecules**: Simple groups of UI atoms functioning together as a unit (search bar with icon, ingredient item row, recipe metric pill with icon + label).
+     - **Organisms**: Distinct, self-contained interface sections composed of molecules and atoms (recipe preview card, interactive step-by-step instruction checklist, filter drawer).
+     - **Templates / Layout**: Page shells and responsive containers defining layout structure independent of specific content.
+     - **Pages**: Top-level route components responsible for routing, orchestrating organisms, and connecting to global contexts or custom hooks.
+   - **Separation of Concerns**: Extract data fetching, complex form states, and timers into custom hooks (`useRecipes`, `useTimer`, `useRecipeForm`) or dedicated service files. Keep presentation components clean and declarative.
 
 ---
 
@@ -51,8 +60,15 @@ recipe-book/
 │   ├── TASKS.md             # [USER ONLY] User task list and notes. Do not touch.
 │   └── rules/               # Agent rules and domain guidelines
 ├── src/
-│   ├── components/          # Reusable UI components (RecipeCard, IngredientList, etc.)
-│   ├── pages/               # Route views (Home, RecipeDetail, RecipeEditor, Auth)
+│   ├── components/          # Reusable UI components organized by atomic level:
+│   │   ├── atoms/           # Base inputs, buttons, badges, icons, typography
+│   │   ├── molecules/       # SearchBar, IngredientRow, MetricPill, FormField
+│   │   ├── organisms/       # RecipeCard, IngredientList, InstructionList, BottomNav
+│   │   └── layout/          # PageShell, ModalLayout, ProtectedRoute
+│   ├── contexts/            # React context providers (AuthContext, etc.)
+│   ├── hooks/               # Custom reusable React hooks (useAuth, useRecipes, etc.)
+│   ├── pages/               # Route views (Home, RecipeDetail, RecipeEditor, Login, Admin)
+│   ├── services/            # Backend/Firestore data layer & API helpers
 │   ├── lib/
 │   │   └── firebase.ts      # Firebase SDK client & local emulator connectors
 │   ├── types/               # TypeScript data definitions (Recipe, Ingredient, Step)
