@@ -20,18 +20,22 @@ A web-based, mobile-first recipe book application for creating, managing, organi
 ## Agent Operational Directives
 1. **User-Owned Files**:
    - **CRITICAL**: `.agents/TASKS.md` is reserved exclusively for the user's input and notes. The agent must NEVER modify, overwrite, or delete `.agents/TASKS.md`.
-2. **Mobile-First Design Principle**:
+2. **Git Version Control & Commits**:
+   - **CRITICAL**: The agent must NEVER make git commits (`git commit`), stage changes (`git add`), or perform any modifying git operations on its own. The user will handle all git operations for adding and committing.
+   - **Read-Only Reference**: The agent may only use git as a read-only reference (e.g. `git status`, `git diff`, `git log`).
+   - **Explicit Permission Required**: If the agent genuinely needs to make other changes in git, it MUST ask the user and receive explicit permission first before proceeding.
+3. **Mobile-First Design Principle**:
    - The user interface must be designed mobile-first (screen sizes 360px–430px first, scaling gracefully to tablet/desktop).
    - Use generous touch targets (minimum 44x44px for buttons and interactive controls).
    - Cooking interactions (checking off ingredients, switching steps, setting timers) must be single-hand friendly.
-3. **Local Emulation First**:
+4. **Local Emulation First**:
    - When developing locally, always work against the Firebase Local Emulator Suite.
    - Emulator ports:
      - **Firestore**: `8080`
      - **Auth**: `9099`
      - **Storage**: `9199`
      - **Emulator UI**: `4000`
-4. **Atomic Design & Modularity (No "God Components")**:
+5. **Atomic Design & Modularity (No "God Components")**:
    - **Strict Modularity**: Avoid large "god components". Deconstruct complex interfaces and forms into small, single-responsibility, reusable components. Keep component files focused and concise (aim for under 150 lines).
    - **Atomic Hierarchy**:
      - **Atoms**: Fundamental UI elements with no recipe business logic (buttons, inputs, badges, typography, icons, spinners).
@@ -40,7 +44,7 @@ A web-based, mobile-first recipe book application for creating, managing, organi
      - **Templates / Layout**: Page shells and responsive containers defining layout structure independent of specific content.
      - **Pages**: Top-level route components responsible for routing, orchestrating organisms, and connecting to global contexts or custom hooks.
    - **Separation of Concerns**: Extract data fetching, complex form states, and timers into custom hooks (`useRecipes`, `useTimer`, `useRecipeForm`) or dedicated service files. Keep presentation components clean and declarative.
-5. **Design Tokens & Theme Consistency**:
+6. **Design Tokens & Theme Consistency**:
    - **Never Use Generic Tailwind Colors**: Always use semantic design tokens configured in `tailwind.config.js` and `src/index.css` instead of raw Tailwind color utilities (e.g. avoid `bg-white`, `bg-stone-100`, `text-stone-900`, `text-amber-600`).
    - **Hex-Based CSS Variables**: Theme colors are defined as clean HEX codes in `src/index.css` under `:root` (light mode) and `@media (prefers-color-scheme: dark)` / `.dark` (dark mode), making color palette tweaks simple and human-readable.
    - **Opacity Modifiers**: The configuration supports Tailwind opacity syntax seamlessly via `color-mix` (e.g. `bg-primary/90`, `bg-secondary/40`, `focus:ring-ring/20`).
