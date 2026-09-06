@@ -2,8 +2,134 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  :root {
+    /* Base Canvas & Surfaces */
+    --background: #fafaf9;
+    --foreground: #1c1917;
+    --surface: #ffffff;
+    --surface-hover: #f5f5f4;
+    --surface-foreground: #1c1917;
+
+    /* Brand / Primary (Culinary warm amber) */
+    --primary: #d97706;
+    --primary-foreground: #ffffff;
+
+    /* Secondary */
+    --secondary: #fef3c7;
+    --secondary-foreground: #92400e;
+
+    /* Tertiary */
+    --tertiary: #f3f4f6;
+    --tertiary-foreground: #374151;
+
+    /* Muted & Subdued Elements */
+    --muted: #f5f5f4;
+    --muted-foreground: #78716c;
+
+    /* Accents */
+    --accent: #f59e0b;
+    --accent-foreground: #ffffff;
+
+    /* Feedback & Destructive */
+    --destructive: #ef4444;
+    --destructive-foreground: #ffffff;
+
+    /* Borders, Inputs, Focus Rings */
+    --border: #e7e5e4;
+    --input: #e7e5e4;
+    --ring: #d97706;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      /* Base Canvas & Surfaces */
+      --background: #141210;
+      --foreground: #f5f5f4;
+      --surface: #1c1917;
+      --surface-hover: #292524;
+      --surface-foreground: #f5f5f4;
+
+      /* Brand / Primary */
+      --primary: #f59e0b;
+      --primary-foreground: #1c1917;
+
+      /* Secondary */
+      --secondary: #292524;
+      --secondary-foreground: #fde68a;
+
+      /* Tertiary */
+      --tertiary: #262626;
+      --tertiary-foreground: #d4d4d4;
+
+      /* Muted & Subdued Elements */
+      --muted: #292524;
+      --muted-foreground: #a8a29e;
+
+      /* Accents */
+      --accent: #d97706;
+      --accent-foreground: #ffffff;
+
+      /* Feedback & Destructive */
+      --destructive: #dc2626;
+      --destructive-foreground: #fee2e2;
+
+      /* Borders, Inputs, Focus Rings */
+      --border: #292524;
+      --input: #292524;
+      --ring: #f59e0b;
+    }
+  }
+
+  .dark {
+    /* Base Canvas & Surfaces */
+    --background: #141210;
+    --foreground: #f5f5f4;
+    --surface: #1c1917;
+    --surface-hover: #292524;
+    --surface-foreground: #f5f5f4;
+
+    /* Brand / Primary */
+    --primary: #f59e0b;
+    --primary-foreground: #1c1917;
+
+    /* Secondary */
+    --secondary: #292524;
+    --secondary-foreground: #fde68a;
+
+    /* Tertiary */
+    --tertiary: #262626;
+    --tertiary-foreground: #d4d4d4;
+
+    /* Muted & Subdued Elements */
+    --muted: #292524;
+    --muted-foreground: #a8a29e;
+
+    /* Accents */
+    --accent: #d97706;
+    --accent-foreground: #ffffff;
+
+    /* Feedback & Destructive */
+    --destructive: #dc2626;
+    --destructive-foreground: #fee2e2;
+
+    /* Borders, Inputs, Focus Rings */
+    --border: #292524;
+    --input: #292524;
+    --ring: #f59e0b;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
 /* Mobile touch responsiveness and base styling */
 html, body {
     -webkit-tap-highlight-color: transparent;
 }
-

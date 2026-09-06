@@ -35,18 +35,18 @@ export function Login() {
     return (
         <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-8 px-4">
             <div className="text-center space-y-2">
-                <div className="w-16 h-16 bg-amber-100 text-amber-700 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 bg-secondary text-secondary-foreground rounded-2xl flex items-center justify-center mx-auto mb-4">
                     <BookOpen className="w-8 h-8" />
                 </div>
-                <h1 className="text-2xl font-bold text-stone-900">Admin Access</h1>
-                <p className="text-sm text-stone-500 max-w-xs mx-auto">
+                <h1 className="text-2xl font-bold text-foreground">Admin Access</h1>
+                <p className="text-sm text-muted-foreground max-w-xs mx-auto">
                     Sign in to manage recipes, tags, and collections.
                 </p>
             </div>
 
             <div className="w-full max-w-xs space-y-4">
                 {error && (
-                    <div className="p-3 rounded-lg bg-red-50 text-red-700 border border-red-200 text-sm text-center">
+                    <div className="p-3 rounded-lg bg-destructive/10 text-destructive border border-destructive/20 text-sm text-center">
                         {error}
                     </div>
                 )}
@@ -54,7 +54,7 @@ export function Login() {
                 <button
                     onClick={handleGoogleSignIn}
                     disabled={isLoading}
-                    className="w-full flex items-center justify-center space-x-3 bg-white border border-stone-200 hover:bg-stone-50 text-stone-700 font-medium py-3 px-4 rounded-xl shadow-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full flex items-center justify-center space-x-3 bg-surface border border-border hover:bg-surface-hover text-foreground font-medium py-3 px-4 rounded-xl shadow-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                     <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
                         <path

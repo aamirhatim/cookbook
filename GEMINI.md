@@ -40,6 +40,22 @@ A web-based, mobile-first recipe book application for creating, managing, organi
      - **Templates / Layout**: Page shells and responsive containers defining layout structure independent of specific content.
      - **Pages**: Top-level route components responsible for routing, orchestrating organisms, and connecting to global contexts or custom hooks.
    - **Separation of Concerns**: Extract data fetching, complex form states, and timers into custom hooks (`useRecipes`, `useTimer`, `useRecipeForm`) or dedicated service files. Keep presentation components clean and declarative.
+5. **Design Tokens & Theme Consistency**:
+   - **Never Use Generic Tailwind Colors**: Always use semantic design tokens configured in `tailwind.config.js` and `src/index.css` instead of raw Tailwind color utilities (e.g. avoid `bg-white`, `bg-stone-100`, `text-stone-900`, `text-amber-600`).
+   - **Hex-Based CSS Variables**: Theme colors are defined as clean HEX codes in `src/index.css` under `:root` (light mode) and `@media (prefers-color-scheme: dark)` / `.dark` (dark mode), making color palette tweaks simple and human-readable.
+   - **Opacity Modifiers**: The configuration supports Tailwind opacity syntax seamlessly via `color-mix` (e.g. `bg-primary/90`, `bg-secondary/40`, `focus:ring-ring/20`).
+   - **Semantic Token Map**:
+     - `background` & `foreground`: App canvas background and default high-contrast body text.
+     - `surface`, `surface-hover`, `surface-foreground`: Cards, sheets, dialogs, and item list backgrounds.
+     - `primary`, `primary-foreground`: Main culinary brand actions, call-to-actions, and highlights.
+     - `secondary`, `secondary-foreground`: Secondary interactive elements, tag badges, and soft notices.
+     - `tertiary`, `tertiary-foreground`: Subtle chips, category pills, and neutral counters.
+     - `muted`, `muted-foreground`: Disabled states, placeholder text, captions, and secondary descriptions.
+     - `accent`, `accent-foreground`: Active navigation items, special alerts, or star ratings.
+     - `destructive`, `destructive-foreground`: Delete buttons, error alerts, and destructive actions.
+     - `border`: Dividers, card borders, and list item separators.
+     - `input`: Form input and selection borders/backgrounds.
+     - `ring`: Focus outlines for keyboard accessibility and active inputs.
 
 ---
 
