@@ -19,9 +19,11 @@ export interface InstructionStep {
 export interface Recipe {
     id: string;
     title: string;
+    cuisine: string;
     description: string;
     prepTimeMinutes: number;
     cookTimeMinutes: number;
+    equipment: string[];
     servings: number;
     difficulty: Difficulty;
     tags: string[];
