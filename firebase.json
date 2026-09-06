@@ -1,4 +1,11 @@
 {
+  "auth": {
+    "providers": {
+      "googleSignIn": {
+        "authorizedRedirectUris": ["http://localhost"]
+      }
+    }
+  },
   "firestore": {
     "rules": "firestore.rules",
     "indexes": "firestore.indexes.json"

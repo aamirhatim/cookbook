@@ -15,6 +15,7 @@ firestore-debug.log*
 ui-debug.log*
 .runtimecache
 emulator-data/
+firebase-export-*
 
 # User notes and documentation
 .agents/TASKS.md

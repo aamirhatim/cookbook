@@ -5,12 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "dev:all": "concurrently -k -n \"firebase,vite\" -c \"yellow.bold,cyan.bold\" \"npm run emulators\" \"npm run dev\"",
+    "dev:all": "node scripts/dev.mjs",
     "start": "npm run dev:all",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "emulators": "JAVA_HOME=/Library/Java/JavaVirtualMachines/temurin-25.jdk/Contents/Home firebase emulators:start --import=./emulator-data --export-on-exit=./emulator-data",
-    "emulators:export": "firebase emulators:export ./emulator-data"
+    "emulators:export": "firebase emulators:export ./emulator-data -f"
   },
   "dependencies": {
     "firebase": "^11.4.0",
