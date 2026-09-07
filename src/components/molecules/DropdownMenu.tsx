@@ -7,127 +7,127 @@ import { DropdownMobileTray } from './DropdownMobileTray';
 export type DropdownMenuVariant = 'default' | 'mobile';
 
 export interface DropdownMenuProps {
-  icon: React.ComponentType<IconProps> | Icon;
-  title: string;
-  type: 'radio' | 'multi';
-  items: DropdownItem[];
-  selectedValues: string | string[];
-  onSelect: (value: string) => void;
-  className?: string;
-  hasActiveFilters?: boolean;
-  placement?: 'top' | 'bottom';
-  variant?: DropdownMenuVariant;
-  mobileLayout?: React.ReactNode | ((props: { close: () => void }) => React.ReactNode);
-  open?: boolean;
-  onOpenChange?: (open: boolean) => void;
+    icon: React.ComponentType<IconProps> | Icon;
+    title: string;
+    type: 'radio' | 'multi';
+    items: DropdownItem[];
+    selectedValues: string | string[];
+    onSelect: (value: string) => void;
+    className?: string;
+    hasActiveFilters?: boolean;
+    placement?: 'top' | 'bottom';
+    variant?: DropdownMenuVariant;
+    mobileLayout?: React.ReactNode | ((props: { close: () => void }) => React.ReactNode);
+    open?: boolean;
+    onOpenChange?: (open: boolean) => void;
 }
 
 export const DropdownMenu: React.FC<DropdownMenuProps> = ({
-  icon,
-  title,
-  type,
-  items,
-  selectedValues,
-  onSelect,
-  className = '',
-  hasActiveFilters = false,
-  placement = 'bottom',
-  variant,
-  mobileLayout,
-  open: controlledOpen,
-  onOpenChange,
+    icon,
+    title,
+    type,
+    items,
+    selectedValues,
+    onSelect,
+    className = '',
+    hasActiveFilters = false,
+    placement = 'bottom',
+    variant,
+    mobileLayout,
+    open: controlledOpen,
+    onOpenChange,
 }) => {
-  const isControlled = controlledOpen !== undefined;
-  const [internalOpen, setInternalOpen] = useState(false);
-  const isOpen = isControlled ? controlledOpen : internalOpen;
-  const containerRef = useRef<HTMLDivElement>(null);
+    const isControlled = controlledOpen !== undefined;
+    const [internalOpen, setInternalOpen] = useState(false);
+    const isOpen = isControlled ? controlledOpen : internalOpen;
+    const containerRef = useRef<HTMLDivElement>(null);
 
-  const [isMobileScreen, setIsMobileScreen] = useState(() =>
-    typeof window !== 'undefined' ? window.matchMedia('(max-width: 639px)').matches : false
-  );
+    const [isMobileScreen, setIsMobileScreen] = useState(() =>
+        typeof window !== 'undefined' ? window.matchMedia('(max-width: 639px)').matches : false
+    );
 
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const mediaQuery = window.matchMedia('(max-width: 639px)');
-    const updateMatch = (e: MediaQueryListEvent) => {
-      setIsMobileScreen(e.matches);
-    };
-    mediaQuery.addEventListener('change', updateMatch);
-    return () => mediaQuery.removeEventListener('change', updateMatch);
-  }, []);
+    useEffect(() => {
+        if (typeof window === 'undefined') return;
+        const mediaQuery = window.matchMedia('(max-width: 639px)');
+        const updateMatch = (e: MediaQueryListEvent) => {
+            setIsMobileScreen(e.matches);
+        };
+        mediaQuery.addEventListener('change', updateMatch);
+        return () => mediaQuery.removeEventListener('change', updateMatch);
+    }, []);
 
-  const isMobileVariant = variant === 'mobile' || (variant !== 'default' && isMobileScreen);
+    const isMobileVariant = variant === 'mobile' || (variant !== 'default' && isMobileScreen);
 
-  const setOpen = (next: boolean) => {
-    if (!isControlled) setInternalOpen(next);
-    onOpenChange?.(next);
-  };
-
-  const toggleOpen = () => {
-    setOpen(!isOpen);
-  };
-
-  useEffect(() => {
-    if (!isOpen || isMobileVariant) return;
-
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(event.target as Node)
-      ) {
-        setOpen(false);
-      }
+    const setOpen = (next: boolean) => {
+        if (!isControlled) setInternalOpen(next);
+        onOpenChange?.(next);
     };
 
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        setOpen(false);
-      }
+    const toggleOpen = () => {
+        setOpen(!isOpen);
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    document.addEventListener('keydown', handleKeyDown);
+    useEffect(() => {
+        if (!isOpen || isMobileVariant) return;
 
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [isOpen, isMobileVariant]);
+        const handleClickOutside = (event: MouseEvent) => {
+            if (
+                containerRef.current &&
+                !containerRef.current.contains(event.target as Node)
+            ) {
+                setOpen(false);
+            }
+        };
 
-  return (
-    <div ref={containerRef} className={`relative inline-block ${className}`}>
-      <ButtonIcon
-        icon={icon}
-        onClick={toggleOpen}
-        active={isOpen || hasActiveFilters}
-        title={title}
-        ariaLabel={title}
-      />
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                setOpen(false);
+            }
+        };
 
-      {isMobileVariant ? (
-        <DropdownMobileTray
-          visible={isOpen}
-          onClose={() => setOpen(false)}
-          title={title}
-          icon={icon}
-          type={type}
-          items={items}
-          selectedValues={selectedValues}
-          onSelect={onSelect}
-          mobileLayout={mobileLayout}
-          anchorRef={containerRef}
-        />
-      ) : (
-        <DropdownList
-          visible={isOpen}
-          type={type}
-          items={items}
-          selectedValues={selectedValues}
-          onSelect={onSelect}
-          placement={placement}
-        />
-      )}
-    </div>
-  );
+        document.addEventListener('mousedown', handleClickOutside);
+        document.addEventListener('keydown', handleKeyDown);
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [isOpen, isMobileVariant]);
+
+    return (
+        <div ref={containerRef} className={`relative inline-block ${className}`}>
+            <ButtonIcon
+                icon={icon}
+                onClick={toggleOpen}
+                active={isOpen || hasActiveFilters}
+                title={title}
+                ariaLabel={title}
+            />
+
+            {isMobileVariant ? (
+                <DropdownMobileTray
+                    visible={isOpen}
+                    onClose={() => setOpen(false)}
+                    title={title}
+                    icon={icon}
+                    type={type}
+                    items={items}
+                    selectedValues={selectedValues}
+                    onSelect={onSelect}
+                    mobileLayout={mobileLayout}
+                    anchorRef={containerRef}
+                />
+            ) : (
+                <DropdownList
+                    visible={isOpen}
+                    type={type}
+                    items={items}
+                    selectedValues={selectedValues}
+                    onSelect={onSelect}
+                    placement={placement}
+                />
+            )}
+        </div>
+    );
 };
 
