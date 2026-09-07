@@ -78,7 +78,7 @@ export function Account() {
             </header>
 
             {/* Main Account Details Card */}
-            <main className="w-full">
+            <main className="w-full space-y-6">
                 <AccountDetailsCard
                     profile={profile}
                     role={role}
@@ -88,6 +88,17 @@ export function Account() {
                     onDeleteAccount={handleDeleteAccount}
                     isDeletingAccount={isDeleting}
                 />
+
+                {/* Status Card: Local Emulators */}
+                <div className="p-4 rounded-xl border border-secondary bg-secondary/40 text-secondary-foreground text-xs sm:text-sm flex items-start space-x-3">
+                    <div className="text-lg">🔥</div>
+                    <div className="space-y-1">
+                        <p className="font-semibold text-foreground">Firebase Local Backend Configured</p>
+                        <p className="text-muted-foreground leading-relaxed">
+                            Connected to local Firebase emulators: Firestore (8080), Auth (9099), Storage (9199), and UI (4000).
+                        </p>
+                    </div>
+                </div>
             </main>
         </div>
     );
