@@ -4,6 +4,7 @@ import { AuthProvider } from './contexts/AuthContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { Login } from './pages/Login';
 import { Admin } from './pages/Admin';
+import { RecipeEditor } from './pages/RecipeEditor';
 function Home() {
     return (
         <div className="space-y-6">
@@ -68,6 +69,14 @@ export default function App() {
                             element={
                                 <ProtectedRoute>
                                     <Admin />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="/admin/recipes/:recipeId"
+                            element={
+                                <ProtectedRoute>
+                                    <RecipeEditor />
                                 </ProtectedRoute>
                             }
                         />
