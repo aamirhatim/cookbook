@@ -7,6 +7,7 @@ import { Login } from './pages/Login';
 import { SignUp } from './pages/SignUp';
 import { Admin } from './pages/Admin';
 import { RecipeEditor } from './pages/RecipeEditor';
+import { Account } from './pages/Account';
 
 export default function App() {
     return (
@@ -21,6 +22,7 @@ export default function App() {
                             {/* All app routes are protected: user must log in to access */}
                             <Route element={<ProtectedRoute />}>
                                 <Route path="/" element={<Home />} />
+                                <Route path="/account" element={<Account />} />
                                 <Route
                                     path="/admin"
                                     element={

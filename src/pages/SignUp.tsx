@@ -16,7 +16,8 @@ export function SignUp() {
     const { user } = useAuth();
     const { showToast } = useToast();
 
-    const from = (location.state as { from?: { pathname: string } })?.from?.pathname || '/';
+    const rawFrom = (location.state as { from?: { pathname: string } })?.from?.pathname;
+    const from = !rawFrom || rawFrom === '/login' || rawFrom.startsWith('/account') ? '/' : rawFrom;
 
     // Redirect if already logged in
     if (user) {

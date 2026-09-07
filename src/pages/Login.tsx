@@ -13,7 +13,8 @@ export function Login() {
     const location = useLocation();
     const { user } = useAuth();
 
-    const from = (location.state as { from?: { pathname: string } })?.from?.pathname || '/';
+    const rawFrom = (location.state as { from?: { pathname: string } })?.from?.pathname;
+    const from = !rawFrom || rawFrom === '/login' || rawFrom.startsWith('/account') ? '/' : rawFrom;
 
     // Redirect if already logged in
     if (user) {
@@ -24,7 +25,7 @@ export function Login() {
         const tokenResult = await signedInUser.getIdTokenResult();
         const isAdminUser = tokenResult.claims.role === 'admin';
 
-        if (from && from !== '/login') {
+        if (from && from !== '/') {
             if (from.startsWith('/admin') && !isAdminUser) {
                 navigate('/', { replace: true });
             } else {

@@ -1,16 +1,9 @@
-import { signOut } from 'firebase/auth';
-import { IconNotebook, IconPlus, IconSearch, IconLogout } from '@tabler/icons-react';
-import { auth } from '../lib/firebase';
+import { useNavigate } from 'react-router-dom';
+import { IconNotebook, IconPlus, IconSearch, IconUser } from '@tabler/icons-react';
 import { ButtonIcon } from '../components/atoms/ButtonIcon';
 
 export function Home() {
-    const handleSignOut = async () => {
-        try {
-            await signOut(auth);
-        } catch (error) {
-            console.error('Error signing out:', error);
-        }
-    };
+    const navigate = useNavigate();
 
     return (
         <div className="space-y-6">
@@ -24,10 +17,10 @@ export function Home() {
                     </p>
                 </div>
                 <ButtonIcon
-                    icon={IconLogout}
-                    onClick={handleSignOut}
-                    title="Sign Out"
-                    ariaLabel="Sign Out"
+                    icon={IconUser}
+                    onClick={() => navigate('/account')}
+                    title="Account"
+                    ariaLabel="Account"
                     className="shrink-0"
                 />
             </header>

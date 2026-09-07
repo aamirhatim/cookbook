@@ -48,6 +48,14 @@ export async function getUserProfile(uid: string): Promise<UserProfile | null> {
 }
 
 /**
+ * Retrieves the user's custom claim role from Firebase Auth.
+ */
+export async function getUserRole(user: User, forceRefresh = false): Promise<string | undefined> {
+    const idTokenResult = await user.getIdTokenResult(forceRefresh);
+    return idTokenResult.claims.role as string | undefined;
+}
+
+/**
  * Sets custom claims (e.g. role: 'user') for a user in Firebase Auth.
  * When running against the Auth emulator, calls the emulator API directly and forces token refresh.
  */
@@ -119,5 +127,17 @@ export async function rollbackUserCreation(user: User): Promise<void> {
     } catch (err) {
         console.error('Error signing out during rollback:', err);
     }
+}
+
+/**
+ * Permanently deletes the user account:
+ * 1. Deletes the user profile document from Firestore `users/{uid}` while user is authenticated.
+ * 2. Deletes the user from Firebase Auth.
+ */
+export async function deleteUserAccount(user: User): Promise<void> {
+    // Delete Firestore profile first while user is still authenticated
+    await deleteUserProfile(user.uid);
+    // Delete user from Firebase Auth
+    await deleteUser(user);
 }
 
