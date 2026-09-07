@@ -8,12 +8,16 @@ import { IconLoader2 } from '@tabler/icons-react';
 export interface RecipeListContainerProps {
   authorId?: string;
   onRecipeClick?: (recipe: Recipe) => void;
+  stickyFilter?: boolean;
+  isStickyFilter?: boolean;
   className?: string;
 }
 
 export const RecipeListContainer: React.FC<RecipeListContainerProps> = ({
   authorId,
   onRecipeClick,
+  stickyFilter = true,
+  isStickyFilter,
   className = '',
 }) => {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
@@ -122,6 +126,7 @@ export const RecipeListContainer: React.FC<RecipeListContainerProps> = ({
       <RecipeFilter
         onFilterChange={setFilters}
         availableCuisines={availableCuisines}
+        sticky={isStickyFilter !== undefined ? isStickyFilter : stickyFilter}
       />
 
       {loading ? (
