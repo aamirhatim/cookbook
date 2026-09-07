@@ -15,6 +15,7 @@ export interface DropdownListProps {
   selectedValues: string | string[];
   onSelect: (value: string) => void;
   className?: string;
+  placement?: 'top' | 'bottom';
 }
 
 export const DropdownList: React.FC<DropdownListProps> = ({
@@ -24,6 +25,7 @@ export const DropdownList: React.FC<DropdownListProps> = ({
   selectedValues,
   onSelect,
   className = '',
+  placement = 'bottom',
 }) => {
   if (!visible) return null;
 
@@ -34,10 +36,15 @@ export const DropdownList: React.FC<DropdownListProps> = ({
     return selectedValues === val;
   };
 
+  const positionClass =
+    placement === 'top'
+      ? 'bottom-full mb-2 right-0'
+      : 'top-full mt-1.5 right-0 sm:left-0 sm:right-auto';
+
   return (
     <div
       role={type === 'radio' ? 'radiogroup' : 'group'}
-      className={`absolute top-full mt-1.5 right-0 sm:left-0 sm:right-auto z-50 min-w-[200px] max-h-[280px] overflow-y-auto p-1.5 rounded-xl bg-surface border border-border shadow-xl focus:outline-none animate-in fade-in zoom-in-95 duration-100 ${className}`}
+      className={`absolute ${positionClass} z-50 min-w-[200px] max-h-[280px] overflow-y-auto p-1.5 rounded-xl bg-surface border border-border shadow-xl focus:outline-none animate-in fade-in zoom-in-95 duration-100 ${className}`}
     >
       {items.length === 0 ? (
         <div className="px-3 py-2 text-xs text-muted-foreground text-center">

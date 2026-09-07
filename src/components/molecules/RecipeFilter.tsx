@@ -18,6 +18,7 @@ export interface RecipeFilterProps {
     availableCuisines?: string[];
     sticky?: boolean;
     isSticky?: boolean;
+    position?: 'top' | 'bottom';
     className?: string;
 }
 
@@ -39,9 +40,11 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
     availableCuisines = [],
     sticky = false,
     isSticky,
+    position = 'bottom',
     className = '',
 }) => {
     const isStickyActive = isSticky !== undefined ? isSticky : sticky;
+    const isBottom = position === 'bottom';
     const [searchInput, setSearchInput] = useState('');
     const [debouncedSearch, setDebouncedSearch] = useState('');
     const [timeFilter, setTimeFilter] = useState<string>('all');
@@ -112,12 +115,14 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
     }));
 
     const stickyClasses = isStickyActive
-        ? 'sticky top-0 z-20 bg-background/95 backdrop-blur-md py-3.5 border-b border-border/40'
+        ? isBottom
+            ? 'sticky bottom-0 z-20 bg-background/95 backdrop-blur-md py-3 border-t border-border/40'
+            : 'sticky top-0 z-20 bg-background/95 backdrop-blur-md py-3.5 border-b border-border/40'
         : '';
 
     return (
         <div
-            className={`flex flex-col gap-3 w-full ${stickyClasses} ${className}`}
+            className={`flex ${isBottom ? 'flex-col-reverse' : 'flex-col'} gap-2.5 w-full ${stickyClasses} ${className}`}
         >
             <div className="flex items-center gap-2 w-full">
                 <Searchbar
@@ -137,6 +142,7 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
                         selectedValues={timeFilter}
                         onSelect={handleTimeSelect}
                         hasActiveFilters={timeFilter !== 'all'}
+                        placement={isBottom ? 'top' : 'bottom'}
                     />
 
                     <DropdownMenu
@@ -147,6 +153,7 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
                         selectedValues={difficulties}
                         onSelect={handleDifficultyToggle}
                         hasActiveFilters={difficulties.length > 0}
+                        placement={isBottom ? 'top' : 'bottom'}
                     />
 
                     {cuisineOptions.length > 0 && (
@@ -158,6 +165,7 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
                             selectedValues={cuisines}
                             onSelect={handleCuisineToggle}
                             hasActiveFilters={cuisines.length > 0}
+                            placement={isBottom ? 'top' : 'bottom'}
                         />
                     )}
 

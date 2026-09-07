@@ -121,28 +121,50 @@ export const RecipeListContainer: React.FC<RecipeListContainerProps> = ({
     });
   }, [recipes, filters]);
 
-  return (
-    <div className={`flex flex-col gap-5 w-full ${className}`}>
-      <RecipeFilter
-        onFilterChange={setFilters}
-        availableCuisines={availableCuisines}
-        sticky={isStickyFilter !== undefined ? isStickyFilter : stickyFilter}
-      />
+  const isStickyActive = isStickyFilter !== undefined ? isStickyFilter : stickyFilter;
 
-      {loading ? (
-        <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
-          <IconLoader2 className="w-8 h-8 animate-spin text-primary mb-2" stroke={1} />
-          <p className="text-sm">Loading recipes...</p>
-        </div>
-      ) : error ? (
-        <div className="p-4 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive text-sm text-center">
-          {error}
+  return (
+    <div className={`flex flex-col w-full ${className}`}>
+      {/* Recipe List Area with bottom padding to ensure content is not obscured by the bottom filter */}
+      <div className={isStickyActive ? 'pb-28 sm:pb-32' : 'pb-4'}>
+        {loading ? (
+          <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
+            <IconLoader2 className="w-8 h-8 animate-spin text-primary mb-2" stroke={1} />
+            <p className="text-sm">Loading recipes...</p>
+          </div>
+        ) : error ? (
+          <div className="p-4 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive text-sm text-center">
+            {error}
+          </div>
+        ) : (
+          <RecipeList
+            recipes={filteredRecipes}
+            onRecipeClick={onRecipeClick}
+          />
+        )}
+      </div>
+
+      {/* Recipe Filter positioned at the bottom of the viewport */}
+      {isStickyActive ? (
+        <div className="fixed bottom-0 left-0 right-0 z-30 bg-background/95 backdrop-blur-md border-t border-border/40 py-3 shadow-lg">
+          <div className="max-w-lg mx-auto px-4 w-full">
+            <RecipeFilter
+              onFilterChange={setFilters}
+              availableCuisines={availableCuisines}
+              position="bottom"
+              sticky={false}
+            />
+          </div>
         </div>
       ) : (
-        <RecipeList
-          recipes={filteredRecipes}
-          onRecipeClick={onRecipeClick}
-        />
+        <div className="w-full pt-4 border-t border-border/40">
+          <RecipeFilter
+            onFilterChange={setFilters}
+            availableCuisines={availableCuisines}
+            position="bottom"
+            sticky={false}
+          />
+        </div>
       )}
     </div>
   );

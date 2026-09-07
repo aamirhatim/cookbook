@@ -12,6 +12,7 @@ export interface DropdownMenuProps {
   onSelect: (value: string) => void;
   className?: string;
   hasActiveFilters?: boolean;
+  placement?: 'top' | 'bottom';
 }
 
 export const DropdownMenu: React.FC<DropdownMenuProps> = ({
@@ -23,6 +24,7 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({
   onSelect,
   className = '',
   hasActiveFilters = false,
+  placement = 'bottom',
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -74,6 +76,7 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({
         items={items}
         selectedValues={selectedValues}
         onSelect={onSelect}
+        placement={placement}
       />
     </div>
   );
