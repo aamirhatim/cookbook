@@ -69,19 +69,13 @@ export const RecipeRowItem: React.FC<RecipeRowItemProps> = ({
                         )}
                     </div>
                     <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground flex-wrap">
-                        {recipe.cuisine && (
-                            <span className="capitalize font-medium text-foreground/80">
-                                {recipe.cuisine}
-                            </span>
-                        )}
-                        {recipe.cuisine && totalTime > 0 && <span>•</span>}
                         {totalTime > 0 && (
                             <span className="flex items-center gap-1">
                                 <IconStopwatch className="w-3.5 h-3.5" stroke={1} />
-                                {totalTime}m
+                                Prep: {recipe.prepTimeMinutes || 0}m, Cook: {recipe.cookTimeMinutes || 0}m
                             </span>
                         )}
-                        {(recipe.cuisine || totalTime > 0) && DifficultyIcon && <span>•</span>}
+                        {totalTime > 0 && DifficultyIcon && <span>•</span>}
                         {DifficultyIcon && (
                             <span
                                 className="flex items-center text-muted-foreground"
@@ -91,7 +85,7 @@ export const RecipeRowItem: React.FC<RecipeRowItemProps> = ({
                                 <DifficultyIcon className="w-3.5 h-3.5" stroke={1} />
                             </span>
                         )}
-                        {(recipe.cuisine || totalTime > 0 || DifficultyIcon) && recipe.isVeg && <span>•</span>}
+                        {(totalTime > 0 || DifficultyIcon) && recipe.isVeg && <span>•</span>}
                         {recipe.isVeg && (
                             <span
                                 className="flex items-center text-muted-foreground"
