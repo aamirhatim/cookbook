@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Searchbar } from '../atoms/Searchbar';
 import { ButtonIcon } from '../atoms/ButtonIcon';
 import { DropdownMenu } from './DropdownMenu';
+import { TimeFilterMobileTray } from './TimeFilterMobileTray';
 import type { Difficulty } from '../../types/recipe';
 import { IconStopwatch, IconHexagonAsterisk, IconWorldMap, IconCarrot, IconX } from '@tabler/icons-react';
 
@@ -24,6 +25,7 @@ export interface RecipeFilterProps {
 
 const TIME_OPTIONS = [
     { id: 'time-all', label: 'Any time', value: 'all' },
+    { id: 'time-5', label: '< 5 min', value: '5' },
     { id: 'time-15', label: '< 15 min', value: '15' },
     { id: 'time-30', label: '< 30 min', value: '30' },
     { id: 'time-60', label: '< 1 hr', value: '60' },
@@ -138,7 +140,7 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
                 <div className="flex items-center gap-1.5 shrink-0">
                     <DropdownMenu
                         icon={IconStopwatch}
-                        title="Filter by Time"
+                        title="Max cooking time"
                         type="radio"
                         items={TIME_OPTIONS}
                         selectedValues={timeFilter}
@@ -147,6 +149,13 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
                         placement={isBottom ? 'top' : 'bottom'}
                         open={activeDropdown === 'time'}
                         onOpenChange={(open) => setActiveDropdown(open ? 'time' : null)}
+                        mobileLayout={({ close }) => (
+                            <TimeFilterMobileTray
+                                selectedValue={timeFilter}
+                                onSelect={handleTimeSelect}
+                                onClose={close}
+                            />
+                        )}
                     />
 
                     <DropdownMenu
