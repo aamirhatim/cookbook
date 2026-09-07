@@ -3,10 +3,11 @@ import { useAuth } from '../contexts/AuthContext';
 
 interface ProtectedRouteProps {
     children: React.ReactNode;
+    requireAdmin?: boolean;
 }
 
-export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
-    const { user, loading } = useAuth();
+export const ProtectedRoute = ({ children, requireAdmin = false }: ProtectedRouteProps) => {
+    const { user, isAdmin, loading } = useAuth();
 
     if (loading) {
         return (
@@ -17,11 +18,13 @@ export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
     }
 
     if (!user) {
-        // Redirect them to the /login page, but save the current location they were
-        // trying to go to when they were redirected. This allows us to send them
-        // along to that page after they login, which is a nicer user experience
-        // than dropping them off on the home page.
+        // Redirect them to the /login page
         return <Navigate to="/login" replace />;
+    }
+
+    if (requireAdmin && !isAdmin) {
+        // Logged-in non-admin user trying to access admin routes
+        return <Navigate to="/" replace />;
     }
 
     return <>{children}</>;

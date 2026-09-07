@@ -67,7 +67,7 @@ export default function App() {
                         <Route
                             path="/admin"
                             element={
-                                <ProtectedRoute>
+                                <ProtectedRoute requireAdmin>
                                     <Admin />
                                 </ProtectedRoute>
                             }
@@ -75,7 +75,7 @@ export default function App() {
                         <Route
                             path="/admin/recipes/:recipeId"
                             element={
-                                <ProtectedRoute>
+                                <ProtectedRoute requireAdmin>
                                     <RecipeEditor />
                                 </ProtectedRoute>
                             }
