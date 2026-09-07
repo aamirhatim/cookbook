@@ -20,6 +20,8 @@ export interface DropdownMenuProps {
     mobileLayout?: React.ReactNode | ((props: { close: () => void }) => React.ReactNode);
     open?: boolean;
     onOpenChange?: (open: boolean) => void;
+    buttonTitle?: string;
+    ariaLabel?: string;
 }
 
 export const DropdownMenu: React.FC<DropdownMenuProps> = ({
@@ -36,6 +38,8 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({
     mobileLayout,
     open: controlledOpen,
     onOpenChange,
+    buttonTitle,
+    ariaLabel,
 }) => {
     const isControlled = controlledOpen !== undefined;
     const [internalOpen, setInternalOpen] = useState(false);
@@ -100,8 +104,8 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({
                 icon={icon}
                 onClick={toggleOpen}
                 active={isOpen || hasActiveFilters}
-                title={title}
-                ariaLabel={title}
+                title={buttonTitle || title}
+                ariaLabel={ariaLabel || buttonTitle || title}
             />
 
             {isMobileVariant ? (
@@ -120,6 +124,8 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({
             ) : (
                 <DropdownList
                     visible={isOpen}
+                    title={title}
+                    icon={icon}
                     type={type}
                     items={items}
                     selectedValues={selectedValues}

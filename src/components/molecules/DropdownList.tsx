@@ -1,4 +1,5 @@
 import React from 'react';
+import type { Icon, IconProps } from '@tabler/icons-react';
 import { MultiSelectItem } from '../atoms/MultiSelectItem';
 import { RadioSelectItem } from '../atoms/RadioSelectItem';
 
@@ -10,6 +11,8 @@ export interface DropdownItem {
 
 export interface DropdownListProps {
   visible: boolean;
+  title?: string;
+  icon?: React.ComponentType<IconProps> | Icon;
   type: 'radio' | 'multi';
   items: DropdownItem[];
   selectedValues: string | string[];
@@ -20,6 +23,8 @@ export interface DropdownListProps {
 
 export const DropdownList: React.FC<DropdownListProps> = ({
   visible,
+  title,
+  icon: IconComponent,
   type,
   items,
   selectedValues,
@@ -44,31 +49,43 @@ export const DropdownList: React.FC<DropdownListProps> = ({
   return (
     <div
       role={type === 'radio' ? 'radiogroup' : 'group'}
-      className={`absolute ${positionClass} z-50 min-w-[200px] max-h-[280px] overflow-y-auto p-1.5 rounded-xl bg-surface border border-border shadow-xl focus:outline-none animate-in fade-in zoom-in-95 duration-100 ${className}`}
+      aria-label={title}
+      className={`absolute ${positionClass} z-50 min-w-[200px] flex flex-col rounded-xl bg-surface border border-border shadow-xl focus:outline-none animate-in fade-in zoom-in-95 duration-100 ${className}`}
     >
-      {items.length === 0 ? (
-        <div className="px-3 py-2 text-xs text-muted-foreground text-center">
-          No options available
+      {title && (
+        <div className="px-3 py-2 flex items-center gap-2 border-b border-border/40 select-none">
+          {IconComponent && <IconComponent size={15} className="text-primary shrink-0" stroke={1} />}
+          <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            {title}
+          </span>
         </div>
-      ) : (
-        items.map((item) =>
-          type === 'radio' ? (
-            <RadioSelectItem
-              key={item.id}
-              label={item.label}
-              selected={isSelected(item.value)}
-              onChange={() => onSelect(item.value)}
-            />
-          ) : (
-            <MultiSelectItem
-              key={item.id}
-              label={item.label}
-              checked={isSelected(item.value)}
-              onChange={() => onSelect(item.value)}
-            />
-          )
-        )
       )}
+
+      <div className="max-h-[240px] overflow-y-auto p-1.5 flex flex-col">
+        {items.length === 0 ? (
+          <div className="px-3 py-2 text-xs text-muted-foreground text-center">
+            No options available
+          </div>
+        ) : (
+          items.map((item) =>
+            type === 'radio' ? (
+              <RadioSelectItem
+                key={item.id}
+                label={item.label}
+                selected={isSelected(item.value)}
+                onChange={() => onSelect(item.value)}
+              />
+            ) : (
+              <MultiSelectItem
+                key={item.id}
+                label={item.label}
+                checked={isSelected(item.value)}
+                onChange={() => onSelect(item.value)}
+              />
+            )
+          )
+        )}
+      </div>
     </div>
   );
 };

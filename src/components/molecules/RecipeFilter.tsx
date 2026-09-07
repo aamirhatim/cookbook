@@ -6,7 +6,21 @@ import { TimeFilterMobileTray } from './TimeFilterMobileTray';
 import { DifficultyFilterMobileTray } from './DifficultyFilterMobileTray';
 import { CuisineFilterMobileTray } from './CuisineFilterMobileTray';
 import type { Difficulty } from '../../types/recipe';
-import { IconStopwatch, IconHexagonAsterisk, IconWorldMap, IconCarrot, IconX } from '@tabler/icons-react';
+import type { Icon, IconProps } from '@tabler/icons-react';
+import {
+    IconStopwatch,
+    IconTimeDuration5,
+    IconTimeDuration15,
+    IconTimeDuration30,
+    IconTimeDuration60,
+    IconHexagonAsterisk,
+    IconHexagonLetterE,
+    IconHexagonLetterM,
+    IconHexagonLetterH,
+    IconWorldMap,
+    IconCarrot,
+    IconX,
+} from '@tabler/icons-react';
 
 export interface RecipeFilterCriteria {
     searchText: string;
@@ -26,18 +40,30 @@ export interface RecipeFilterProps {
 }
 
 const TIME_OPTIONS = [
-    { id: 'time-all', label: 'Any time', value: 'all' },
     { id: 'time-5', label: '< 5 min', value: '5' },
     { id: 'time-15', label: '< 15 min', value: '15' },
     { id: 'time-30', label: '< 30 min', value: '30' },
     { id: 'time-60', label: '< 1 hr', value: '60' },
 ];
 
+const TIME_ICON_MAP: Record<string, React.ComponentType<IconProps> | Icon> = {
+    '5': IconTimeDuration5,
+    '15': IconTimeDuration15,
+    '30': IconTimeDuration30,
+    '60': IconTimeDuration60,
+};
+
 const DIFFICULTY_OPTIONS: { id: string; label: string; value: Difficulty }[] = [
     { id: 'diff-easy', label: 'Easy', value: 'easy' },
     { id: 'diff-med', label: 'Medium', value: 'medium' },
     { id: 'diff-hard', label: 'Hard', value: 'hard' },
 ];
+
+const DIFFICULTY_ICON_MAP: Record<Difficulty, React.ComponentType<IconProps> | Icon> = {
+    easy: IconHexagonLetterE,
+    medium: IconHexagonLetterM,
+    hard: IconHexagonLetterH,
+};
 
 export const RecipeFilter: React.FC<RecipeFilterProps> = ({
     onFilterChange,
@@ -81,7 +107,7 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
     }, [debouncedSearch, timeFilter, difficulties, cuisines, isVeg, onFilterChange]);
 
     const handleTimeSelect = (val: string) => {
-        setTimeFilter(val);
+        setTimeFilter((prev) => (prev === val || val === 'all' ? 'all' : val));
     };
 
     const handleDifficultyToggle = (val: string) => {
@@ -119,6 +145,28 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
         value: c,
     }));
 
+    const timeIcon =
+        timeFilter !== 'all' && TIME_ICON_MAP[timeFilter]
+            ? TIME_ICON_MAP[timeFilter]
+            : IconStopwatch;
+
+    const difficultyIcon =
+        difficulties.length === 1 && DIFFICULTY_ICON_MAP[difficulties[0]]
+            ? DIFFICULTY_ICON_MAP[difficulties[0]]
+            : IconHexagonAsterisk;
+
+    const timeButtonTitle =
+        timeFilter !== 'all'
+            ? `Max cooking time: < ${timeFilter === '60' ? '1 hr' : `${timeFilter} min`}`
+            : 'Max cooking time';
+
+    const difficultyButtonTitle =
+        difficulties.length === 1
+            ? `Difficulty: ${difficulties[0].charAt(0).toUpperCase() + difficulties[0].slice(1)}`
+            : difficulties.length > 1
+            ? `Difficulty (${difficulties.length} selected)`
+            : 'Difficulty';
+
     const stickyClasses = isStickyActive
         ? isBottom
             ? 'sticky bottom-0 z-20 bg-background/95 backdrop-blur-md py-3 border-t border-border/40'
@@ -141,8 +189,10 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
                 {/* Filter Dropdowns & Toggles */}
                 <div className="flex items-center gap-1.5 shrink-0">
                     <DropdownMenu
-                        icon={IconStopwatch}
+                        icon={timeIcon}
                         title="Max cooking time"
+                        buttonTitle={timeButtonTitle}
+                        ariaLabel={timeButtonTitle}
                         type="radio"
                         items={TIME_OPTIONS}
                         selectedValues={timeFilter}
@@ -161,8 +211,10 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
                     />
 
                     <DropdownMenu
-                        icon={IconHexagonAsterisk}
+                        icon={difficultyIcon}
                         title="Difficulty"
+                        buttonTitle={difficultyButtonTitle}
+                        ariaLabel={difficultyButtonTitle}
                         type="multi"
                         items={DIFFICULTY_OPTIONS}
                         selectedValues={difficulties}
