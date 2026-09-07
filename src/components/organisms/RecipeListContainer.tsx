@@ -11,6 +11,7 @@ export interface RecipeListContainerProps {
   stickyFilter?: boolean;
   isStickyFilter?: boolean;
   className?: string;
+  viewMode?: 'responsive' | 'list' | 'tile';
 }
 
 export const RecipeListContainer: React.FC<RecipeListContainerProps> = ({
@@ -19,6 +20,7 @@ export const RecipeListContainer: React.FC<RecipeListContainerProps> = ({
   stickyFilter = true,
   isStickyFilter,
   className = '',
+  viewMode = 'responsive',
 }) => {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [loading, setLoading] = useState(true);
@@ -140,6 +142,7 @@ export const RecipeListContainer: React.FC<RecipeListContainerProps> = ({
           <RecipeList
             recipes={filteredRecipes}
             onRecipeClick={onRecipeClick}
+            viewMode={viewMode}
           />
         )}
       </div>
@@ -150,7 +153,7 @@ export const RecipeListContainer: React.FC<RecipeListContainerProps> = ({
           data-recipe-filter-bar="true"
           className="fixed bottom-0 left-0 right-0 z-30 bg-background/95 backdrop-blur-md border-t border-border/40 py-3 shadow-lg"
         >
-          <div className="max-w-lg mx-auto px-4 w-full">
+          <div className="max-w-lg md:max-w-4xl lg:max-w-6xl xl:max-w-7xl mx-auto px-4 w-full">
             <RecipeFilter
               onFilterChange={setFilters}
               availableCuisines={availableCuisines}

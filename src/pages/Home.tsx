@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { IconNotebook, IconPlus, IconSearch, IconUser } from '@tabler/icons-react';
+import { IconNotebook, IconPlus, IconSearch, IconUser, IconBook } from '@tabler/icons-react';
 import { ButtonIcon } from '../components/atoms/ButtonIcon';
 
 export function Home() {
@@ -25,30 +25,44 @@ export function Home() {
                 />
             </header>
 
-            {/* Quick Search Bar */}
+            {/* Quick Search Bar (links to /recipes) */}
             <div className="relative">
                 <IconSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" stroke={1} />
                 <input
                     type="text"
                     placeholder="Search recipes, tags, ingredients..."
-                    className="w-full bg-surface border border-input text-foreground rounded-xl pl-10 pr-4 py-2.5 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring/20 focus:border-ring transition-colors shadow-sm"
+                    onFocus={() => navigate('/recipes')}
+                    className="w-full bg-surface border border-input text-foreground rounded-xl pl-10 pr-4 py-2.5 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring/20 focus:border-ring transition-colors shadow-sm cursor-pointer"
                 />
             </div>
-
 
             {/* Empty State / Get Started */}
             <div className="bg-surface border border-dashed border-border rounded-2xl p-8 text-center space-y-3">
                 <div className="w-12 h-12 bg-secondary text-secondary-foreground rounded-full flex items-center justify-center mx-auto">
                     <IconNotebook className="w-6 h-6" stroke={1} />
                 </div>
-                <h3 className="font-semibold text-foreground">No recipes yet</h3>
+                <h3 className="font-semibold text-foreground">Explore your kitchen</h3>
                 <p className="text-xs sm:text-sm text-muted-foreground max-w-sm mx-auto">
-                    Your digital kitchen is ready. Start adding your first recipe or explore collections.
+                    Your digital kitchen is ready. Browse your saved recipes or add a new dish.
                 </p>
-                <button className="inline-flex items-center space-x-1.5 px-4 py-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg text-sm font-medium shadow-sm transition-colors active:scale-98">
-                    <IconPlus className="w-4 h-4" stroke={1} />
-                    <span>New Recipe</span>
-                </button>
+                <div className="flex flex-wrap items-center justify-center gap-2.5 pt-2">
+                    <button
+                        type="button"
+                        onClick={() => navigate('/recipes')}
+                        className="inline-flex items-center space-x-1.5 px-4 py-2 bg-surface hover:bg-surface-hover text-foreground border border-border rounded-lg text-sm font-medium shadow-sm transition-colors active:scale-98"
+                    >
+                        <IconBook className="w-4 h-4 text-primary" stroke={1.5} />
+                        <span>Browse Recipes</span>
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => navigate('/admin/recipes/new')}
+                        className="inline-flex items-center space-x-1.5 px-4 py-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg text-sm font-medium shadow-sm transition-colors active:scale-98"
+                    >
+                        <IconPlus className="w-4 h-4" stroke={1.5} />
+                        <span>New Recipe</span>
+                    </button>
+                </div>
             </div>
         </div>
     );

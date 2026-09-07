@@ -1,5 +1,6 @@
 import React from 'react';
 import { RecipeRowItem } from '../atoms/RecipeRowItem';
+import { RecipeTile } from '../atoms/RecipeTile';
 import type { Recipe } from '../../types/recipe';
 import { IconToolsKitchen2 } from '@tabler/icons-react';
 
@@ -8,6 +9,7 @@ export interface RecipeListProps {
   onRecipeClick?: (recipe: Recipe) => void;
   emptyMessage?: string;
   className?: string;
+  viewMode?: 'responsive' | 'list' | 'tile';
 }
 
 export const RecipeList: React.FC<RecipeListProps> = ({
@@ -15,6 +17,7 @@ export const RecipeList: React.FC<RecipeListProps> = ({
   onRecipeClick,
   emptyMessage = 'No recipes found matching your filters.',
   className = '',
+  viewMode = 'responsive',
 }) => {
   if (recipes.length === 0) {
     return (
@@ -30,15 +33,57 @@ export const RecipeList: React.FC<RecipeListProps> = ({
     );
   }
 
+  if (viewMode === 'list') {
+    return (
+      <div className={`flex flex-col gap-2.5 w-full ${className}`}>
+        {recipes.map((recipe) => (
+          <RecipeRowItem
+            key={recipe.id}
+            recipe={recipe}
+            onClick={onRecipeClick}
+          />
+        ))}
+      </div>
+    );
+  }
+
+  if (viewMode === 'tile') {
+    return (
+      <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full ${className}`}>
+        {recipes.map((recipe) => (
+          <RecipeTile
+            key={recipe.id}
+            recipe={recipe}
+            onClick={onRecipeClick}
+          />
+        ))}
+      </div>
+    );
+  }
+
   return (
-    <div className={`flex flex-col gap-2.5 w-full ${className}`}>
-      {recipes.map((recipe) => (
-        <RecipeRowItem
-          key={recipe.id}
-          recipe={recipe}
-          onClick={onRecipeClick}
-        />
-      ))}
+    <div className={`w-full ${className}`}>
+      {/* Mobile view (< md): Row items */}
+      <div className="flex flex-col gap-2.5 w-full md:hidden">
+        {recipes.map((recipe) => (
+          <RecipeRowItem
+            key={recipe.id}
+            recipe={recipe}
+            onClick={onRecipeClick}
+          />
+        ))}
+      </div>
+
+      {/* Desktop view (>= md): Tile grid */}
+      <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
+        {recipes.map((recipe) => (
+          <RecipeTile
+            key={recipe.id}
+            recipe={recipe}
+            onClick={onRecipeClick}
+          />
+        ))}
+      </div>
     </div>
   );
 };
