@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { IconRotate2, IconListCheck } from '@tabler/icons-react';
+import { IconRotate2, IconListCheck, IconChevronDown } from '@tabler/icons-react';
 import type { InstructionSection } from '../../types/recipe';
 import { InstructionViewerItem } from '../molecules/InstructionViewerItem';
 
@@ -13,6 +13,7 @@ export const RecipeViewerInstructions: React.FC<RecipeViewerInstructionsProps> =
     className = '',
 }) => {
     const [completedSteps, setCompletedSteps] = useState<Set<number>>(new Set());
+    const [collapsedSections, setCollapsedSections] = useState<Set<number>>(new Set());
 
     const totalSteps = instructions.reduce((acc, sec) => acc + (sec.steps?.length || 0), 0);
 
@@ -23,6 +24,18 @@ export const RecipeViewerInstructions: React.FC<RecipeViewerInstructionsProps> =
                 next.delete(stepNumber);
             } else {
                 next.add(stepNumber);
+            }
+            return next;
+        });
+    };
+
+    const toggleSectionCollapse = (secIdx: number) => {
+        setCollapsedSections((prev) => {
+            const next = new Set(prev);
+            if (next.has(secIdx)) {
+                next.delete(secIdx);
+            } else {
+                next.add(secIdx);
             }
             return next;
         });
@@ -69,28 +82,47 @@ export const RecipeViewerInstructions: React.FC<RecipeViewerInstructionsProps> =
             <div className="space-y-5">
                 {instructions.map((sec, secIdx) => {
                     if (!sec.steps || sec.steps.length === 0) return null;
+                    const isCollapsed = collapsedSections.has(secIdx);
+                    const sectionTitle = sec.title?.trim() || (hasSections ? `Phase ${secIdx + 1}` : '');
+
                     return (
                         <div key={secIdx} className="space-y-3">
-                            {hasSections && sec.title && (
-                                <div className="flex items-center justify-between px-1">
-                                    <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                                        {sec.title}
-                                    </h3>
+                            {sectionTitle && (
+                                <button
+                                    type="button"
+                                    onClick={() => toggleSectionCollapse(secIdx)}
+                                    className="w-full flex items-center justify-between px-1 py-1 text-left select-none group focus:outline-none"
+                                    aria-expanded={!isCollapsed}
+                                >
+                                    <div className="flex items-center gap-1.5">
+                                        <IconChevronDown
+                                            className={`w-4 h-4 text-muted-foreground group-hover:text-foreground transition-transform duration-200 ${
+                                                isCollapsed ? '-rotate-90' : 'rotate-0'
+                                            }`}
+                                            stroke={2}
+                                        />
+                                        <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground group-hover:text-foreground transition-colors">
+                                            {sectionTitle}
+                                        </h3>
+                                    </div>
                                     <span className="text-[11px] text-muted-foreground font-medium">
                                         {sec.steps.length} {sec.steps.length === 1 ? 'step' : 'steps'}
                                     </span>
+                                </button>
+                            )}
+
+                            {!isCollapsed && (
+                                <div className="space-y-3">
+                                    {sec.steps.map((step) => (
+                                        <InstructionViewerItem
+                                            key={step.stepNumber}
+                                            step={step}
+                                            isDone={completedSteps.has(step.stepNumber)}
+                                            onToggle={() => toggleStep(step.stepNumber)}
+                                        />
+                                    ))}
                                 </div>
                             )}
-                            <div className="space-y-3">
-                                {sec.steps.map((step) => (
-                                    <InstructionViewerItem
-                                        key={step.stepNumber}
-                                        step={step}
-                                        isDone={completedSteps.has(step.stepNumber)}
-                                        onToggle={() => toggleStep(step.stepNumber)}
-                                    />
-                                ))}
-                            </div>
                         </div>
                     );
                 })}
