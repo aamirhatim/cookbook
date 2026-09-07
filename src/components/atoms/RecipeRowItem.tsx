@@ -49,7 +49,7 @@ export const RecipeRowItem: React.FC<RecipeRowItemProps> = ({
                     <img
                         src={recipe.imageUrl}
                         alt={recipe.title}
-                        className="w-12 h-12 sm:w-14 sm:h-14 rounded-lg object-cover shrink-0 border border-border"
+                        className="w-20 h-20 rounded-lg object-cover shrink-0 border border-border"
                         loading="lazy"
                     />
                 ) : (
@@ -68,7 +68,26 @@ export const RecipeRowItem: React.FC<RecipeRowItemProps> = ({
                             </span>
                         )}
                     </div>
-                    <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground flex-wrap">
+
+                    {(recipe.cuisine || (recipe.tags && recipe.tags.length > 0)) && (
+                        <div className="flex items-center gap-1.5 mt-1.5 flex-nowrap overflow-hidden">
+                            {recipe.cuisine && (
+                                <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-background border border-border/70 text-foreground capitalize shrink-0">
+                                    {recipe.cuisine}
+                                </span>
+                            )}
+                            {recipe.tags?.filter(Boolean).map((tag) => (
+                                <span
+                                    key={tag}
+                                    className="px-2 py-0.5 rounded-full text-xs font-medium bg-background border border-border/70 text-foreground capitalize shrink-0"
+                                >
+                                    {tag}
+                                </span>
+                            ))}
+                        </div>
+                    )}
+
+                    <div className="flex items-center gap-2 mt-1.5 text-xs text-muted-foreground flex-wrap">
                         {totalTime > 0 && (
                             <span className="flex items-center gap-1">
                                 <IconStopwatch className="w-3.5 h-3.5" stroke={1} />

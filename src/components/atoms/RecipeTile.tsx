@@ -6,7 +6,6 @@ import {
     IconHexagonLetterM,
     IconHexagonLetterH,
     IconCarrot,
-    IconUsers,
 } from '@tabler/icons-react';
 import type { Recipe } from '../../types/recipe';
 
@@ -87,6 +86,25 @@ export const RecipeTile: React.FC<RecipeTileProps> = ({
                         )}
                     </div>
                 </div>
+
+                {/* Floating Bottom Tags */}
+                {recipe.tags && recipe.tags.length > 0 && (
+                    <div className="absolute bottom-2.5 right-2.5 flex items-center gap-1.5 pointer-events-none flex-wrap justify-end max-w-[85%]">
+                        {(recipe.tags.length <= 3 ? recipe.tags : recipe.tags.slice(0, 2)).map((tag) => (
+                            <span
+                                key={tag}
+                                className="px-2 py-0.5 rounded-full text-xs font-medium bg-background/85 backdrop-blur-md text-foreground border border-border/50 shadow-sm capitalize"
+                            >
+                                {tag}
+                            </span>
+                        ))}
+                        {recipe.tags.length > 3 && (
+                            <span className="px-1.5 py-0.5 rounded-full text-xs font-medium bg-background/85 backdrop-blur-md text-foreground/80 border border-border/50 shadow-sm">
+                                +{recipe.tags.length - 2}
+                            </span>
+                        )}
+                    </div>
+                )}
             </div>
 
             {/* Content Info */}
@@ -102,29 +120,24 @@ export const RecipeTile: React.FC<RecipeTileProps> = ({
 
                 {/* Metrics Footer */}
                 <div className="pt-2 border-t border-border/50 flex items-center justify-between text-xs text-muted-foreground">
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-1 min-w-0">
                         <IconStopwatch className="w-3.5 h-3.5 shrink-0" stroke={1.5} />
-                        <span>{totalTime > 0 ? `${totalTime}m total` : 'Quick prep'}</span>
+                        <span className="truncate">
+                            {totalTime > 0
+                                ? `Prep: ${recipe.prepTimeMinutes || 0}m, Cook: ${recipe.cookTimeMinutes || 0}m`
+                                : 'Quick prep'}
+                        </span>
                     </div>
 
-                    <div className="flex items-center gap-2.5">
-                        {recipe.servings ? (
-                            <span className="flex items-center gap-0.5" title={`${recipe.servings} servings`}>
-                                <IconUsers className="w-3.5 h-3.5" stroke={1.5} />
-                                <span>{recipe.servings}</span>
-                            </span>
-                        ) : null}
-
-                        {DifficultyIcon && (
-                            <span
-                                className="flex items-center gap-1 capitalize"
-                                title={`Difficulty: ${recipe.difficulty}`}
-                            >
-                                <DifficultyIcon className="w-3.5 h-3.5" stroke={1.5} />
-                                <span className="hidden sm:inline">{recipe.difficulty}</span>
-                            </span>
-                        )}
-                    </div>
+                    {DifficultyIcon && (
+                        <div
+                            className="flex items-center gap-1 shrink-0 capitalize"
+                            title={`Difficulty: ${recipe.difficulty}`}
+                        >
+                            <DifficultyIcon className="w-3.5 h-3.5" stroke={1.5} />
+                            <span className="hidden sm:inline">{recipe.difficulty}</span>
+                        </div>
+                    )}
                 </div>
             </div>
         </button>
