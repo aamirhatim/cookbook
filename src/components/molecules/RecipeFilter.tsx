@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Searchbar } from '../atoms/Searchbar';
 import { DropdownMenu } from './DropdownMenu';
 import type { Difficulty } from '../../types/recipe';
-import { IconStopwatch, IconWeight, IconWorldMap, IconX } from '@tabler/icons-react';
+import { IconStopwatch, IconHexagonAsterisk, IconWorldMap, IconX } from '@tabler/icons-react';
 
 export interface RecipeFilterCriteria {
   searchText: string;
@@ -123,7 +123,7 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
           />
 
           <DropdownMenu
-            icon={IconWeight}
+            icon={IconHexagonAsterisk}
             title="Filter by Difficulty"
             type="multi"
             items={DIFFICULTY_OPTIONS}

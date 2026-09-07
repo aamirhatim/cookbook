@@ -1,5 +1,11 @@
 import React from 'react';
-import { IconStopwatch, IconChefHat } from '@tabler/icons-react';
+import {
+  IconStopwatch,
+  IconChefHat,
+  IconHexagonLetterE,
+  IconHexagonLetterM,
+  IconHexagonLetterH,
+} from '@tabler/icons-react';
 import type { Recipe } from '../../types/recipe';
 
 export interface RecipeRowItemProps {
@@ -7,6 +13,12 @@ export interface RecipeRowItemProps {
   onClick?: (recipe: Recipe) => void;
   className?: string;
 }
+
+const difficultyIcons = {
+  easy: IconHexagonLetterE,
+  medium: IconHexagonLetterM,
+  hard: IconHexagonLetterH,
+} as const;
 
 export const RecipeRowItem: React.FC<RecipeRowItemProps> = ({
   recipe,
@@ -22,11 +34,7 @@ export const RecipeRowItem: React.FC<RecipeRowItemProps> = ({
     }
   };
 
-  const difficultyColors = {
-    easy: 'text-primary bg-primary/10 border-primary/20',
-    medium: 'text-accent-foreground bg-accent/15 border-accent/30',
-    hard: 'text-destructive bg-destructive/10 border-destructive/20',
-  };
+  const DifficultyIcon = recipe.difficulty ? difficultyIcons[recipe.difficulty] : null;
 
   return (
     <button
@@ -72,26 +80,18 @@ export const RecipeRowItem: React.FC<RecipeRowItemProps> = ({
                 {totalTime}m
               </span>
             )}
-            {recipe.servings && (
-              <>
-                <span>•</span>
-                <span>{recipe.servings} servings</span>
-              </>
+            {(recipe.cuisine || totalTime > 0) && DifficultyIcon && <span>•</span>}
+            {DifficultyIcon && (
+              <span
+                className="flex items-center text-muted-foreground"
+                title={`Difficulty: ${recipe.difficulty}`}
+                aria-label={`Difficulty: ${recipe.difficulty}`}
+              >
+                <DifficultyIcon className="w-3.5 h-3.5" stroke={1.5} />
+              </span>
             )}
           </div>
         </div>
-      </div>
-
-      <div className="flex items-center gap-2 shrink-0 self-start sm:self-center">
-        {recipe.difficulty && (
-          <span
-            className={`text-xs px-2.5 py-1 rounded-md border font-medium capitalize ${
-              difficultyColors[recipe.difficulty] || 'text-muted-foreground bg-muted border-border'
-            }`}
-          >
-            {recipe.difficulty}
-          </span>
-        )}
       </div>
     </button>
   );
