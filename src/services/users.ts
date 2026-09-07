@@ -1,0 +1,123 @@
+import { doc, setDoc, getDoc, deleteDoc, serverTimestamp } from 'firebase/firestore';
+import { deleteUser, signOut, User } from 'firebase/auth';
+import { db, auth } from '../lib/firebase';
+import type { UserProfile } from '../types/user';
+
+export interface CreateUserProfileInput {
+    uid: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+}
+
+/**
+ * Creates or overwrites a user profile document in Firestore `users/{uid}`.
+ */
+export async function createUserProfile(input: CreateUserProfileInput): Promise<UserProfile> {
+    const { uid, firstName, lastName, email } = input;
+    const displayName = `${firstName} ${lastName}`.trim();
+
+    const userDocRef = doc(db, 'users', uid);
+    const profileData: UserProfile = {
+        uid,
+        firstName,
+        lastName,
+        displayName,
+        email,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+    };
+
+    await setDoc(userDocRef, profileData);
+
+    return profileData;
+}
+
+/**
+ * Retrieves a user profile document from Firestore `users/{uid}`.
+ */
+export async function getUserProfile(uid: string): Promise<UserProfile | null> {
+    const userDocRef = doc(db, 'users', uid);
+    const snapshot = await getDoc(userDocRef);
+
+    if (!snapshot.exists()) {
+        return null;
+    }
+
+    return snapshot.data() as UserProfile;
+}
+
+/**
+ * Sets custom claims (e.g. role: 'user') for a user in Firebase Auth.
+ * When running against the Auth emulator, calls the emulator API directly and forces token refresh.
+ */
+export async function setUserCustomClaim(uid: string, role: string = 'user'): Promise<void> {
+    const isEmulator =
+        import.meta.env.VITE_USE_FIREBASE_EMULATORS === 'true' ||
+        (typeof window !== 'undefined' && window.location.hostname === 'localhost');
+
+    if (isEmulator) {
+        try {
+            const projectId = import.meta.env.VITE_FIREBASE_PROJECT_ID || 'recipe-book-f7e7f';
+            const res = await fetch(
+                `http://127.0.0.1:9099/identitytoolkit.googleapis.com/v1/projects/${projectId}/accounts:update?key=fake-api-key`,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer owner',
+                    },
+                    body: JSON.stringify({
+                        localId: uid,
+                        customAttributes: JSON.stringify({ role }),
+                    }),
+                }
+            );
+
+            if (!res.ok) {
+                console.warn('Failed to set custom claim in Auth emulator:', await res.text());
+            } else if (auth.currentUser && auth.currentUser.uid === uid) {
+                await auth.currentUser.getIdToken(true);
+            }
+        } catch (err) {
+            console.warn('Could not set custom claim in Auth emulator:', err);
+        }
+    }
+}
+
+/**
+ * Deletes a user profile document from Firestore `users/{uid}`.
+ */
+export async function deleteUserProfile(uid: string): Promise<void> {
+    const userDocRef = doc(db, 'users', uid);
+    await deleteDoc(userDocRef);
+}
+
+/**
+ * Rolls back user creation by deleting their Firestore profile document and Firebase Auth account.
+ */
+export async function rollbackUserCreation(user: User): Promise<void> {
+    // 1. Delete from Firestore if exists
+    try {
+        await deleteUserProfile(user.uid);
+    } catch (err) {
+        console.error('Error deleting user profile from Firestore during rollback:', err);
+    }
+
+    // 2. Delete user from Firebase Auth
+    try {
+        await deleteUser(user);
+    } catch (err) {
+        console.error('Error deleting user from Firebase Auth during rollback:', err);
+    }
+
+    // 3. Ensure signed out
+    try {
+        if (auth.currentUser) {
+            await signOut(auth);
+        }
+    } catch (err) {
+        console.error('Error signing out during rollback:', err);
+    }
+}
+

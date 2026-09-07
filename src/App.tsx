@@ -4,6 +4,7 @@ import { ToastProvider } from './contexts/ToastContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { Home } from './pages/Home';
 import { Login } from './pages/Login';
+import { SignUp } from './pages/SignUp';
 import { Admin } from './pages/Admin';
 import { RecipeEditor } from './pages/RecipeEditor';
 
@@ -15,6 +16,7 @@ export default function App() {
                     <main className="flex-1 min-w-0 w-full">
                         <Routes>
                             <Route path="/login" element={<Login />} />
+                            <Route path="/signup" element={<SignUp />} />
 
                             {/* All app routes are protected: user must log in to access */}
                             <Route element={<ProtectedRoute />}>
