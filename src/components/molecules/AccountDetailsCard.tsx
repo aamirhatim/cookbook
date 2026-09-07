@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { IconMail, IconLogout, IconShieldCheck, IconTrash } from '@tabler/icons-react';
 import { ButtonIcon } from '../atoms/ButtonIcon';
 import type { UserProfile } from '../../types/user';
@@ -65,6 +66,20 @@ export const AccountDetailsCard: React.FC<AccountDetailsCardProps> = ({
                     <IconMail className="w-4 h-4 shrink-0 text-muted-foreground" stroke={1.5} />
                     <span className="truncate">{email}</span>
                 </p>
+
+                {/* Admin Navigation Link */}
+                {role === 'admin' && (
+                    <div className="pt-3">
+                        <Link
+                            to="/admin/recipes"
+                            className={`inline-flex items-center text-sm font-medium text-primary hover:underline transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded ${
+                                isLoggingOut || isDeletingAccount ? 'pointer-events-none opacity-50' : ''
+                            }`}
+                        >
+                            Go to recipe list
+                        </Link>
+                    </div>
+                )}
             </div>
 
             {/* Account Actions */}
