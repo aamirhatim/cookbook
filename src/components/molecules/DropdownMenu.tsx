@@ -67,7 +67,6 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({
           active={isOpen || hasActiveFilters}
           title={title}
           ariaLabel={title}
-          className="border border-border"
         />
         {hasActiveFilters && (
           <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 rounded-full bg-primary ring-2 ring-background pointer-events-none" />

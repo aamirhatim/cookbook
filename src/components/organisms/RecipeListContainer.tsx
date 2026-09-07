@@ -25,6 +25,7 @@ export const RecipeListContainer: React.FC<RecipeListContainerProps> = ({
     maxTimeMinutes: null,
     difficulties: [],
     cuisines: [],
+    isVeg: false,
   });
 
   useEffect(() => {
@@ -105,6 +106,11 @@ export const RecipeListContainer: React.FC<RecipeListContainerProps> = ({
         if (!filters.cuisines.includes(recipeCuisine)) {
           return false;
         }
+      }
+
+      // 5. Vegetarian filter
+      if (filters.isVeg && !recipe.isVeg) {
+        return false;
       }
 
       return true;

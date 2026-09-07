@@ -146,6 +146,10 @@ function buildRecipeQueryConstraints(filters: RecipeFilters = {}): QueryConstrai
         constraints.push(where('difficulty', '==', filters.difficulty));
     }
 
+    if (filters.isVeg !== undefined) {
+        constraints.push(where('isVeg', '==', filters.isVeg));
+    }
+
     // Order by most recently created
     constraints.push(orderBy('createdAt', 'desc'));
 

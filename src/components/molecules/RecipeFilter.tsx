@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Searchbar } from '../atoms/Searchbar';
+import { ButtonIcon } from '../atoms/ButtonIcon';
 import { DropdownMenu } from './DropdownMenu';
 import type { Difficulty } from '../../types/recipe';
-import { IconStopwatch, IconHexagonAsterisk, IconWorldMap, IconX } from '@tabler/icons-react';
+import { IconStopwatch, IconHexagonAsterisk, IconWorldMap, IconCarrot, IconX } from '@tabler/icons-react';
 
 export interface RecipeFilterCriteria {
   searchText: string;
   maxTimeMinutes: number | null;
   difficulties: Difficulty[];
   cuisines: string[];
+  isVeg: boolean;
 }
 
 export interface RecipeFilterProps {
@@ -40,6 +42,7 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
   const [timeFilter, setTimeFilter] = useState<string>('all');
   const [difficulties, setDifficulties] = useState<Difficulty[]>([]);
   const [cuisines, setCuisines] = useState<string[]>([]);
+  const [isVeg, setIsVeg] = useState<boolean>(false);
 
   // Debounce search input to avoid filtering on every keystroke
   useEffect(() => {
@@ -60,8 +63,9 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
       maxTimeMinutes: isNaN(maxTime as number) ? null : maxTime,
       difficulties,
       cuisines,
+      isVeg,
     });
-  }, [debouncedSearch, timeFilter, difficulties, cuisines, onFilterChange]);
+  }, [debouncedSearch, timeFilter, difficulties, cuisines, isVeg, onFilterChange]);
 
   const handleTimeSelect = (val: string) => {
     setTimeFilter(val);
@@ -84,7 +88,8 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
     searchInput !== '' ||
     timeFilter !== 'all' ||
     difficulties.length > 0 ||
-    cuisines.length > 0;
+    cuisines.length > 0 ||
+    isVeg;
 
   const handleResetFilters = () => {
     setSearchInput('');
@@ -92,6 +97,7 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
     setTimeFilter('all');
     setDifficulties([]);
     setCuisines([]);
+    setIsVeg(false);
   };
 
   const cuisineOptions = availableCuisines.map((c) => ({
@@ -110,7 +116,7 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
           className="flex-1"
         />
 
-        {/* Filter Dropdowns */}
+        {/* Filter Dropdowns & Toggles */}
         <div className="flex items-center gap-1.5 shrink-0">
           <DropdownMenu
             icon={IconStopwatch}
@@ -143,6 +149,15 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
               hasActiveFilters={cuisines.length > 0}
             />
           )}
+
+          <ButtonIcon
+            icon={IconCarrot}
+            isToggle
+            active={isVeg}
+            onToggle={setIsVeg}
+            title={isVeg ? 'Vegetarian only (Active)' : 'Filter by Vegetarian'}
+            ariaLabel="Filter by Vegetarian"
+          />
         </div>
       </div>
 
@@ -195,6 +210,19 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
               </button>
             </span>
           ))}
+          {isVeg && (
+            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface border border-border text-foreground font-medium">
+              Vegetarian
+              <button
+                type="button"
+                onClick={() => setIsVeg(false)}
+                className="hover:text-destructive"
+                aria-label="Remove vegetarian filter"
+              >
+                <IconX className="w-3 h-3" stroke={1} />
+              </button>
+            </span>
+          )}
           <button
             type="button"
             onClick={handleResetFilters}

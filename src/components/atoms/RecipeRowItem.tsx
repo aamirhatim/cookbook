@@ -5,6 +5,7 @@ import {
   IconHexagonLetterE,
   IconHexagonLetterM,
   IconHexagonLetterH,
+  IconCarrot,
 } from '@tabler/icons-react';
 import type { Recipe } from '../../types/recipe';
 
@@ -88,6 +89,16 @@ export const RecipeRowItem: React.FC<RecipeRowItemProps> = ({
                 aria-label={`Difficulty: ${recipe.difficulty}`}
               >
                 <DifficultyIcon className="w-3.5 h-3.5" stroke={1.5} />
+              </span>
+            )}
+            {(recipe.cuisine || totalTime > 0 || DifficultyIcon) && recipe.isVeg && <span>•</span>}
+            {recipe.isVeg && (
+              <span
+                className="flex items-center text-muted-foreground"
+                title="Vegetarian"
+                aria-label="Vegetarian"
+              >
+                <IconCarrot className="w-3.5 h-3.5" stroke={1.5} />
               </span>
             )}
           </div>

@@ -21,6 +21,7 @@ export interface Recipe {
     title: string;
     cuisine: string;
     description: string;
+    isVeg: boolean;
     prepTimeMinutes: number;
     cookTimeMinutes: number;
     equipment: string[];
@@ -46,6 +47,7 @@ export interface CreateRecipeInput {
     title: string;
     cuisine: string;
     description: string;
+    isVeg: boolean;
     prepTimeMinutes: number;
     cookTimeMinutes: number;
     servings: number;
@@ -72,6 +74,7 @@ export interface RecipeFilters {
     cuisine?: string;
     tag?: string;
     difficulty?: Difficulty;
+    isVeg?: boolean;
     includePrivate?: boolean;
     limitCount?: number;
 }
