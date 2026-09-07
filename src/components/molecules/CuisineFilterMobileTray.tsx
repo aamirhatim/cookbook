@@ -1,5 +1,4 @@
 import React from 'react';
-import { IconCheck } from '@tabler/icons-react';
 
 export interface CuisineOption {
     id: string;
