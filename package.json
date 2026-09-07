@@ -13,8 +13,8 @@
         "emulators:export": "firebase emulators:export ./emulator-data -f"
     },
     "dependencies": {
+        "@tabler/icons-react": "^3.46.0",
         "firebase": "^11.4.0",
-        "lucide-react": "^1.16.0",
         "react": "^19.0.0",
         "react-dom": "^19.0.0",
         "react-router-dom": "^7.3.0"

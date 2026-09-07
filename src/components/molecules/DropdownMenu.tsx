@@ -1,9 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ButtonIcon, LucideIconName } from '../atoms/ButtonIcon';
+import type { Icon, IconProps } from '@tabler/icons-react';
+import { ButtonIcon } from '../atoms/ButtonIcon';
 import { DropdownList, DropdownItem } from './DropdownList';
 
 export interface DropdownMenuProps {
-  iconName: LucideIconName;
+  icon: React.ComponentType<IconProps> | Icon;
   title: string;
   type: 'radio' | 'multi';
   items: DropdownItem[];
@@ -14,7 +15,7 @@ export interface DropdownMenuProps {
 }
 
 export const DropdownMenu: React.FC<DropdownMenuProps> = ({
-  iconName,
+  icon,
   title,
   type,
   items,
@@ -61,7 +62,7 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({
     <div ref={containerRef} className={`relative inline-block ${className}`}>
       <div className="relative">
         <ButtonIcon
-          iconName={iconName}
+          icon={icon}
           onClick={toggleOpen}
           active={isOpen || hasActiveFilters}
           title={title}

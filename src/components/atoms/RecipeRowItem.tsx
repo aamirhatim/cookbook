@@ -1,5 +1,5 @@
 import React from 'react';
-import { Clock, ChefHat } from 'lucide-react';
+import { IconStopwatch, IconChefHat } from '@tabler/icons-react';
 import type { Recipe } from '../../types/recipe';
 
 export interface RecipeRowItemProps {
@@ -45,7 +45,7 @@ export const RecipeRowItem: React.FC<RecipeRowItemProps> = ({
           />
         ) : (
           <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-lg bg-surface-hover border border-border shrink-0 flex items-center justify-center text-muted-foreground">
-            <ChefHat className="w-6 h-6" />
+            <IconChefHat className="w-6 h-6" stroke={1} />
           </div>
         )}
         <div className="min-w-0 flex-1">
@@ -68,7 +68,7 @@ export const RecipeRowItem: React.FC<RecipeRowItemProps> = ({
             {recipe.cuisine && totalTime > 0 && <span>•</span>}
             {totalTime > 0 && (
               <span className="flex items-center gap-1">
-                <Clock className="w-3.5 h-3.5" />
+                <IconStopwatch className="w-3.5 h-3.5" stroke={1} />
                 {totalTime}m
               </span>
             )}

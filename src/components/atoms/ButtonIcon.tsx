@@ -1,19 +1,19 @@
 import React from 'react';
-import { icons } from 'lucide-react';
-
-export type LucideIconName = keyof typeof icons;
+import type { Icon, IconProps } from '@tabler/icons-react';
 
 export interface ButtonIconProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  iconName: LucideIconName;
+  icon: React.ComponentType<IconProps> | Icon;
   iconSize?: number;
+  iconStroke?: number;
   active?: boolean;
   title?: string;
   ariaLabel?: string;
 }
 
 export const ButtonIcon: React.FC<ButtonIconProps> = ({
-  iconName,
+  icon: IconComponent,
   iconSize = 20,
+  iconStroke = 1,
   active = false,
   title,
   ariaLabel,
@@ -22,8 +22,6 @@ export const ButtonIcon: React.FC<ButtonIconProps> = ({
   disabled = false,
   ...rest
 }) => {
-  const IconComponent = icons[iconName];
-
   return (
     <button
       type="button"
@@ -39,11 +37,12 @@ export const ButtonIcon: React.FC<ButtonIconProps> = ({
       {...rest}
     >
       {IconComponent ? (
-        <IconComponent size={iconSize} className="shrink-0" />
+        <IconComponent size={iconSize} stroke={iconStroke} className="shrink-0" />
       ) : (
         <span className="text-xs font-mono text-muted-foreground">?</span>
       )}
     </button>
   );
 };
+
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search, X } from 'lucide-react';
+import { IconSearch, IconX } from '@tabler/icons-react';
 
 export interface SearchbarProps {
   value: string;
@@ -28,7 +28,7 @@ export const Searchbar: React.FC<SearchbarProps> = ({
   return (
     <div className={`relative flex items-center w-full min-w-0 ${className}`}>
       <div className="absolute left-3.5 pointer-events-none text-muted-foreground flex items-center justify-center">
-        <Search className="w-5 h-5" />
+        <IconSearch className="w-5 h-5" stroke={1} />
       </div>
       <input
         type="text"
@@ -46,7 +46,7 @@ export const Searchbar: React.FC<SearchbarProps> = ({
           aria-label="Clear search"
           className="absolute right-1 min-w-[36px] min-h-[36px] flex items-center justify-center text-muted-foreground hover:text-foreground rounded-full hover:bg-surface-hover transition-colors"
         >
-          <X className="w-4 h-4" />
+          <IconX className="w-4 h-4" stroke={1} />
         </button>
       )}
     </div>

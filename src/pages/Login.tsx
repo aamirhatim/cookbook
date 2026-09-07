@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
-import { BookOpen } from 'lucide-react';
+import { IconNotebook } from '@tabler/icons-react';
 import { auth } from '../lib/firebase';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -36,7 +36,7 @@ export function Login() {
         <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-8 px-4">
             <div className="text-center space-y-2">
                 <div className="w-16 h-16 bg-secondary text-secondary-foreground rounded-2xl flex items-center justify-center mx-auto mb-4">
-                    <BookOpen className="w-8 h-8" />
+                    <IconNotebook className="w-8 h-8" stroke={1} />
                 </div>
                 <h1 className="text-2xl font-bold text-foreground">Admin Access</h1>
                 <p className="text-sm text-muted-foreground max-w-xs mx-auto">

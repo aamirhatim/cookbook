@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Searchbar } from '../atoms/Searchbar';
 import { DropdownMenu } from './DropdownMenu';
 import type { Difficulty } from '../../types/recipe';
-import { X } from 'lucide-react';
+import { IconStopwatch, IconWeight, IconWorldMap, IconX } from '@tabler/icons-react';
 
 export interface RecipeFilterCriteria {
   searchText: string;
@@ -113,7 +113,7 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
         {/* Filter Dropdowns */}
         <div className="flex items-center gap-1.5 shrink-0">
           <DropdownMenu
-            iconName="Clock"
+            icon={IconStopwatch}
             title="Filter by Time"
             type="radio"
             items={TIME_OPTIONS}
@@ -123,7 +123,7 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
           />
 
           <DropdownMenu
-            iconName="Flame"
+            icon={IconWeight}
             title="Filter by Difficulty"
             type="multi"
             items={DIFFICULTY_OPTIONS}
@@ -134,7 +134,7 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
 
           {cuisineOptions.length > 0 && (
             <DropdownMenu
-              iconName="Globe"
+              icon={IconWorldMap}
               title="Filter by Cuisine"
               type="multi"
               items={cuisineOptions}
@@ -159,7 +159,7 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
                 className="hover:text-destructive"
                 aria-label="Remove time filter"
               >
-                <X className="w-3 h-3" />
+                <IconX className="w-3 h-3" stroke={1} />
               </button>
             </span>
           )}
@@ -175,7 +175,7 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
                 className="hover:text-destructive"
                 aria-label={`Remove ${diff} filter`}
               >
-                <X className="w-3 h-3" />
+                <IconX className="w-3 h-3" stroke={1} />
               </button>
             </span>
           ))}
@@ -191,7 +191,7 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
                 className="hover:text-destructive"
                 aria-label={`Remove ${c} filter`}
               >
-                <X className="w-3 h-3" />
+                <IconX className="w-3 h-3" stroke={1} />
               </button>
             </span>
           ))}

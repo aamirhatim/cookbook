@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Square, SquareCheck } from 'lucide-react';
+import { IconSquare, IconSquareCheck } from '@tabler/icons-react';
 
 export interface MultiSelectItemProps {
   label?: string;
@@ -55,9 +55,9 @@ export const MultiSelectItem: React.FC<MultiSelectItemProps> = ({
     >
       <span className="shrink-0 flex items-center justify-center">
         {isSelected ? (
-          <SquareCheck className="w-5 h-5 text-primary" />
+          <IconSquareCheck className="w-5 h-5 text-primary" stroke={1} />
         ) : (
-          <Square className="w-5 h-5 text-muted-foreground" />
+          <IconSquare className="w-5 h-5 text-muted-foreground" stroke={1} />
         )}
       </span>
       {label && <span className="text-sm font-medium leading-none">{label}</span>}

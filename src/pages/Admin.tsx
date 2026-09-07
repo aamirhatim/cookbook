@@ -1,5 +1,5 @@
 import { signOut } from 'firebase/auth';
-import { LogOut } from 'lucide-react';
+import { IconLogout } from '@tabler/icons-react';
 import { auth } from '../lib/firebase';
 import { RecipeListContainer } from '../components/organisms/RecipeListContainer';
 
@@ -29,7 +29,7 @@ export function Admin() {
                     title="Sign Out"
                     aria-label="Sign Out"
                 >
-                    <LogOut className="w-5 h-5" />
+                    <IconLogout className="w-5 h-5" stroke={1} />
                 </button>
             </header>
 

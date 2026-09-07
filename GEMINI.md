@@ -8,7 +8,7 @@ A web-based, mobile-first recipe book application for creating, managing, organi
 - **Language**: [TypeScript](https://www.typescriptlang.org/) (Strict mode enabled)
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/) (Mobile-first utility classes)
 - **Routing**: [React Router v7](https://reactrouter.com/)
-- **Icons**: [lucide-react](https://lucide.dev/)
+- **Icons**: [@tabler/icons-react](https://tabler.io/icons)
 - **Backend & Database**: [Firebase](https://firebase.google.com/)
   - **Firestore**: Document database for recipes, collections, and user profiles
   - **Authentication**: Firebase Auth (Email/Password, Google OAuth)

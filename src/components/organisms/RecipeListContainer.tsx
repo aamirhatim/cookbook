@@ -3,7 +3,7 @@ import { subscribeToRecipes } from '../../services/recipes';
 import { RecipeFilter, RecipeFilterCriteria } from '../molecules/RecipeFilter';
 import { RecipeList } from '../molecules/RecipeList';
 import type { Recipe } from '../../types/recipe';
-import { Loader2 } from 'lucide-react';
+import { IconLoader2 } from '@tabler/icons-react';
 
 export interface RecipeListContainerProps {
   authorId?: string;
@@ -120,7 +120,7 @@ export const RecipeListContainer: React.FC<RecipeListContainerProps> = ({
 
       {loading ? (
         <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
-          <Loader2 className="w-8 h-8 animate-spin text-primary mb-2" />
+          <IconLoader2 className="w-8 h-8 animate-spin text-primary mb-2" stroke={1} />
           <p className="text-sm">Loading recipes...</p>
         </div>
       ) : error ? (

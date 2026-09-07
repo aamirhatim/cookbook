@@ -1,5 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
-import { BookOpen, PlusCircle, Search } from 'lucide-react';
+import { IconNotebook, IconPlus, IconSearch } from '@tabler/icons-react';
 import { AuthProvider } from './contexts/AuthContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { Login } from './pages/Login';
@@ -18,7 +18,7 @@ function Home() {
 
             {/* Quick Search Bar */}
             <div className="relative">
-                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
+                <IconSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" stroke={1} />
                 <input
                     type="text"
                     placeholder="Search recipes, tags, ingredients..."
@@ -40,14 +40,14 @@ function Home() {
             {/* Empty State / Get Started */}
             <div className="bg-surface border border-dashed border-border rounded-2xl p-8 text-center space-y-3">
                 <div className="w-12 h-12 bg-secondary text-secondary-foreground rounded-full flex items-center justify-center mx-auto">
-                    <BookOpen className="w-6 h-6" />
+                    <IconNotebook className="w-6 h-6" stroke={1} />
                 </div>
                 <h3 className="font-semibold text-foreground">No recipes yet</h3>
                 <p className="text-xs sm:text-sm text-muted-foreground max-w-sm mx-auto">
                     Your digital kitchen is ready. Start adding your first recipe or explore collections.
                 </p>
                 <button className="inline-flex items-center space-x-1.5 px-4 py-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg text-sm font-medium shadow-sm transition-colors active:scale-98">
-                    <PlusCircle className="w-4 h-4" />
+                    <IconPlus className="w-4 h-4" stroke={1} />
                     <span>New Recipe</span>
                 </button>
             </div>
