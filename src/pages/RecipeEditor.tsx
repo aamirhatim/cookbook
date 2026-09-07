@@ -42,7 +42,8 @@ export function RecipeEditor() {
     difficulty: 'medium',
     tags: [],
     ingredients: [],
-    instructions: []
+    instructions: [],
+    isPrivate: false
   });
 
   useEffect(() => {
@@ -107,6 +108,19 @@ export function RecipeEditor() {
       setSaving(true);
       setError(null);
 
+      const sanitizedIngredients = (formData.ingredients || []).map((ing) => ({
+        name: ing.name || '',
+        amount: ing.amount || 0,
+        unit: ing.unit || '',
+        ...(ing.notes ? { notes: ing.notes } : {})
+      }));
+
+      const sanitizedInstructions = (formData.instructions || []).map((step, idx) => ({
+        stepNumber: step.stepNumber || idx + 1,
+        instruction: step.instruction || '',
+        ...(step.tip ? { tip: step.tip } : {})
+      }));
+
       if (isNew) {
         const newRecipeInput: CreateRecipeInput = {
           title: formData.title || 'Untitled Recipe',
@@ -118,8 +132,8 @@ export function RecipeEditor() {
           servings: formData.servings || 1,
           difficulty: formData.difficulty || 'medium',
           tags: formData.tags || [],
-          ingredients: formData.ingredients || [],
-          instructions: formData.instructions || [],
+          ingredients: sanitizedIngredients,
+          instructions: sanitizedInstructions,
           authorId: user.uid,
           authorName: user.displayName || 'Unknown Author',
           isPrivate: formData.isPrivate || false
@@ -127,18 +141,18 @@ export function RecipeEditor() {
         await createRecipe(newRecipeInput);
       } else {
         const updateRecipeInput: UpdateRecipeInput = {
-          title: formData.title,
-          cuisine: formData.cuisine,
-          description: formData.description,
-          isVeg: formData.isVeg,
-          prepTimeMinutes: formData.prepTimeMinutes,
-          cookTimeMinutes: formData.cookTimeMinutes,
-          servings: formData.servings,
-          difficulty: formData.difficulty,
-          tags: formData.tags,
-          ingredients: formData.ingredients,
-          instructions: formData.instructions,
-          isPrivate: formData.isPrivate
+          title: formData.title ?? 'Untitled Recipe',
+          cuisine: formData.cuisine ?? '',
+          description: formData.description ?? '',
+          isVeg: formData.isVeg ?? false,
+          prepTimeMinutes: formData.prepTimeMinutes ?? 0,
+          cookTimeMinutes: formData.cookTimeMinutes ?? 0,
+          servings: formData.servings ?? 1,
+          difficulty: formData.difficulty ?? 'medium',
+          tags: formData.tags ?? [],
+          ingredients: sanitizedIngredients,
+          instructions: sanitizedInstructions,
+          isPrivate: formData.isPrivate ?? false
         };
         await updateRecipe(recipeId!, updateRecipeInput);
       }

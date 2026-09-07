@@ -1,7 +1,6 @@
 import React from 'react';
 import { InstructionStep } from '../../types/recipe';
 import { Textarea } from '../atoms/Textarea';
-import { Input } from '../atoms/Input';
 import { IconPlus, IconTrash, IconBulb } from '@tabler/icons-react';
 
 export interface InstructionsFormListProps {
@@ -24,9 +23,16 @@ export const InstructionsFormList: React.FC<InstructionsFormListProps> = ({ inst
     onChange(newInstructions);
   };
 
-  const handleChange = (index: number, field: keyof InstructionStep, value: string | number | undefined) => {
+  const handleChange = (index: number, field: keyof InstructionStep, value: string | number) => {
     const newInstructions = [...instructions];
     newInstructions[index] = { ...newInstructions[index], [field]: value };
+    onChange(newInstructions);
+  };
+
+  const handleRemoveTip = (index: number) => {
+    const newInstructions = [...instructions];
+    const { tip, ...rest } = newInstructions[index];
+    newInstructions[index] = rest;
     onChange(newInstructions);
   };
 
@@ -66,7 +72,7 @@ export const InstructionsFormList: React.FC<InstructionsFormListProps> = ({ inst
               />
               <button
                 type="button"
-                onClick={() => handleChange(i, 'tip', undefined)}
+                onClick={() => handleRemoveTip(i)}
                 className="absolute top-2 right-2 text-muted-foreground hover:text-destructive transition-colors p-1"
               >
                 <IconTrash className="w-4 h-4" stroke={1.5} />

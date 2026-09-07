@@ -68,6 +68,29 @@ export async function deleteRecipeImage(storagePath: string): Promise<void> {
 }
 
 /**
+ * Recursively removes all keys with `undefined` values from an object or array.
+ * Firestore rejects payloads containing `undefined` field values.
+ */
+function stripUndefined<T>(obj: T): T {
+    if (obj === null || typeof obj !== 'object') {
+        return obj;
+    }
+    if (Array.isArray(obj)) {
+        return obj.map((item) => stripUndefined(item)) as unknown as T;
+    }
+    if (obj.constructor && obj.constructor.name !== 'Object') {
+        return obj;
+    }
+    const result: Record<string, unknown> = {};
+    for (const [key, value] of Object.entries(obj)) {
+        if (value !== undefined) {
+            result[key] = stripUndefined(value);
+        }
+    }
+    return result as T;
+}
+
+/**
  * Creates a new recipe in Firestore, optionally uploading a cover photo to Storage.
  */
 export async function createRecipe(
@@ -86,7 +109,7 @@ export async function createRecipe(
         imageStoragePath = uploadResult.storagePath;
     }
 
-    const recipeData = {
+    const recipeData = stripUndefined({
         ...input,
         id: recipeId,
         isPrivate: input.isPrivate ?? false,
@@ -94,7 +117,7 @@ export async function createRecipe(
         imageStoragePath: imageStoragePath ?? null,
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp()
-    };
+    });
 
     await setDoc(recipeRef, recipeData);
 
@@ -211,10 +234,10 @@ export async function updateRecipe(
 ): Promise<void> {
     const recipeRef = doc(db, RECIPES_COLLECTION, recipeId);
 
-    const updates: UpdateData<DocumentData> = {
+    const updates = stripUndefined<UpdateData<DocumentData>>({
         ...input,
         updatedAt: serverTimestamp()
-    };
+    });
 
     if (newImageFile) {
         // Fetch existing doc to check for an old image to remove

@@ -12,7 +12,6 @@ export interface Ingredient {
 export interface InstructionStep {
     stepNumber: number;
     instruction: string;
-    timerMinutes?: number;
     tip?: string;
 }
 
