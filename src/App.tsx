@@ -60,7 +60,7 @@ export default function App() {
     return (
         <AuthProvider>
             <div className="max-w-lg mx-auto min-h-screen flex flex-col justify-between px-4 py-4">
-                <main className="flex-1">
+                <main className="flex-1 min-w-0 w-full">
                     <Routes>
                         <Route path="/" element={<Home />} />
                         <Route path="/login" element={<Login />} />
