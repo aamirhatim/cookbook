@@ -60,18 +60,13 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({
 
   return (
     <div ref={containerRef} className={`relative inline-block ${className}`}>
-      <div className="relative">
-        <ButtonIcon
-          icon={icon}
-          onClick={toggleOpen}
-          active={isOpen || hasActiveFilters}
-          title={title}
-          ariaLabel={title}
-        />
-        {hasActiveFilters && (
-          <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 rounded-full bg-primary ring-2 ring-background pointer-events-none" />
-        )}
-      </div>
+      <ButtonIcon
+        icon={icon}
+        onClick={toggleOpen}
+        active={isOpen || hasActiveFilters}
+        title={title}
+        ariaLabel={title}
+      />
 
       <DropdownList
         visible={isOpen}
