@@ -51,6 +51,7 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
     const [difficulties, setDifficulties] = useState<Difficulty[]>([]);
     const [cuisines, setCuisines] = useState<string[]>([]);
     const [isVeg, setIsVeg] = useState<boolean>(false);
+    const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
 
     // Debounce search input to avoid filtering on every keystroke
     useEffect(() => {
@@ -122,6 +123,7 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
 
     return (
         <div
+            data-recipe-filter-bar="true"
             className={`flex ${isBottom ? 'flex-col-reverse' : 'flex-col'} gap-2.5 w-full ${stickyClasses} ${className}`}
         >
             <div className="flex items-center gap-2 w-full">
@@ -143,6 +145,8 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
                         onSelect={handleTimeSelect}
                         hasActiveFilters={timeFilter !== 'all'}
                         placement={isBottom ? 'top' : 'bottom'}
+                        open={activeDropdown === 'time'}
+                        onOpenChange={(open) => setActiveDropdown(open ? 'time' : null)}
                     />
 
                     <DropdownMenu
@@ -154,6 +158,8 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
                         onSelect={handleDifficultyToggle}
                         hasActiveFilters={difficulties.length > 0}
                         placement={isBottom ? 'top' : 'bottom'}
+                        open={activeDropdown === 'diff'}
+                        onOpenChange={(open) => setActiveDropdown(open ? 'diff' : null)}
                     />
 
                     {cuisineOptions.length > 0 && (
@@ -166,6 +172,8 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
                             onSelect={handleCuisineToggle}
                             hasActiveFilters={cuisines.length > 0}
                             placement={isBottom ? 'top' : 'bottom'}
+                            open={activeDropdown === 'cuisine'}
+                            onOpenChange={(open) => setActiveDropdown(open ? 'cuisine' : null)}
                         />
                     )}
 
@@ -179,6 +187,9 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
                     />
                 </div>
             </div>
+
+            {/* Mobile Tray Slot: expands inside the filter, above existing search and filtering tools */}
+            <div data-recipe-filter-tray-slot="true" className="w-full empty:hidden" />
 
             {/* Active filter badges / reset */}
             {hasActiveFilters && (

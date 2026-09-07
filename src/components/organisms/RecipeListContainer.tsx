@@ -146,7 +146,10 @@ export const RecipeListContainer: React.FC<RecipeListContainerProps> = ({
 
       {/* Recipe Filter positioned at the bottom of the viewport */}
       {isStickyActive ? (
-        <div className="fixed bottom-0 left-0 right-0 z-30 bg-background/95 backdrop-blur-md border-t border-border/40 py-3 shadow-lg">
+        <div
+          data-recipe-filter-bar="true"
+          className="fixed bottom-0 left-0 right-0 z-30 bg-background/95 backdrop-blur-md border-t border-border/40 py-3 shadow-lg"
+        >
           <div className="max-w-lg mx-auto px-4 w-full">
             <RecipeFilter
               onFilterChange={setFilters}
@@ -157,7 +160,7 @@ export const RecipeListContainer: React.FC<RecipeListContainerProps> = ({
           </div>
         </div>
       ) : (
-        <div className="w-full pt-4 border-t border-border/40">
+        <div data-recipe-filter-bar="true" className="w-full pt-4 border-t border-border/40">
           <RecipeFilter
             onFilterChange={setFilters}
             availableCuisines={availableCuisines}

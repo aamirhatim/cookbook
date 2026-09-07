@@ -2,6 +2,9 @@ import React, { useState, useRef, useEffect } from 'react';
 import type { Icon, IconProps } from '@tabler/icons-react';
 import { ButtonIcon } from '../atoms/ButtonIcon';
 import { DropdownList, DropdownItem } from './DropdownList';
+import { DropdownMobileTray } from './DropdownMobileTray';
+
+export type DropdownMenuVariant = 'default' | 'mobile';
 
 export interface DropdownMenuProps {
   icon: React.ComponentType<IconProps> | Icon;
@@ -13,6 +16,10 @@ export interface DropdownMenuProps {
   className?: string;
   hasActiveFilters?: boolean;
   placement?: 'top' | 'bottom';
+  variant?: DropdownMenuVariant;
+  mobileLayout?: React.ReactNode | ((props: { close: () => void }) => React.ReactNode);
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
 export const DropdownMenu: React.FC<DropdownMenuProps> = ({
@@ -25,40 +32,67 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({
   className = '',
   hasActiveFilters = false,
   placement = 'bottom',
+  variant,
+  mobileLayout,
+  open: controlledOpen,
+  onOpenChange,
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const isControlled = controlledOpen !== undefined;
+  const [internalOpen, setInternalOpen] = useState(false);
+  const isOpen = isControlled ? controlledOpen : internalOpen;
   const containerRef = useRef<HTMLDivElement>(null);
 
+  const [isMobileScreen, setIsMobileScreen] = useState(() =>
+    typeof window !== 'undefined' ? window.matchMedia('(max-width: 639px)').matches : false
+  );
+
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const mediaQuery = window.matchMedia('(max-width: 639px)');
+    const updateMatch = (e: MediaQueryListEvent) => {
+      setIsMobileScreen(e.matches);
+    };
+    mediaQuery.addEventListener('change', updateMatch);
+    return () => mediaQuery.removeEventListener('change', updateMatch);
+  }, []);
+
+  const isMobileVariant = variant === 'mobile' || (variant !== 'default' && isMobileScreen);
+
+  const setOpen = (next: boolean) => {
+    if (!isControlled) setInternalOpen(next);
+    onOpenChange?.(next);
+  };
+
+  const toggleOpen = () => {
+    setOpen(!isOpen);
+  };
+
+  useEffect(() => {
+    if (!isOpen || isMobileVariant) return;
+
     const handleClickOutside = (event: MouseEvent) => {
       if (
         containerRef.current &&
         !containerRef.current.contains(event.target as Node)
       ) {
-        setIsOpen(false);
+        setOpen(false);
       }
     };
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
-        setIsOpen(false);
+        setOpen(false);
       }
     };
 
-    if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-      document.addEventListener('keydown', handleKeyDown);
-    }
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleKeyDown);
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [isOpen]);
-
-  const toggleOpen = () => {
-    setIsOpen((prev) => !prev);
-  };
+  }, [isOpen, isMobileVariant]);
 
   return (
     <div ref={containerRef} className={`relative inline-block ${className}`}>
@@ -70,14 +104,29 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({
         ariaLabel={title}
       />
 
-      <DropdownList
-        visible={isOpen}
-        type={type}
-        items={items}
-        selectedValues={selectedValues}
-        onSelect={onSelect}
-        placement={placement}
-      />
+      {isMobileVariant ? (
+        <DropdownMobileTray
+          visible={isOpen}
+          onClose={() => setOpen(false)}
+          title={title}
+          icon={icon}
+          type={type}
+          items={items}
+          selectedValues={selectedValues}
+          onSelect={onSelect}
+          mobileLayout={mobileLayout}
+          anchorRef={containerRef}
+        />
+      ) : (
+        <DropdownList
+          visible={isOpen}
+          type={type}
+          items={items}
+          selectedValues={selectedValues}
+          onSelect={onSelect}
+          placement={placement}
+        />
+      )}
     </div>
   );
 };
