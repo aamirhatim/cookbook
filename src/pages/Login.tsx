@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { useNavigate, Navigate, useLocation } from 'react-router-dom';
-import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, User } from 'firebase/auth';
 import { IconNotebook } from '@tabler/icons-react';
 import { auth } from '../lib/firebase';
 import { useAuth } from '../contexts/AuthContext';
+import { EmailPasswordForm } from '../components/molecules/EmailPasswordForm';
 
 export function Login() {
     const [error, setError] = useState<string | null>(null);
@@ -19,24 +20,56 @@ export function Login() {
         return <Navigate to={from} replace />;
     }
 
+    const handleSuccessfulLogin = async (signedInUser: User) => {
+        const tokenResult = await signedInUser.getIdTokenResult();
+        const isAdminUser = tokenResult.claims.role === 'admin';
+
+        if (from && from !== '/login') {
+            if (from.startsWith('/admin') && !isAdminUser) {
+                navigate('/', { replace: true });
+            } else {
+                navigate(from, { replace: true });
+            }
+        } else {
+            navigate('/', { replace: true });
+        }
+    };
+
+    const handleEmailSignIn = async ({ email, password }: { email: string; password: string }) => {
+        setIsLoading(true);
+        setError(null);
+        try {
+            const result = await signInWithEmailAndPassword(auth, email, password);
+            await handleSuccessfulLogin(result.user);
+        } catch (err: any) {
+            console.error('Login error:', err);
+            let message = 'Failed to sign in. Please try again.';
+            if (
+                err.code === 'auth/invalid-credential' ||
+                err.code === 'auth/wrong-password' ||
+                err.code === 'auth/user-not-found'
+            ) {
+                message = 'Invalid email or password.';
+            } else if (err.code === 'auth/invalid-email') {
+                message = 'Please enter a valid email address.';
+            } else if (err.code === 'auth/too-many-requests') {
+                message = 'Too many failed attempts. Please try again later.';
+            } else if (err.message) {
+                message = err.message;
+            }
+            setError(message);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     const handleGoogleSignIn = async () => {
         setIsLoading(true);
         setError(null);
         try {
             const provider = new GoogleAuthProvider();
             const result = await signInWithPopup(auth, provider);
-            const tokenResult = await result.user.getIdTokenResult();
-            const isAdminUser = tokenResult.claims.role === 'admin';
-
-            if (from && from !== '/login') {
-                if (from.startsWith('/admin') && !isAdminUser) {
-                    navigate('/', { replace: true });
-                } else {
-                    navigate(from, { replace: true });
-                }
-            } else {
-                navigate('/', { replace: true });
-            }
+            await handleSuccessfulLogin(result.user);
         } catch (err: any) {
             console.error('Login error:', err);
             setError(err.message || 'Failed to sign in. Please try again.');
@@ -46,9 +79,9 @@ export function Login() {
     };
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-8 px-4">
+        <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-6 px-4 py-8">
             <div className="text-center space-y-2">
-                <div className="w-16 h-16 bg-secondary text-secondary-foreground rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 bg-secondary text-secondary-foreground rounded-2xl flex items-center justify-center mx-auto mb-3">
                     <IconNotebook className="w-8 h-8" stroke={1} />
                 </div>
                 <h1 className="text-2xl font-bold text-foreground">Sign In</h1>
@@ -64,10 +97,17 @@ export function Login() {
                     </div>
                 )}
 
+                <EmailPasswordForm
+                    onSubmit={handleEmailSignIn}
+                    isLoading={isLoading}
+                    submitLabel="Sign In"
+                />
+
                 <button
+                    type="button"
                     onClick={handleGoogleSignIn}
                     disabled={isLoading}
-                    className="w-full flex items-center justify-center space-x-3 bg-surface border border-border hover:bg-surface-hover text-foreground font-medium py-3 px-4 rounded-xl shadow-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full flex items-center justify-center space-x-3 bg-surface border border-border hover:bg-surface-hover text-foreground font-medium h-11 min-h-[44px] px-4 rounded-xl shadow-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                     <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
                         <path
@@ -87,10 +127,20 @@ export function Login() {
                             fill="#EA4335"
                         />
                     </svg>
-                    <span>{isLoading ? 'Signing in...' : 'Sign in with Google'}</span>
+                    <span>Sign in with Google</span>
                 </button>
+
+                <div className="pt-2 border-t border-border text-center space-y-2">
+                    <p className="text-xs text-muted-foreground">Don't have an account yet?</p>
+                    <button
+                        type="button"
+                        onClick={() => navigate('/signup', { state: { from: location.state?.from } })}
+                        className="w-full flex items-center justify-center border border-border bg-surface hover:bg-surface-hover text-foreground font-medium h-11 min-h-[44px] px-4 rounded-xl transition-colors active:scale-98"
+                    >
+                        Sign Up
+                    </button>
+                </div>
             </div>
         </div>
     );
 }
-
