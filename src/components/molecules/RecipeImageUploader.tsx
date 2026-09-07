@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { IconCamera, IconTrash } from '@tabler/icons-react';
+import { IconPencil, IconTrash } from '@tabler/icons-react';
+import { ButtonIcon } from '../atoms/ButtonIcon';
 import { ImageUploadPlaceholder } from './ImageUploadPlaceholder';
 import { useToast } from '../../hooks/useToast';
 
@@ -101,29 +102,26 @@ export const RecipeImageUploader: React.FC<RecipeImageUploaderProps> = ({
           />
 
           {/* Action Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20 flex items-end justify-between p-3">
-            <button
-              type="button"
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20 flex items-end justify-end p-3 gap-2">
+            <ButtonIcon
+              icon={IconPencil}
+              iconStroke={1}
               onClick={handleOpenPicker}
               disabled={disabled}
-              className="min-h-[44px] px-3.5 flex items-center gap-1.5 rounded-xl bg-surface/90 hover:bg-surface text-surface-foreground text-xs font-semibold backdrop-blur-md transition-all shadow-md active:scale-95 disabled:opacity-50"
-              aria-label="Change photo"
+              ariaLabel="Change photo"
               title="Change photo"
-            >
-              <IconCamera className="w-4 h-4 text-primary" stroke={1.5} />
-              <span>Change</span>
-            </button>
+              className="shadow-md backdrop-blur-xs"
+            />
 
-            <button
-              type="button"
+            <ButtonIcon
+              icon={IconTrash}
+              iconStroke={1}
               onClick={handleRemove}
               disabled={disabled}
-              className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl bg-destructive/90 hover:bg-destructive text-destructive-foreground transition-all shadow-md active:scale-95 disabled:opacity-50"
-              aria-label="Remove photo"
+              ariaLabel="Remove photo"
               title="Remove photo"
-            >
-              <IconTrash className="w-4 h-4" stroke={1.5} />
-            </button>
+              className="shadow-md backdrop-blur-xs"
+            />
           </div>
         </div>
       )}

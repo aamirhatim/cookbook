@@ -84,7 +84,7 @@ export const DropdownMobileTray: React.FC<DropdownMobileTrayProps> = ({
             {/* Header with Title and Close button */}
             <div className="flex items-center justify-between pb-2 mb-2 border-b border-border/30">
                 <div className="flex items-center gap-2">
-                    {IconComponent && <IconComponent size={18} className="text-primary shrink-0" stroke={1.5} />}
+                    {IconComponent && <IconComponent size={18} className="text-primary shrink-0" stroke={1} />}
                     <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{title}</span>
                 </div>
                 <button
@@ -93,7 +93,7 @@ export const DropdownMobileTray: React.FC<DropdownMobileTrayProps> = ({
                     className="p-1 rounded-md text-muted-foreground hover:text-foreground hover:bg-surface-hover min-w-[36px] min-h-[36px] flex items-center justify-center transition-colors"
                     aria-label="Close tray"
                 >
-                    <IconX size={18} stroke={1.5} />
+                    <IconX size={18} stroke={1} />
                 </button>
             </div>
 

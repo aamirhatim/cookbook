@@ -48,7 +48,7 @@ export const InstructionsFormList: React.FC<InstructionsFormListProps> = ({ inst
               className="text-muted-foreground hover:text-destructive transition-colors p-1"
               aria-label="Remove step"
             >
-              <IconTrash className="w-4 h-4" stroke={1.5} />
+              <IconTrash className="w-4 h-4" stroke={1} />
             </button>
           </div>
           
@@ -62,7 +62,7 @@ export const InstructionsFormList: React.FC<InstructionsFormListProps> = ({ inst
           {step.tip !== undefined ? (
             <div className="flex gap-2 items-start mt-1 relative">
               <div className="pt-2 text-accent">
-                <IconBulb className="w-5 h-5" stroke={1.5} />
+                <IconBulb className="w-5 h-5" stroke={1} />
               </div>
               <Textarea 
                 placeholder="Add a tip for this step..." 
@@ -75,7 +75,7 @@ export const InstructionsFormList: React.FC<InstructionsFormListProps> = ({ inst
                 onClick={() => handleRemoveTip(i)}
                 className="absolute top-2 right-2 text-muted-foreground hover:text-destructive transition-colors p-1"
               >
-                <IconTrash className="w-4 h-4" stroke={1.5} />
+                <IconTrash className="w-4 h-4" stroke={1} />
               </button>
             </div>
           ) : (
@@ -84,7 +84,7 @@ export const InstructionsFormList: React.FC<InstructionsFormListProps> = ({ inst
               onClick={() => handleChange(i, 'tip', '')}
               className="self-start text-xs font-medium text-accent hover:text-accent/80 flex items-center gap-1.5 mt-1"
             >
-              <IconBulb className="w-4 h-4" stroke={1.5} />
+              <IconBulb className="w-4 h-4" stroke={1} />
               Add Tip
             </button>
           )}
@@ -96,7 +96,7 @@ export const InstructionsFormList: React.FC<InstructionsFormListProps> = ({ inst
         onClick={handleAdd}
         className="w-full py-3 flex items-center justify-center gap-2 rounded-xl border border-dashed border-border text-sm font-medium text-muted-foreground hover:text-primary hover:border-primary/50 transition-colors bg-surface"
       >
-        <IconPlus className="w-5 h-5" stroke={1.5} />
+        <IconPlus className="w-5 h-5" stroke={1} />
         Add Step
       </button>
     </div>

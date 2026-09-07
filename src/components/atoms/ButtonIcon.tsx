@@ -66,7 +66,7 @@ export const ButtonIcon: React.FC<ButtonIconProps> = ({
 
   const isFab = variant === 'fab';
   const effectiveIconSize = iconSize ?? (isFab ? 24 : 20);
-  const effectiveIconStroke = iconStroke ?? (isFab ? 1.5 : 1);
+  const effectiveIconStroke = iconStroke ?? 1;
 
   // Semantic styles for active and inactive states
   const variantStyles = {

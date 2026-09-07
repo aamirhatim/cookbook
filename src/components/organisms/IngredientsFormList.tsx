@@ -63,7 +63,7 @@ export const IngredientsFormList: React.FC<IngredientsFormListProps> = ({ ingred
               className="w-9 h-9 flex items-center justify-center text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-lg transition-colors flex-shrink-0"
               aria-label="Remove ingredient"
             >
-              <IconTrash className="w-5 h-5" stroke={1.5} />
+              <IconTrash className="w-5 h-5" stroke={1} />
             </button>
           </div>
         </div>
@@ -73,7 +73,7 @@ export const IngredientsFormList: React.FC<IngredientsFormListProps> = ({ ingred
         onClick={handleAdd}
         className="w-full py-3 flex items-center justify-center gap-2 rounded-xl border border-dashed border-border text-sm font-medium text-muted-foreground hover:text-primary hover:border-primary/50 transition-colors bg-surface"
       >
-        <IconPlus className="w-5 h-5" stroke={1.5} />
+        <IconPlus className="w-5 h-5" stroke={1} />
         Add Ingredient
       </button>
     </div>

@@ -19,12 +19,12 @@ export const ToastItem: React.FC<ToastItemProps> = ({
     const renderIcon = () => {
         switch (type) {
             case 'success':
-                return <IconCircleCheck className="w-5 h-5 text-primary flex-shrink-0" stroke={1.5} />;
+                return <IconCircleCheck className="w-5 h-5 text-primary flex-shrink-0" stroke={1} />;
             case 'error':
-                return <IconAlertCircle className="w-5 h-5 text-destructive flex-shrink-0" stroke={1.5} />;
+                return <IconAlertCircle className="w-5 h-5 text-destructive flex-shrink-0" stroke={1} />;
             case 'info':
             default:
-                return <IconInfoCircle className="w-5 h-5 text-accent flex-shrink-0" stroke={1.5} />;
+                return <IconInfoCircle className="w-5 h-5 text-accent flex-shrink-0" stroke={1} />;
         }
     };
 
@@ -60,7 +60,7 @@ export const ToastItem: React.FC<ToastItemProps> = ({
                 aria-label="Dismiss notification"
                 title="Dismiss"
             >
-                <IconX className="w-4 h-4" stroke={1.5} />
+                <IconX className="w-4 h-4" stroke={1} />
             </button>
         </div>
     );

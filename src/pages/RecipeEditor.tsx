@@ -209,7 +209,7 @@ export function RecipeEditor() {
           title="Back to Recipes"
           aria-label="Back to Recipes"
         >
-          <IconArrowLeft className="w-5 h-5" stroke={1.5} />
+          <IconArrowLeft className="w-5 h-5" stroke={1} />
         </button>
       </header>
 
@@ -217,13 +217,13 @@ export function RecipeEditor() {
       <div className="w-full min-w-0">
         {loading ? (
           <div className="flex flex-col items-center justify-center py-20 text-muted-foreground">
-            <IconLoader2 className="w-8 h-8 animate-spin text-primary mb-3" stroke={1.5} />
+            <IconLoader2 className="w-8 h-8 animate-spin text-primary mb-3" stroke={1} />
             <p className="text-sm">Loading recipe details...</p>
           </div>
         ) : !isNew && !recipe ? (
           <div className="p-6 rounded-2xl bg-surface border border-border text-center space-y-4">
             <div className="w-12 h-12 rounded-full bg-destructive/10 text-destructive flex items-center justify-center mx-auto">
-              <IconAlertCircle className="w-6 h-6" stroke={1.5} />
+              <IconAlertCircle className="w-6 h-6" stroke={1} />
             </div>
             <div className="space-y-1">
               <h2 className="text-base font-semibold text-foreground">Recipe Not Found</h2>
@@ -359,7 +359,7 @@ export function RecipeEditor() {
                   disabled={saving}
                   className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl bg-surface hover:bg-surface-hover border border-border text-foreground text-sm font-medium transition-colors disabled:opacity-50"
                 >
-                  <IconX className="w-5 h-5" stroke={1.5} />
+                  <IconX className="w-5 h-5" stroke={1} />
                   Cancel
                 </button>
                 <button
@@ -369,9 +369,9 @@ export function RecipeEditor() {
                   className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-medium shadow-sm transition-colors disabled:opacity-50"
                 >
                   {saving ? (
-                    <IconLoader2 className="w-5 h-5 animate-spin" stroke={1.5} />
+                    <IconLoader2 className="w-5 h-5 animate-spin" stroke={1} />
                   ) : (
-                    <IconCheck className="w-5 h-5" stroke={1.5} />
+                    <IconCheck className="w-5 h-5" stroke={1} />
                   )}
                   Save Recipe
                 </button>
