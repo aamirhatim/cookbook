@@ -9,10 +9,20 @@ export interface Ingredient {
     notes?: string;
 }
 
+export interface IngredientSection {
+    title?: string;
+    items: Ingredient[];
+}
+
 export interface InstructionStep {
     stepNumber: number;
     instruction: string;
     tip?: string;
+}
+
+export interface InstructionSection {
+    title?: string;
+    steps: InstructionStep[];
 }
 
 export interface Recipe {
@@ -27,8 +37,8 @@ export interface Recipe {
     servings: number;
     difficulty: Difficulty;
     tags: string[];
-    ingredients: Ingredient[];
-    instructions: InstructionStep[];
+    ingredients: IngredientSection[];
+    instructions: InstructionSection[];
     imageUrl?: string;
     imageStoragePath?: string;
     authorId: string;
@@ -52,8 +62,8 @@ export interface CreateRecipeInput {
     servings: number;
     difficulty: Difficulty;
     tags: string[];
-    ingredients: Ingredient[];
-    instructions: InstructionStep[];
+    ingredients: IngredientSection[];
+    instructions: InstructionSection[];
     authorId: string;
     authorName?: string;
     isPrivate?: boolean;

@@ -76,8 +76,9 @@ export const RecipeListContainer: React.FC<RecipeListContainerProps> = ({
       if (filters.searchText) {
         const query = filters.searchText.toLowerCase();
         const matchesTitle = recipe.title.toLowerCase().includes(query);
-        const matchesIngredient = recipe.ingredients?.some((ing) =>
-          ing.name.toLowerCase().includes(query)
+        const matchesIngredient = recipe.ingredients?.some((section) =>
+          (section.title && section.title.toLowerCase().includes(query)) ||
+          section.items?.some((ing) => ing.name.toLowerCase().includes(query))
         );
         const matchesEquipment = recipe.equipment?.some((eq) =>
           eq.toLowerCase().includes(query)

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { IconArrowLeft, IconLoader2, IconAlertCircle, IconCheck, IconX } from '@tabler/icons-react';
 import { getRecipe, createRecipe, updateRecipe } from '../services/recipes';
-import type { Recipe, CreateRecipeInput, UpdateRecipeInput } from '../types/recipe';
+import type { Recipe, CreateRecipeInput, UpdateRecipeInput, IngredientSection, InstructionSection } from '../types/recipe';
 import { useAuth } from '../contexts/AuthContext';
 import { Input } from '../components/atoms/Input';
 import { Textarea } from '../components/atoms/Textarea';
@@ -46,8 +46,8 @@ export function RecipeEditor() {
     servings: 1,
     difficulty: 'medium',
     tags: [],
-    ingredients: [],
-    instructions: [],
+    ingredients: [{ title: '', items: [] }],
+    instructions: [{ title: '', steps: [] }],
     isPrivate: false
   });
 
@@ -114,18 +114,41 @@ export function RecipeEditor() {
       setSaving(true);
       setError(null);
 
-      const sanitizedIngredients = (formData.ingredients || []).map((ing) => ({
-        name: ing.name || '',
-        amount: ing.amount || 0,
-        unit: ing.unit || '',
-        ...(ing.notes ? { notes: ing.notes } : {})
-      }));
+      const sanitizedIngredients: IngredientSection[] = (formData.ingredients || [])
+        .map((sec) => ({
+          ...(sec.title?.trim() ? { title: sec.title.trim() } : {}),
+          items: (sec.items || [])
+            .filter((ing) => ing.name?.trim() || ing.amount > 0 || ing.unit?.trim())
+            .map((ing) => ({
+              name: ing.name?.trim() || '',
+              amount: ing.amount || 0,
+              unit: ing.unit?.trim() || '',
+              ...(ing.notes?.trim() ? { notes: ing.notes.trim() } : {})
+            }))
+        }))
+        .filter((sec) => sec.title || sec.items.length > 0);
 
-      const sanitizedInstructions = (formData.instructions || []).map((step, idx) => ({
-        stepNumber: step.stepNumber || idx + 1,
-        instruction: step.instruction || '',
-        ...(step.tip ? { tip: step.tip } : {})
-      }));
+      const finalIngredients = sanitizedIngredients.length > 0
+        ? sanitizedIngredients
+        : [{ title: '', items: [] }];
+
+      let stepCounter = 1;
+      const sanitizedInstructions: InstructionSection[] = (formData.instructions || [])
+        .map((sec) => ({
+          ...(sec.title?.trim() ? { title: sec.title.trim() } : {}),
+          steps: (sec.steps || [])
+            .filter((step) => step.instruction?.trim())
+            .map((step) => ({
+              stepNumber: stepCounter++,
+              instruction: step.instruction?.trim() || '',
+              ...(step.tip?.trim() ? { tip: step.tip.trim() } : {})
+            }))
+        }))
+        .filter((sec) => sec.title || sec.steps.length > 0);
+
+      const finalInstructions = sanitizedInstructions.length > 0
+        ? sanitizedInstructions
+        : [{ title: '', steps: [] }];
 
       if (isNew) {
         const newRecipeInput: CreateRecipeInput = {
@@ -138,8 +161,8 @@ export function RecipeEditor() {
           servings: formData.servings || 1,
           difficulty: formData.difficulty || 'medium',
           tags: formData.tags || [],
-          ingredients: sanitizedIngredients,
-          instructions: sanitizedInstructions,
+          ingredients: finalIngredients,
+          instructions: finalInstructions,
           authorId: user.uid,
           authorName: user.displayName || 'Unknown Author',
           isPrivate: formData.isPrivate || false
@@ -156,8 +179,8 @@ export function RecipeEditor() {
           servings: formData.servings ?? 1,
           difficulty: formData.difficulty ?? 'medium',
           tags: formData.tags ?? [],
-          ingredients: sanitizedIngredients,
-          instructions: sanitizedInstructions,
+          ingredients: finalIngredients,
+          instructions: finalInstructions,
           isPrivate: formData.isPrivate ?? false
         };
         await updateRecipe(

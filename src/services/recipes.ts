@@ -27,6 +27,8 @@ import {
 import { db, storage } from '../lib/firebase';
 import type {
     Recipe,
+    IngredientSection,
+    InstructionSection,
     CreateRecipeInput,
     UpdateRecipeInput,
     RecipeFilters
@@ -91,6 +93,77 @@ function stripUndefined<T>(obj: T): T {
 }
 
 /**
+ * Normalizes Firestore document data into a typed Recipe object.
+ * Seamlessly adapts legacy flat ingredient/instruction arrays into section structures.
+ */
+export function normalizeRecipe(id: string, data: DocumentData): Recipe {
+    const rawIngredients = data.ingredients;
+    let ingredients: IngredientSection[] = [];
+
+    if (Array.isArray(rawIngredients)) {
+        if (rawIngredients.length > 0 && ('name' in rawIngredients[0] || !('items' in rawIngredients[0]))) {
+            // Legacy flat Ingredient[]
+            ingredients = [{
+                title: '',
+                items: rawIngredients.map((item: any) => ({
+                    name: item.name || '',
+                    amount: item.amount || 0,
+                    unit: item.unit || '',
+                    ...(item.notes ? { notes: item.notes } : {})
+                }))
+            }];
+        } else {
+            ingredients = rawIngredients.map((sec: any) => ({
+                ...(sec.title ? { title: sec.title } : {}),
+                items: Array.isArray(sec.items)
+                    ? sec.items.map((item: any) => ({
+                          name: item.name || '',
+                          amount: item.amount || 0,
+                          unit: item.unit || '',
+                          ...(item.notes ? { notes: item.notes } : {})
+                      }))
+                    : []
+            }));
+        }
+    }
+
+    const rawInstructions = data.instructions;
+    let instructions: InstructionSection[] = [];
+
+    if (Array.isArray(rawInstructions)) {
+        if (rawInstructions.length > 0 && ('instruction' in rawInstructions[0] || !('steps' in rawInstructions[0]))) {
+            // Legacy flat InstructionStep[]
+            instructions = [{
+                title: '',
+                steps: rawInstructions.map((step: any, idx: number) => ({
+                    stepNumber: step.stepNumber || idx + 1,
+                    instruction: step.instruction || '',
+                    ...(step.tip ? { tip: step.tip } : {})
+                }))
+            }];
+        } else {
+            instructions = rawInstructions.map((sec: any) => ({
+                ...(sec.title ? { title: sec.title } : {}),
+                steps: Array.isArray(sec.steps)
+                    ? sec.steps.map((step: any, idx: number) => ({
+                          stepNumber: step.stepNumber || idx + 1,
+                          instruction: step.instruction || '',
+                          ...(step.tip ? { tip: step.tip } : {})
+                      }))
+                    : []
+            }));
+        }
+    }
+
+    return {
+        ...data,
+        id,
+        ingredients,
+        instructions
+    } as Recipe;
+}
+
+/**
  * Creates a new recipe in Firestore, optionally uploading a cover photo to Storage.
  */
 export async function createRecipe(
@@ -121,13 +194,13 @@ export async function createRecipe(
 
     await setDoc(recipeRef, recipeData);
 
-    return {
+    return normalizeRecipe(recipeId, {
         ...recipeData,
         createdAt: Timestamp.now(),
         updatedAt: Timestamp.now(),
         imageUrl,
         imageStoragePath
-    } as Recipe;
+    });
 }
 
 /**
@@ -141,7 +214,7 @@ export async function getRecipe(recipeId: string): Promise<Recipe | null> {
         return null;
     }
 
-    return { id: snapshot.id, ...snapshot.data() } as Recipe;
+    return normalizeRecipe(snapshot.id, snapshot.data());
 }
 
 /**
@@ -192,7 +265,7 @@ export async function getRecipes(filters: RecipeFilters = {}): Promise<Recipe[]>
     const snapshot = await getDocs(q);
 
     return snapshot.docs.map(
-        (docSnap) => ({ id: docSnap.id, ...docSnap.data() } as Recipe)
+        (docSnap) => normalizeRecipe(docSnap.id, docSnap.data())
     );
 }
 
@@ -212,7 +285,7 @@ export function subscribeToRecipes(
         q,
         (snapshot) => {
             const recipes = snapshot.docs.map(
-                (docSnap) => ({ id: docSnap.id, ...docSnap.data() } as Recipe)
+                (docSnap) => normalizeRecipe(docSnap.id, docSnap.data())
             );
             onUpdate(recipes);
         },

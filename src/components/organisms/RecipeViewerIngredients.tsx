@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { IconCheck, IconRotate2, IconToolsKitchen } from '@tabler/icons-react';
-import type { Ingredient } from '../../types/recipe';
+import { IconRotate2, IconToolsKitchen } from '@tabler/icons-react';
+import type { IngredientSection } from '../../types/recipe';
+import { IngredientViewerItem } from '../molecules/IngredientViewerItem';
 
 export interface RecipeViewerIngredientsProps {
-    ingredients: Ingredient[];
+    ingredients: IngredientSection[];
     className?: string;
 }
 
@@ -11,25 +12,27 @@ export const RecipeViewerIngredients: React.FC<RecipeViewerIngredientsProps> = (
     ingredients,
     className = '',
 }) => {
-    const [checkedIndices, setCheckedIndices] = useState<Set<number>>(new Set());
+    const [checkedKeys, setCheckedKeys] = useState<Set<string>>(new Set());
 
-    const toggleIngredient = (index: number) => {
-        setCheckedIndices((prev) => {
+    const totalCount = ingredients.reduce((acc, sec) => acc + (sec.items?.length || 0), 0);
+
+    const toggleItem = (key: string) => {
+        setCheckedKeys((prev) => {
             const next = new Set(prev);
-            if (next.has(index)) {
-                next.delete(index);
+            if (next.has(key)) {
+                next.delete(key);
             } else {
-                next.add(index);
+                next.add(key);
             }
             return next;
         });
     };
 
     const handleReset = () => {
-        setCheckedIndices(new Set());
+        setCheckedKeys(new Set());
     };
 
-    if (!ingredients || ingredients.length === 0) {
+    if (!ingredients || totalCount === 0) {
         return (
             <div className={`p-4 rounded-xl bg-surface border border-border text-center text-xs text-muted-foreground ${className}`}>
                 No ingredients listed for this recipe.
@@ -37,18 +40,20 @@ export const RecipeViewerIngredients: React.FC<RecipeViewerIngredientsProps> = (
         );
     }
 
+    const hasSections = ingredients.length > 1 || ingredients.some((sec) => !!sec.title?.trim());
+
     return (
-        <section className={`space-y-3 ${className}`}>
+        <section className={`space-y-4 ${className}`}>
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                     <IconToolsKitchen className="w-5 h-5 text-primary" stroke={1.5} />
                     <h2 className="text-lg font-bold text-foreground">Ingredients</h2>
                     <span className="text-xs px-2 py-0.5 rounded-full bg-surface-hover text-muted-foreground font-medium">
-                        {ingredients.length}
+                        {totalCount}
                     </span>
                 </div>
 
-                {checkedIndices.size > 0 && (
+                {checkedKeys.size > 0 && (
                     <button
                         type="button"
                         onClick={handleReset}
@@ -61,45 +66,35 @@ export const RecipeViewerIngredients: React.FC<RecipeViewerIngredientsProps> = (
                 )}
             </div>
 
-            <div className="rounded-2xl bg-surface border border-border divide-y divide-border/50 overflow-hidden shadow-sm">
-                {ingredients.map((ing, idx) => {
-                    const isChecked = checkedIndices.has(idx);
+            <div className="space-y-4">
+                {ingredients.map((sec, secIdx) => {
+                    if (!sec.items || sec.items.length === 0) return null;
                     return (
-                        <button
-                            key={`${ing.name}-${idx}`}
-                            type="button"
-                            onClick={() => toggleIngredient(idx)}
-                            className={`w-full min-h-[48px] px-4 py-3 text-left flex items-start gap-3 transition-colors hover:bg-surface-hover active:bg-surface-hover/80 ${
-                                isChecked ? 'bg-surface-hover/40' : ''
-                            }`}
-                        >
-                            {/* Check circle */}
-                            <span
-                                className={`w-5 h-5 rounded-md mt-0.5 flex items-center justify-center shrink-0 border transition-all ${
-                                    isChecked
-                                        ? 'bg-primary border-primary text-primary-foreground'
-                                        : 'border-input bg-surface text-transparent'
-                                }`}
-                            >
-                                <IconCheck className="w-3.5 h-3.5" stroke={2.5} />
-                            </span>
-
-                            {/* Ingredient Details */}
-                            <div className="flex-1 text-sm leading-snug">
-                                <span className={`font-semibold text-foreground ${isChecked ? 'line-through text-muted-foreground' : ''}`}>
-                                    {ing.amount > 0 ? `${ing.amount} ` : ''}
-                                    {ing.unit ? `${ing.unit} ` : ''}
-                                </span>
-                                <span className={`text-foreground ${isChecked ? 'line-through text-muted-foreground' : ''}`}>
-                                    {ing.name}
-                                </span>
-                                {ing.notes && (
-                                    <span className={`block text-xs text-muted-foreground mt-0.5 ${isChecked ? 'line-through' : ''}`}>
-                                        ({ing.notes})
+                        <div key={secIdx} className="space-y-2">
+                            {hasSections && sec.title && (
+                                <div className="flex items-center justify-between px-1">
+                                    <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                                        {sec.title}
+                                    </h3>
+                                    <span className="text-[11px] text-muted-foreground font-medium">
+                                        {sec.items.length} {sec.items.length === 1 ? 'item' : 'items'}
                                     </span>
-                                )}
+                                </div>
+                            )}
+                            <div className="rounded-2xl bg-surface border border-border divide-y divide-border/50 overflow-hidden shadow-sm">
+                                {sec.items.map((ing, itemIdx) => {
+                                    const key = `${secIdx}-${itemIdx}`;
+                                    return (
+                                        <IngredientViewerItem
+                                            key={key}
+                                            ingredient={ing}
+                                            isChecked={checkedKeys.has(key)}
+                                            onToggle={() => toggleItem(key)}
+                                        />
+                                    );
+                                })}
                             </div>
-                        </button>
+                        </div>
                     );
                 })}
             </div>

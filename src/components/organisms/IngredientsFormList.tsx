@@ -1,82 +1,107 @@
 import React from 'react';
-import { Ingredient } from '../../types/recipe';
-import { Input } from '../atoms/Input';
-import { ButtonIcon } from '../atoms/ButtonIcon';
-import { IconPlus, IconTrash } from '@tabler/icons-react';
+import { IconFolderPlus } from '@tabler/icons-react';
+import type { Ingredient, IngredientSection } from '../../types/recipe';
+import { IngredientSectionCard } from '../molecules/IngredientSectionCard';
 
 export interface IngredientsFormListProps {
-  ingredients: Ingredient[];
-  onChange: (ingredients: Ingredient[]) => void;
+    ingredients: IngredientSection[];
+    onChange: (ingredients: IngredientSection[]) => void;
 }
 
-export const IngredientsFormList: React.FC<IngredientsFormListProps> = ({ ingredients, onChange }) => {
-  const handleAdd = () => {
-    onChange([...ingredients, { name: '', amount: 0, unit: '', notes: '' }]);
-  };
+export const IngredientsFormList: React.FC<IngredientsFormListProps> = ({
+    ingredients,
+    onChange
+}) => {
+    // Ensure at least one section exists
+    const sections = ingredients.length > 0 ? ingredients : [{ title: '', items: [] }];
 
-  const handleRemove = (index: number) => {
-    const newIngredients = [...ingredients];
-    newIngredients.splice(index, 1);
-    onChange(newIngredients);
-  };
+    const updateSections = (newSections: IngredientSection[]) => {
+        onChange(newSections);
+    };
 
-  const handleChange = (index: number, field: keyof Ingredient, value: string | number) => {
-    const newIngredients = [...ingredients];
-    newIngredients[index] = { ...newIngredients[index], [field]: value };
-    onChange(newIngredients);
-  };
+    const handleAddSection = () => {
+        updateSections([
+            ...sections,
+            { title: '', items: [{ name: '', amount: 0, unit: '', notes: '' }] }
+        ]);
+    };
 
-  return (
-    <div className="flex flex-col gap-4">
-      {ingredients.map((ing, i) => (
-        <div key={i} className="flex flex-col gap-2 p-3 bg-surface-hover rounded-xl border border-border relative overflow-hidden">
-          <div className="flex gap-2 items-center w-full">
-            <Input 
-              type="number"
-              placeholder="Qty" 
-              className="w-14 sm:w-16 flex-shrink-0 px-2 h-9"
-              value={ing.amount || ''}
-              onChange={(e) => handleChange(i, 'amount', parseFloat(e.target.value) || 0)}
-            />
-            <Input 
-              placeholder="Unit" 
-              className="w-16 sm:w-20 flex-shrink-0 px-2 h-9"
-              value={ing.unit}
-              onChange={(e) => handleChange(i, 'unit', e.target.value)}
-            />
-            <Input 
-              placeholder="Name (e.g. flour)" 
-              className="flex-1 min-w-0 h-9"
-              value={ing.name}
-              onChange={(e) => handleChange(i, 'name', e.target.value)}
-            />
-          </div>
-          <div className="flex gap-2 items-center w-full">
-            <Input 
-              placeholder="Notes (optional, e.g. sifted)" 
-              className="flex-1 min-w-0 text-sm h-9 bg-surface/50"
-              value={ing.notes || ''}
-              onChange={(e) => handleChange(i, 'notes', e.target.value)}
-            />
-            <ButtonIcon
-              icon={IconTrash}
-              size="small"
-              onClick={() => handleRemove(i)}
-              ariaLabel="Remove ingredient"
-              title="Remove ingredient"
-              className="shrink-0"
-            />
-          </div>
+    const handleRemoveSection = (sectionIndex: number) => {
+        const next = sections.filter((_, idx) => idx !== sectionIndex);
+        updateSections(next.length > 0 ? next : [{ title: '', items: [] }]);
+    };
+
+    const handleMoveSection = (sectionIndex: number, direction: 'up' | 'down') => {
+        const targetIndex = direction === 'up' ? sectionIndex - 1 : sectionIndex + 1;
+        if (targetIndex < 0 || targetIndex >= sections.length) return;
+        const next = [...sections];
+        const [moved] = next.splice(sectionIndex, 1);
+        next.splice(targetIndex, 0, moved);
+        updateSections(next);
+    };
+
+    const handleChangeTitle = (sectionIndex: number, title: string) => {
+        const next = [...sections];
+        next[sectionIndex] = { ...next[sectionIndex], title };
+        updateSections(next);
+    };
+
+    const handleAddItem = (sectionIndex: number) => {
+        const next = [...sections];
+        const currentItems = next[sectionIndex].items || [];
+        next[sectionIndex] = {
+            ...next[sectionIndex],
+            items: [...currentItems, { name: '', amount: 0, unit: '', notes: '' }]
+        };
+        updateSections(next);
+    };
+
+    const handleChangeItem = (
+        sectionIndex: number,
+        itemIndex: number,
+        field: keyof Ingredient,
+        value: string | number
+    ) => {
+        const next = [...sections];
+        const currentItems = [...(next[sectionIndex].items || [])];
+        currentItems[itemIndex] = { ...currentItems[itemIndex], [field]: value };
+        next[sectionIndex] = { ...next[sectionIndex], items: currentItems };
+        updateSections(next);
+    };
+
+    const handleRemoveItem = (sectionIndex: number, itemIndex: number) => {
+        const next = [...sections];
+        const currentItems = (next[sectionIndex].items || []).filter((_, idx) => idx !== itemIndex);
+        next[sectionIndex] = { ...next[sectionIndex], items: currentItems };
+        updateSections(next);
+    };
+
+    return (
+        <div className="flex flex-col gap-4">
+            {sections.map((section, idx) => (
+                <IngredientSectionCard
+                    key={idx}
+                    section={section}
+                    sectionIndex={idx}
+                    totalSections={sections.length}
+                    onChangeTitle={(title) => handleChangeTitle(idx, title)}
+                    onAddItem={() => handleAddItem(idx)}
+                    onChangeItem={(itemIdx, field, val) => handleChangeItem(idx, itemIdx, field, val)}
+                    onRemoveItem={(itemIdx) => handleRemoveItem(idx, itemIdx)}
+                    onRemoveSection={() => handleRemoveSection(idx)}
+                    onMoveUp={() => handleMoveSection(idx, 'up')}
+                    onMoveDown={() => handleMoveSection(idx, 'down')}
+                />
+            ))}
+
+            <button
+                type="button"
+                onClick={handleAddSection}
+                className="w-full py-3 flex items-center justify-center gap-2 rounded-xl border border-dashed border-border text-sm font-medium text-muted-foreground hover:text-primary hover:border-primary/50 transition-colors bg-surface"
+            >
+                <IconFolderPlus className="w-5 h-5" stroke={1.5} />
+                <span>Add Ingredient Section</span>
+            </button>
         </div>
-      ))}
-      <button
-        type="button"
-        onClick={handleAdd}
-        className="w-full py-3 flex items-center justify-center gap-2 rounded-xl border border-dashed border-border text-sm font-medium text-muted-foreground hover:text-primary hover:border-primary/50 transition-colors bg-surface"
-      >
-        <IconPlus className="w-5 h-5" stroke={1} />
-        Add Ingredient
-      </button>
-    </div>
-  );
+    );
 };

@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { IconCheck, IconRotate2, IconListCheck, IconBulb } from '@tabler/icons-react';
-import type { InstructionStep } from '../../types/recipe';
+import { IconRotate2, IconListCheck } from '@tabler/icons-react';
+import type { InstructionSection } from '../../types/recipe';
+import { InstructionViewerItem } from '../molecules/InstructionViewerItem';
 
 export interface RecipeViewerInstructionsProps {
-    instructions: InstructionStep[];
+    instructions: InstructionSection[];
     className?: string;
 }
 
@@ -12,6 +13,8 @@ export const RecipeViewerInstructions: React.FC<RecipeViewerInstructionsProps> =
     className = '',
 }) => {
     const [completedSteps, setCompletedSteps] = useState<Set<number>>(new Set());
+
+    const totalSteps = instructions.reduce((acc, sec) => acc + (sec.steps?.length || 0), 0);
 
     const toggleStep = (stepNumber: number) => {
         setCompletedSteps((prev) => {
@@ -29,7 +32,7 @@ export const RecipeViewerInstructions: React.FC<RecipeViewerInstructionsProps> =
         setCompletedSteps(new Set());
     };
 
-    if (!instructions || instructions.length === 0) {
+    if (!instructions || totalSteps === 0) {
         return (
             <div className={`p-4 rounded-xl bg-surface border border-border text-center text-xs text-muted-foreground ${className}`}>
                 No instruction steps listed for this recipe.
@@ -37,17 +40,16 @@ export const RecipeViewerInstructions: React.FC<RecipeViewerInstructionsProps> =
         );
     }
 
-    // Sort instructions by stepNumber
-    const sortedSteps = [...instructions].sort((a, b) => a.stepNumber - b.stepNumber);
+    const hasSections = instructions.length > 1 || instructions.some((sec) => !!sec.title?.trim());
 
     return (
-        <section className={`space-y-3 ${className}`}>
+        <section className={`space-y-4 ${className}`}>
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                     <IconListCheck className="w-5 h-5 text-primary" stroke={1.5} />
                     <h2 className="text-lg font-bold text-foreground">Instructions</h2>
                     <span className="text-xs px-2 py-0.5 rounded-full bg-surface-hover text-muted-foreground font-medium">
-                        {instructions.length} steps
+                        {totalSteps} {totalSteps === 1 ? 'step' : 'steps'}
                     </span>
                 </div>
 
@@ -64,56 +66,31 @@ export const RecipeViewerInstructions: React.FC<RecipeViewerInstructionsProps> =
                 )}
             </div>
 
-            <div className="space-y-3">
-                {sortedSteps.map((step) => {
-                    const isDone = completedSteps.has(step.stepNumber);
+            <div className="space-y-5">
+                {instructions.map((sec, secIdx) => {
+                    if (!sec.steps || sec.steps.length === 0) return null;
                     return (
-                        <div
-                            key={step.stepNumber}
-                            onClick={() => toggleStep(step.stepNumber)}
-                            role="button"
-                            tabIndex={0}
-                            onKeyDown={(e) => {
-                                if (e.key === 'Enter' || e.key === ' ') {
-                                    e.preventDefault();
-                                    toggleStep(step.stepNumber);
-                                }
-                            }}
-                            className={`p-4 rounded-2xl bg-surface border transition-all cursor-pointer select-none space-y-3 ${
-                                isDone
-                                    ? 'border-primary/40 bg-primary/5 opacity-80'
-                                    : 'border-border hover:border-border/80 hover:bg-surface-hover/50'
-                            }`}
-                        >
-                            <div className="flex items-start gap-3">
-                                {/* Step number / check badge */}
-                                <span
-                                    className={`w-7 h-7 rounded-lg flex items-center justify-center font-bold text-xs shrink-0 transition-colors ${
-                                        isDone
-                                            ? 'bg-primary text-primary-foreground'
-                                            : 'bg-surface-hover text-foreground border border-border'
-                                    }`}
-                                >
-                                    {isDone ? <IconCheck className="w-4 h-4" stroke={2.5} /> : step.stepNumber}
-                                </span>
-
-                                <div className="flex-1 min-w-0">
-                                    <p className={`text-sm leading-relaxed ${isDone ? 'line-through text-muted-foreground' : 'text-foreground'}`}>
-                                        {step.instruction}
-                                    </p>
-                                </div>
-                            </div>
-
-                            {/* Chef Tip Callout */}
-                            {step.tip && (
-                                <div className="ml-10 flex items-start gap-2 p-2.5 rounded-xl bg-secondary/40 border border-secondary/60 text-secondary-foreground text-xs">
-                                    <IconBulb className="w-4 h-4 shrink-0 mt-0.5 text-primary" stroke={1.5} />
-                                    <div className="leading-snug">
-                                        <span className="font-semibold">Tip: </span>
-                                        <span>{step.tip}</span>
-                                    </div>
+                        <div key={secIdx} className="space-y-3">
+                            {hasSections && sec.title && (
+                                <div className="flex items-center justify-between px-1">
+                                    <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                                        {sec.title}
+                                    </h3>
+                                    <span className="text-[11px] text-muted-foreground font-medium">
+                                        {sec.steps.length} {sec.steps.length === 1 ? 'step' : 'steps'}
+                                    </span>
                                 </div>
                             )}
+                            <div className="space-y-3">
+                                {sec.steps.map((step) => (
+                                    <InstructionViewerItem
+                                        key={step.stepNumber}
+                                        step={step}
+                                        isDone={completedSteps.has(step.stepNumber)}
+                                        onToggle={() => toggleStep(step.stepNumber)}
+                                    />
+                                ))}
+                            </div>
                         </div>
                     );
                 })}
