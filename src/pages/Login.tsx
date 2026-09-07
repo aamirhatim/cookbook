@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Navigate } from 'react-router-dom';
 import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { IconNotebook } from '@tabler/icons-react';
 import { auth } from '../lib/firebase';
@@ -9,12 +9,11 @@ export function Login() {
     const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
-    const { user } = useAuth();
+    const { user, isAdmin } = useAuth();
 
     // Redirect if already logged in
     if (user) {
-        navigate('/admin', { replace: true });
-        return null;
+        return <Navigate to={isAdmin ? '/admin' : '/'} replace />;
     }
 
     const handleGoogleSignIn = async () => {
@@ -22,8 +21,13 @@ export function Login() {
         setError(null);
         try {
             const provider = new GoogleAuthProvider();
-            await signInWithPopup(auth, provider);
-            navigate('/admin', { replace: true });
+            const result = await signInWithPopup(auth, provider);
+            const tokenResult = await result.user.getIdTokenResult();
+            if (tokenResult.claims.role === 'admin') {
+                navigate('/admin', { replace: true });
+            } else {
+                navigate('/', { replace: true });
+            }
         } catch (err: any) {
             console.error('Login error:', err);
             setError(err.message || 'Failed to sign in. Please try again.');
