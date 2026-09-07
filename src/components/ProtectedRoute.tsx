@@ -1,13 +1,14 @@
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation, Outlet } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
 interface ProtectedRouteProps {
-    children: React.ReactNode;
+    children?: React.ReactNode;
     requireAdmin?: boolean;
 }
 
 export const ProtectedRoute = ({ children, requireAdmin = false }: ProtectedRouteProps) => {
     const { user, isAdmin, loading } = useAuth();
+    const location = useLocation();
 
     if (loading) {
         return (
@@ -18,8 +19,8 @@ export const ProtectedRoute = ({ children, requireAdmin = false }: ProtectedRout
     }
 
     if (!user) {
-        // Redirect them to the /login page
-        return <Navigate to="/login" replace />;
+        // Redirect them to the /login page, saving current location
+        return <Navigate to="/login" state={{ from: location }} replace />;
     }
 
     if (requireAdmin && !isAdmin) {
@@ -27,6 +28,6 @@ export const ProtectedRoute = ({ children, requireAdmin = false }: ProtectedRout
         return <Navigate to="/" replace />;
     }
 
-    return <>{children}</>;
+    return children ? <>{children}</> : <Outlet />;
 };
 

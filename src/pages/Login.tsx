@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, Navigate } from 'react-router-dom';
+import { useNavigate, Navigate, useLocation } from 'react-router-dom';
 import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { IconNotebook } from '@tabler/icons-react';
 import { auth } from '../lib/firebase';
@@ -9,11 +9,14 @@ export function Login() {
     const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
-    const { user, isAdmin } = useAuth();
+    const location = useLocation();
+    const { user } = useAuth();
+
+    const from = (location.state as { from?: { pathname: string } })?.from?.pathname || '/';
 
     // Redirect if already logged in
     if (user) {
-        return <Navigate to={isAdmin ? '/admin' : '/'} replace />;
+        return <Navigate to={from} replace />;
     }
 
     const handleGoogleSignIn = async () => {
@@ -23,8 +26,14 @@ export function Login() {
             const provider = new GoogleAuthProvider();
             const result = await signInWithPopup(auth, provider);
             const tokenResult = await result.user.getIdTokenResult();
-            if (tokenResult.claims.role === 'admin') {
-                navigate('/admin', { replace: true });
+            const isAdminUser = tokenResult.claims.role === 'admin';
+
+            if (from && from !== '/login') {
+                if (from.startsWith('/admin') && !isAdminUser) {
+                    navigate('/', { replace: true });
+                } else {
+                    navigate(from, { replace: true });
+                }
             } else {
                 navigate('/', { replace: true });
             }
@@ -42,9 +51,9 @@ export function Login() {
                 <div className="w-16 h-16 bg-secondary text-secondary-foreground rounded-2xl flex items-center justify-center mx-auto mb-4">
                     <IconNotebook className="w-8 h-8" stroke={1} />
                 </div>
-                <h1 className="text-2xl font-bold text-foreground">Admin Access</h1>
+                <h1 className="text-2xl font-bold text-foreground">Sign In</h1>
                 <p className="text-sm text-muted-foreground max-w-xs mx-auto">
-                    Sign in to manage recipes, tags, and collections.
+                    Sign in to access your recipes, cooking notes, and collections.
                 </p>
             </div>
 
