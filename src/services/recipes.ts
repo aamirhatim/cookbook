@@ -226,11 +226,13 @@ export function subscribeToRecipes(
 /**
  * Updates an existing recipe in Firestore.
  * If a new image file is provided, replaces the old image in Storage.
+ * If removeImage is true and no new image is provided, deletes the existing image from Storage and clears image fields.
  */
 export async function updateRecipe(
     recipeId: string,
     input: UpdateRecipeInput,
-    newImageFile?: File
+    newImageFile?: File,
+    removeImage?: boolean
 ): Promise<void> {
     const recipeRef = doc(db, RECIPES_COLLECTION, recipeId);
 
@@ -250,6 +252,13 @@ export async function updateRecipe(
         if (existing?.imageStoragePath) {
             await deleteRecipeImage(existing.imageStoragePath);
         }
+    } else if (removeImage) {
+        const existing = await getRecipe(recipeId);
+        if (existing?.imageStoragePath) {
+            await deleteRecipeImage(existing.imageStoragePath);
+        }
+        updates.imageUrl = null;
+        updates.imageStoragePath = null;
     }
 
     await updateDoc(recipeRef, updates);

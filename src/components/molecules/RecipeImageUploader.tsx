@@ -1,0 +1,132 @@
+import React, { useRef, useState, useEffect } from 'react';
+import { IconCamera, IconTrash } from '@tabler/icons-react';
+import { ImageUploadPlaceholder } from './ImageUploadPlaceholder';
+import { useToast } from '../../hooks/useToast';
+
+export interface RecipeImageUploaderProps {
+  currentImageUrl?: string | null;
+  selectedFile: File | null;
+  onSelectImage: (file: File) => void;
+  onRemoveImage: () => void;
+  disabled?: boolean;
+}
+
+const MAX_IMAGE_SIZE_BYTES = 5 * 1024 * 1024; // 5MB
+
+export const RecipeImageUploader: React.FC<RecipeImageUploaderProps> = ({
+  currentImageUrl,
+  selectedFile,
+  onSelectImage,
+  onRemoveImage,
+  disabled = false
+}) => {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const { showToast } = useToast();
+
+  // Manage object URL lifecycle for newly selected image files
+  useEffect(() => {
+    if (selectedFile) {
+      const url = URL.createObjectURL(selectedFile);
+      setPreviewUrl(url);
+
+      return () => {
+        URL.revokeObjectURL(url);
+      };
+    } else {
+      setPreviewUrl(null);
+    }
+  }, [selectedFile]);
+
+  const activeImageUrl = previewUrl || currentImageUrl || null;
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    // Reset file input value so re-selecting the same file triggers onChange
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      showToast('Please select a valid image file (JPEG, PNG, WebP).', 'error');
+      return;
+    }
+
+    if (file.size > MAX_IMAGE_SIZE_BYTES) {
+      showToast('Image must be 5MB or smaller.', 'error');
+      return;
+    }
+
+    onSelectImage(file);
+  };
+
+  const handleOpenPicker = () => {
+    if (disabled) return;
+    fileInputRef.current?.click();
+  };
+
+  const handleRemove = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (disabled) return;
+    onRemoveImage();
+  };
+
+  return (
+    <div className="w-full">
+      {/* Hidden Native File Input */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        onChange={handleFileChange}
+        disabled={disabled}
+        className="hidden"
+        aria-label="Upload recipe photo"
+      />
+
+      {!activeImageUrl ? (
+        <ImageUploadPlaceholder
+          onClick={handleOpenPicker}
+          disabled={disabled}
+          aria-label="Add Recipe Cover Photo"
+        />
+      ) : (
+        <div className="relative w-full h-48 sm:h-56 rounded-2xl overflow-hidden border border-border bg-surface shadow-sm group">
+          <img
+            src={activeImageUrl}
+            alt="Recipe cover preview"
+            className="w-full h-full object-cover"
+          />
+
+          {/* Action Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20 flex items-end justify-between p-3">
+            <button
+              type="button"
+              onClick={handleOpenPicker}
+              disabled={disabled}
+              className="min-h-[44px] px-3.5 flex items-center gap-1.5 rounded-xl bg-surface/90 hover:bg-surface text-surface-foreground text-xs font-semibold backdrop-blur-md transition-all shadow-md active:scale-95 disabled:opacity-50"
+              aria-label="Change photo"
+              title="Change photo"
+            >
+              <IconCamera className="w-4 h-4 text-primary" stroke={1.5} />
+              <span>Change</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={handleRemove}
+              disabled={disabled}
+              className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl bg-destructive/90 hover:bg-destructive text-destructive-foreground transition-all shadow-md active:scale-95 disabled:opacity-50"
+              aria-label="Remove photo"
+              title="Remove photo"
+            >
+              <IconTrash className="w-4 h-4" stroke={1.5} />
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};

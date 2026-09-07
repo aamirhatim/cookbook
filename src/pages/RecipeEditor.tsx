@@ -9,7 +9,7 @@ import { Textarea } from '../components/atoms/Textarea';
 import { Checkbox } from '../components/atoms/Checkbox';
 import { RadioGroup } from '../components/atoms/RadioGroup';
 import { FormField } from '../components/molecules/FormField';
-import { ImageUploadPlaceholder } from '../components/molecules/ImageUploadPlaceholder';
+import { RecipeImageUploader } from '../components/molecules/RecipeImageUploader';
 import { IngredientsFormList } from '../components/organisms/IngredientsFormList';
 import { InstructionsFormList } from '../components/organisms/InstructionsFormList';
 import { useToast } from '../hooks/useToast';
@@ -32,6 +32,8 @@ export function RecipeEditor() {
   const [loading, setLoading] = useState<boolean>(!isNew && !recipe);
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
+  const [removeExistingImage, setRemoveExistingImage] = useState<boolean>(false);
 
   const [formData, setFormData] = useState<Partial<Recipe>>({
     title: '',
@@ -141,7 +143,7 @@ export function RecipeEditor() {
           authorName: user.displayName || 'Unknown Author',
           isPrivate: formData.isPrivate || false
         };
-        await createRecipe(newRecipeInput);
+        await createRecipe(newRecipeInput, selectedImageFile || undefined);
       } else {
         const updateRecipeInput: UpdateRecipeInput = {
           title: formData.title ?? 'Untitled Recipe',
@@ -157,7 +159,12 @@ export function RecipeEditor() {
           instructions: sanitizedInstructions,
           isPrivate: formData.isPrivate ?? false
         };
-        await updateRecipe(recipeId!, updateRecipeInput);
+        await updateRecipe(
+          recipeId!,
+          updateRecipeInput,
+          selectedImageFile || undefined,
+          removeExistingImage
+        );
       }
       
       showToast('Recipe saved successfully!', 'success');
@@ -168,6 +175,17 @@ export function RecipeEditor() {
     } finally {
       setSaving(false);
     }
+  };
+
+  const handleImageSelect = (file: File) => {
+    setSelectedImageFile(file);
+    setRemoveExistingImage(false);
+  };
+
+  const handleImageRemove = () => {
+    setSelectedImageFile(null);
+    setRemoveExistingImage(true);
+    setFormData((prev) => ({ ...prev, imageUrl: undefined }));
   };
 
   const handleChange = (field: keyof Recipe, value: any) => {
@@ -222,16 +240,14 @@ export function RecipeEditor() {
         ) : (
           <div className="space-y-6">
 
-            {/* Image Placeholder */}
-            {formData.imageUrl ? (
-              <img 
-                src={formData.imageUrl} 
-                alt="Recipe" 
-                className="w-full h-[100px] object-cover rounded-xl"
-              />
-            ) : (
-              <ImageUploadPlaceholder />
-            )}
+            {/* Recipe Image Uploader */}
+            <RecipeImageUploader
+              currentImageUrl={removeExistingImage ? null : formData.imageUrl}
+              selectedFile={selectedImageFile}
+              onSelectImage={handleImageSelect}
+              onRemoveImage={handleImageRemove}
+              disabled={saving}
+            />
 
             <div className="space-y-4">
               <FormField label="Recipe Title">
