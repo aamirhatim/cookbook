@@ -101,7 +101,7 @@ export function RecipeEditor() {
 
   const handleCancel = () => {
     showToast('Recipe changes canceled', 'info');
-    navigate('/admin');
+    navigate('/admin/recipes');
   };
 
   const handleSave = async () => {
@@ -169,7 +169,7 @@ export function RecipeEditor() {
       }
       
       showToast('Recipe saved successfully!', 'success');
-      navigate('/admin');
+      navigate('/admin/recipes');
     } catch (err: any) {
       console.error('Error saving recipe:', err);
       showToast(err.message || 'Failed to save recipe. Please try again.', 'error');

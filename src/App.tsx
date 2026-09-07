@@ -1,11 +1,11 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import { ToastProvider } from './contexts/ToastContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { Home } from './pages/Home';
 import { Login } from './pages/Login';
 import { SignUp } from './pages/SignUp';
-import { Admin } from './pages/Admin';
+import { AdminRecipesList } from './pages/AdminRecipesList';
 import { RecipeEditor } from './pages/RecipeEditor';
 import { Account } from './pages/Account';
 
@@ -25,9 +25,13 @@ export default function App() {
                                 <Route path="/account" element={<Account />} />
                                 <Route
                                     path="/admin"
+                                    element={<Navigate to="/admin/recipes" replace />}
+                                />
+                                <Route
+                                    path="/admin/recipes"
                                     element={
                                         <ProtectedRoute requireAdmin>
-                                            <Admin />
+                                            <AdminRecipesList />
                                         </ProtectedRoute>
                                     }
                                 />

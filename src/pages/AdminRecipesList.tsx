@@ -6,7 +6,7 @@ import { RecipeListContainer } from '../components/organisms/RecipeListContainer
 import { ButtonIcon } from '../components/atoms/ButtonIcon';
 import type { Recipe } from '../types/recipe';
 
-export function Admin() {
+export function AdminRecipesList() {
     const navigate = useNavigate();
 
     const handleSignOut = async () => {
