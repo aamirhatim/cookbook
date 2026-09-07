@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import type { Icon, IconProps } from '@tabler/icons-react';
 
-export type ButtonIconVariant = 'subtle' | 'solid' | 'fab';
+export type ButtonIconVariant = 'subtle' | 'solid' | 'fab' | 'small';
+export type ButtonIconSize = 'default' | 'small';
 
 export interface ButtonIconProps
   extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'onChange' | 'onToggle'> {
@@ -15,6 +16,7 @@ export interface ButtonIconProps
   onToggle?: (active: boolean) => void;
   onChange?: (active: boolean) => void;
   variant?: ButtonIconVariant;
+  size?: ButtonIconSize;
   title?: string;
   ariaLabel?: string;
   activeClassName?: string;
@@ -32,6 +34,7 @@ export const ButtonIcon: React.FC<ButtonIconProps> = ({
   onToggle,
   onChange,
   variant = 'subtle',
+  size = 'default',
   title,
   ariaLabel,
   className = '',
@@ -64,8 +67,9 @@ export const ButtonIcon: React.FC<ButtonIconProps> = ({
 
   const CurrentIcon = isActive && activeIcon ? activeIcon : InactiveIcon;
 
+  const isSmall = size === 'small' || variant === 'small';
   const isFab = variant === 'fab';
-  const effectiveIconSize = iconSize ?? (isFab ? 24 : 20);
+  const effectiveIconSize = iconSize ?? (isFab ? 24 : isSmall ? 16 : 20);
   const effectiveIconStroke = iconStroke ?? 1;
 
   // Semantic styles for active and inactive states
@@ -86,11 +90,15 @@ export const ButtonIcon: React.FC<ButtonIconProps> = ({
 
   const shapeAndPositionStyles = isFab
     ? 'fixed bottom-6 right-6 sm:bottom-8 sm:right-8 z-50 w-14 h-14 min-w-[56px] min-h-[56px] rounded-full'
+    : isSmall
+    ? 'inline-flex w-9 h-9 min-w-[36px] min-h-[36px] rounded-lg'
     : 'inline-flex min-w-[44px] min-h-[44px] rounded-lg';
 
+  const colorVariant: 'subtle' | 'solid' | 'fab' = variant === 'small' ? 'subtle' : variant;
+
   const currentStyles = isActive
-    ? `${variantStyles[variant].active} ${activeClassName}`
-    : `${variantStyles[variant].inactive} ${inactiveClassName}`;
+    ? `${variantStyles[colorVariant].active} ${activeClassName}`
+    : `${variantStyles[colorVariant].inactive} ${inactiveClassName}`;
 
   return (
     <button

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Ingredient } from '../../types/recipe';
 import { Input } from '../atoms/Input';
+import { ButtonIcon } from '../atoms/ButtonIcon';
 import { IconPlus, IconTrash } from '@tabler/icons-react';
 
 export interface IngredientsFormListProps {
@@ -57,14 +58,14 @@ export const IngredientsFormList: React.FC<IngredientsFormListProps> = ({ ingred
               value={ing.notes || ''}
               onChange={(e) => handleChange(i, 'notes', e.target.value)}
             />
-            <button
-              type="button"
+            <ButtonIcon
+              icon={IconTrash}
+              size="small"
               onClick={() => handleRemove(i)}
-              className="w-9 h-9 flex items-center justify-center text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-lg transition-colors flex-shrink-0"
-              aria-label="Remove ingredient"
-            >
-              <IconTrash className="w-5 h-5" stroke={1} />
-            </button>
+              ariaLabel="Remove ingredient"
+              title="Remove ingredient"
+              className="shrink-0"
+            />
           </div>
         </div>
       ))}

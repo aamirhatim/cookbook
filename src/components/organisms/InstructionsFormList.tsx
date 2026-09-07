@@ -1,6 +1,7 @@
 import React from 'react';
 import { InstructionStep } from '../../types/recipe';
 import { Textarea } from '../atoms/Textarea';
+import { ButtonIcon } from '../atoms/ButtonIcon';
 import { IconPlus, IconTrash, IconBulb } from '@tabler/icons-react';
 
 export interface InstructionsFormListProps {
@@ -42,14 +43,13 @@ export const InstructionsFormList: React.FC<InstructionsFormListProps> = ({ inst
         <div key={i} className="flex flex-col gap-3 p-4 bg-surface-hover rounded-xl border border-border relative">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-muted-foreground uppercase">Step {step.stepNumber}</span>
-            <button
-              type="button"
+            <ButtonIcon
+              icon={IconTrash}
+              size="small"
               onClick={() => handleRemove(i)}
-              className="text-muted-foreground hover:text-destructive transition-colors p-1"
-              aria-label="Remove step"
-            >
-              <IconTrash className="w-4 h-4" stroke={1} />
-            </button>
+              ariaLabel="Remove step"
+              title="Remove step"
+            />
           </div>
           
           <Textarea 
@@ -70,13 +70,14 @@ export const InstructionsFormList: React.FC<InstructionsFormListProps> = ({ inst
                 onChange={(e) => handleChange(i, 'tip', e.target.value)}
                 className="min-h-[60px] text-sm flex-1 bg-surface"
               />
-              <button
-                type="button"
+              <ButtonIcon
+                icon={IconTrash}
+                size="small"
                 onClick={() => handleRemoveTip(i)}
-                className="absolute top-2 right-2 text-muted-foreground hover:text-destructive transition-colors p-1"
-              >
-                <IconTrash className="w-4 h-4" stroke={1} />
-              </button>
+                ariaLabel="Remove tip"
+                title="Remove tip"
+                className="absolute top-2 right-2"
+              />
             </div>
           ) : (
             <button
