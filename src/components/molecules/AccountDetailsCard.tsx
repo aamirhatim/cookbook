@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { IconMail, IconLogout, IconShieldCheck, IconTrash } from '@tabler/icons-react';
+import { ButtonIcon } from '../atoms/ButtonIcon';
 import type { UserProfile } from '../../types/user';
 
 interface AccountDetailsCardProps {
@@ -69,21 +70,15 @@ export const AccountDetailsCard: React.FC<AccountDetailsCardProps> = ({
             {/* Account Actions */}
             <div className="pt-2 border-t border-border space-y-3">
                 {/* Sign Out Button */}
-                <button
-                    type="button"
-                    onClick={onLogout}
+                <ButtonIcon
+                    icon={IconLogout}
+                    text="Sign Out"
+                    width="full"
+                    variant="subtle"
+                    loading={isLoggingOut}
                     disabled={isLoggingOut || isDeletingAccount}
-                    className="w-full flex items-center justify-center space-x-2 min-h-[44px] px-4 py-2.5 rounded-xl border border-border bg-surface hover:bg-surface-hover active:bg-surface text-foreground font-medium text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed active:scale-98"
-                >
-                    {isLoggingOut ? (
-                        <div className="animate-spin rounded-full h-4 w-4 border-2 border-foreground border-t-transparent" />
-                    ) : (
-                        <>
-                            <IconLogout className="w-4 h-4" stroke={1.5} />
-                            <span>Sign Out</span>
-                        </>
-                    )}
-                </button>
+                    onClick={onLogout}
+                />
 
                 {/* Delete Account Flow */}
                 {isConfirmingDelete ? (
@@ -95,41 +90,33 @@ export const AccountDetailsCard: React.FC<AccountDetailsCardProps> = ({
                             </p>
                         </div>
                         <div className="flex items-center gap-2 pt-1">
-                            <button
-                                type="button"
+                            <ButtonIcon
+                                text="Cancel"
+                                width="expand"
+                                variant="subtle"
+                                disabled={isDeletingAccount}
                                 onClick={() => setIsConfirmingDelete(false)}
+                            />
+                            <ButtonIcon
+                                icon={IconTrash}
+                                text="Confirm Delete"
+                                width="expand"
+                                variant="destructive"
+                                loading={isDeletingAccount}
                                 disabled={isDeletingAccount}
-                                className="flex-1 flex items-center justify-center min-h-[44px] px-4 py-2 rounded-lg border border-border bg-surface hover:bg-surface-hover text-foreground font-medium text-xs transition-colors disabled:opacity-50"
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                type="button"
                                 onClick={onDeleteAccount}
-                                disabled={isDeletingAccount}
-                                className="flex-1 flex items-center justify-center space-x-1.5 min-h-[44px] px-4 py-2 rounded-lg bg-destructive hover:bg-destructive/90 text-destructive-foreground font-medium text-xs shadow-xs transition-colors disabled:opacity-50 active:scale-98"
-                            >
-                                {isDeletingAccount ? (
-                                    <div className="animate-spin rounded-full h-4 w-4 border-2 border-destructive-foreground border-t-transparent" />
-                                ) : (
-                                    <>
-                                        <IconTrash className="w-4 h-4" stroke={1.5} />
-                                        <span>Confirm Delete</span>
-                                    </>
-                                )}
-                            </button>
+                            />
                         </div>
                     </div>
                 ) : (
-                    <button
-                        type="button"
-                        onClick={() => setIsConfirmingDelete(true)}
+                    <ButtonIcon
+                        icon={IconTrash}
+                        text="Delete Account"
+                        width="full"
+                        variant="destructive-subtle"
                         disabled={isLoggingOut || isDeletingAccount}
-                        className="w-full flex items-center justify-center space-x-2 min-h-[44px] px-4 py-2.5 rounded-xl border border-destructive/30 bg-destructive/10 hover:bg-destructive/15 active:bg-destructive/20 text-destructive font-medium text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed active:scale-98"
-                    >
-                        <IconTrash className="w-4 h-4" stroke={1.5} />
-                        <span>Delete Account</span>
-                    </button>
+                        onClick={() => setIsConfirmingDelete(true)}
+                    />
                 )}
             </div>
         </div>
