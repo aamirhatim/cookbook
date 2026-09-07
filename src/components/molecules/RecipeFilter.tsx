@@ -3,6 +3,8 @@ import { Searchbar } from '../atoms/Searchbar';
 import { ButtonIcon } from '../atoms/ButtonIcon';
 import { DropdownMenu } from './DropdownMenu';
 import { TimeFilterMobileTray } from './TimeFilterMobileTray';
+import { DifficultyFilterMobileTray } from './DifficultyFilterMobileTray';
+import { CuisineFilterMobileTray } from './CuisineFilterMobileTray';
 import type { Difficulty } from '../../types/recipe';
 import { IconStopwatch, IconHexagonAsterisk, IconWorldMap, IconCarrot, IconX } from '@tabler/icons-react';
 
@@ -160,7 +162,7 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
 
                     <DropdownMenu
                         icon={IconHexagonAsterisk}
-                        title="Filter by Difficulty"
+                        title="Difficulty"
                         type="multi"
                         items={DIFFICULTY_OPTIONS}
                         selectedValues={difficulties}
@@ -169,12 +171,19 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
                         placement={isBottom ? 'top' : 'bottom'}
                         open={activeDropdown === 'diff'}
                         onOpenChange={(open) => setActiveDropdown(open ? 'diff' : null)}
+                        mobileLayout={({ close }) => (
+                            <DifficultyFilterMobileTray
+                                selectedValues={difficulties}
+                                onSelect={handleDifficultyToggle}
+                                onClose={close}
+                            />
+                        )}
                     />
 
                     {cuisineOptions.length > 0 && (
                         <DropdownMenu
                             icon={IconWorldMap}
-                            title="Filter by Cuisine"
+                            title="Cuisine"
                             type="multi"
                             items={cuisineOptions}
                             selectedValues={cuisines}
@@ -183,6 +192,14 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
                             placement={isBottom ? 'top' : 'bottom'}
                             open={activeDropdown === 'cuisine'}
                             onOpenChange={(open) => setActiveDropdown(open ? 'cuisine' : null)}
+                            mobileLayout={({ close }) => (
+                                <CuisineFilterMobileTray
+                                    items={cuisineOptions}
+                                    selectedValues={cuisines}
+                                    onSelect={handleCuisineToggle}
+                                    onClose={close}
+                                />
+                            )}
                         />
                     )}
 
