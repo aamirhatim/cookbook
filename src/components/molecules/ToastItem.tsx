@@ -1,5 +1,6 @@
 import React from 'react';
 import { IconCircleCheck, IconAlertCircle, IconInfoCircle, IconX } from '@tabler/icons-react';
+import { ButtonIcon } from '../atoms/ButtonIcon';
 
 export type ToastType = 'success' | 'error' | 'info';
 
@@ -44,7 +45,7 @@ export const ToastItem: React.FC<ToastItemProps> = ({
         <div
             role="status"
             aria-live="polite"
-            className={`flex items-center justify-between gap-3 px-3 bg-surface text-surface-foreground border ${getBorderColor()} shadow-xl rounded-2xl w-full pointer-events-auto transition-all animate-in fade-in slide-in-from-top-2 duration-200`}
+            className={`flex items-center justify-between gap-3 px-3 py-1.5 bg-surface text-surface-foreground border ${getBorderColor()} shadow-xl rounded-2xl w-full pointer-events-auto transition-all animate-in fade-in slide-in-from-top-2 duration-200`}
         >
             <div className="flex items-center gap-2.5 min-w-0 flex-1">
                 {renderIcon()}
@@ -53,15 +54,14 @@ export const ToastItem: React.FC<ToastItemProps> = ({
                 </p>
             </div>
 
-            <button
-                type="button"
+            <ButtonIcon
+                icon={IconX}
+                size="small"
                 onClick={() => onDismiss(id)}
-                className="min-w-[44px] min-h-[44px] flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-surface-hover rounded-xl transition-colors -mr-2 flex-shrink-0"
-                aria-label="Dismiss notification"
+                ariaLabel="Dismiss notification"
                 title="Dismiss"
-            >
-                <IconX className="w-4 h-4" stroke={1} />
-            </button>
+                className="shrink-0"
+            />
         </div>
     );
 };

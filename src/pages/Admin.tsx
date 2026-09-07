@@ -3,6 +3,7 @@ import { IconLogout } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
 import { auth } from '../lib/firebase';
 import { RecipeListContainer } from '../components/organisms/RecipeListContainer';
+import { ButtonIcon } from '../components/atoms/ButtonIcon';
 import type { Recipe } from '../types/recipe';
 
 export function Admin() {
@@ -28,14 +29,12 @@ export function Admin() {
                         Recipes Editor
                     </h1>
                 </div>
-                <button
+                <ButtonIcon
+                    icon={IconLogout}
                     onClick={handleSignOut}
-                    className="min-w-[44px] min-h-[44px] flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-surface-hover rounded-lg transition-colors"
                     title="Sign Out"
-                    aria-label="Sign Out"
-                >
-                    <IconLogout className="w-5 h-5" stroke={1} />
-                </button>
+                    ariaLabel="Sign Out"
+                />
             </header>
 
             <main className="w-full">

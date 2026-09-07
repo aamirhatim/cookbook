@@ -8,6 +8,7 @@ import { Input } from '../components/atoms/Input';
 import { Textarea } from '../components/atoms/Textarea';
 import { Checkbox } from '../components/atoms/Checkbox';
 import { RadioGroup } from '../components/atoms/RadioGroup';
+import { ButtonIcon } from '../components/atoms/ButtonIcon';
 import { FormField } from '../components/molecules/FormField';
 import { RecipeImageUploader } from '../components/molecules/RecipeImageUploader';
 import { IngredientsFormList } from '../components/organisms/IngredientsFormList';
@@ -201,16 +202,13 @@ export function RecipeEditor() {
     <div className="space-y-6 w-full pb-20">
       {/* Header with Back Button */}
       <header className="pt-2 flex items-center gap-3">
-        <button
-          type="button"
+        <ButtonIcon
+          icon={IconArrowLeft}
           onClick={handleCancel}
           disabled={saving}
-          className="min-w-[44px] min-h-[44px] flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-surface-hover rounded-lg transition-colors border border-transparent hover:border-border disabled:opacity-50"
           title="Back to Recipes"
-          aria-label="Back to Recipes"
-        >
-          <IconArrowLeft className="w-5 h-5" stroke={1} />
-        </button>
+          ariaLabel="Back to Recipes"
+        />
       </header>
 
       {/* Main Content Area: Editor Template UI */}
