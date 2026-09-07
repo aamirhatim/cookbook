@@ -12,12 +12,14 @@ import { FormField } from '../components/molecules/FormField';
 import { ImageUploadPlaceholder } from '../components/molecules/ImageUploadPlaceholder';
 import { IngredientsFormList } from '../components/organisms/IngredientsFormList';
 import { InstructionsFormList } from '../components/organisms/InstructionsFormList';
+import { useToast } from '../hooks/useToast';
 
 export function RecipeEditor() {
   const { recipeId } = useParams<{ recipeId: string }>();
   const navigate = useNavigate();
   const location = useLocation();
   const { user } = useAuth();
+  const { showToast } = useToast();
 
   const isNew = recipeId === 'new';
 
@@ -94,13 +96,14 @@ export function RecipeEditor() {
     }
   }, [recipe]);
 
-  const handleBack = () => {
+  const handleCancel = () => {
+    showToast('Recipe changes canceled', 'info');
     navigate('/admin');
   };
 
   const handleSave = async () => {
     if (!user) {
-      setError('You must be logged in to save recipes.');
+      showToast('You must be logged in to save recipes.', 'error');
       return;
     }
 
@@ -157,11 +160,11 @@ export function RecipeEditor() {
         await updateRecipe(recipeId!, updateRecipeInput);
       }
       
-      // Navigate back to admin dashboard after saving
+      showToast('Recipe saved successfully!', 'success');
       navigate('/admin');
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error saving recipe:', err);
-      setError('Failed to save recipe. Please try again.');
+      showToast(err.message || 'Failed to save recipe. Please try again.', 'error');
     } finally {
       setSaving(false);
     }
@@ -182,7 +185,7 @@ export function RecipeEditor() {
       <header className="pt-2 flex items-center gap-3">
         <button
           type="button"
-          onClick={handleBack}
+          onClick={handleCancel}
           disabled={saving}
           className="min-w-[44px] min-h-[44px] flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-surface-hover rounded-lg transition-colors border border-transparent hover:border-border disabled:opacity-50"
           title="Back to Recipes"
@@ -193,24 +196,24 @@ export function RecipeEditor() {
       </header>
 
       {/* Main Content Area: Editor Template UI */}
-      <main className="w-full">
+      <div className="w-full min-w-0">
         {loading ? (
           <div className="flex flex-col items-center justify-center py-20 text-muted-foreground">
             <IconLoader2 className="w-8 h-8 animate-spin text-primary mb-3" stroke={1.5} />
             <p className="text-sm">Loading recipe details...</p>
           </div>
-        ) : error && !saving ? (
+        ) : !isNew && !recipe ? (
           <div className="p-6 rounded-2xl bg-surface border border-border text-center space-y-4">
             <div className="w-12 h-12 rounded-full bg-destructive/10 text-destructive flex items-center justify-center mx-auto">
               <IconAlertCircle className="w-6 h-6" stroke={1.5} />
             </div>
             <div className="space-y-1">
-              <h2 className="text-base font-semibold text-foreground">Error</h2>
-              <p className="text-sm text-muted-foreground">{error}</p>
+              <h2 className="text-base font-semibold text-foreground">Recipe Not Found</h2>
+              <p className="text-sm text-muted-foreground">{error || "This recipe could not be loaded or doesn't exist."}</p>
             </div>
             <button
               type="button"
-              onClick={handleBack}
+              onClick={handleCancel}
               className="inline-flex items-center justify-center min-h-[44px] px-4 py-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg text-sm font-medium shadow-sm transition-colors"
             >
               Return to Recipes
@@ -218,13 +221,6 @@ export function RecipeEditor() {
           </div>
         ) : (
           <div className="space-y-6">
-            
-            {error && (
-              <div className="p-4 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive flex items-center gap-3">
-                 <IconAlertCircle className="w-5 h-5 flex-shrink-0" stroke={1.5} />
-                 <span className="text-sm">{error}</span>
-              </div>
-            )}
 
             {/* Image Placeholder */}
             {formData.imageUrl ? (
@@ -343,7 +339,7 @@ export function RecipeEditor() {
               <div className="flex gap-3 pt-6 pb-2 border-t border-border">
                 <button
                   type="button"
-                  onClick={handleBack}
+                  onClick={handleCancel}
                   disabled={saving}
                   className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl bg-surface hover:bg-surface-hover border border-border text-foreground text-sm font-medium transition-colors disabled:opacity-50"
                 >
@@ -368,7 +364,7 @@ export function RecipeEditor() {
             </div>
           </div>
         )}
-      </main>
+      </div>
     </div>
   );
 }
