@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { IconArrowLeft, IconPencil, IconLoader2, IconAlertCircle } from '@tabler/icons-react';
 import { getRecipe } from '../services/recipes';
@@ -6,8 +6,9 @@ import type { Recipe } from '../types/recipe';
 import { useAuth } from '../contexts/AuthContext';
 import { ButtonIcon } from '../components/atoms/ButtonIcon';
 import { RecipeViewerHero } from '../components/organisms/RecipeViewerHero';
-import { RecipeViewerIngredients } from '../components/organisms/RecipeViewerIngredients';
-import { RecipeViewerInstructions } from '../components/organisms/RecipeViewerInstructions';
+import { RecipeViewerIngredients, type RecipeViewerIngredientsHandle } from '../components/organisms/RecipeViewerIngredients';
+import { RecipeViewerInstructions, type RecipeViewerInstructionsHandle } from '../components/organisms/RecipeViewerInstructions';
+import { RecipeScrollController } from '../components/molecules/RecipeScrollController';
 
 export function RecipeViewer() {
     const { recipeId } = useParams<{ recipeId: string }>();
@@ -65,11 +66,42 @@ export function RecipeViewer() {
         };
     }, [recipeId]);
 
+    const ingredientsRef = useRef<RecipeViewerIngredientsHandle>(null);
+    const instructionsRef = useRef<RecipeViewerInstructionsHandle>(null);
+
     const handleBack = () => {
         if (window.history.length > 1) {
             navigate(-1);
         } else {
             navigate('/recipes');
+        }
+    };
+
+    const handleScrollToTop = () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    const handleScrollToIngredients = () => {
+        if (ingredientsRef.current) {
+            ingredientsRef.current.scrollToIngredients();
+        } else {
+            const el = document.getElementById('recipe-ingredients');
+            if (el) {
+                const y = el.getBoundingClientRect().top + window.scrollY - 20;
+                window.scrollTo({ top: y, behavior: 'smooth' });
+            }
+        }
+    };
+
+    const handleScrollToInstructions = () => {
+        if (instructionsRef.current) {
+            instructionsRef.current.scrollToFirstUncheckedStep();
+        } else {
+            const el = document.getElementById('recipe-instructions');
+            if (el) {
+                const y = el.getBoundingClientRect().top + window.scrollY - 20;
+                window.scrollTo({ top: y, behavior: 'smooth' });
+            }
         }
     };
 
@@ -144,18 +176,33 @@ export function RecipeViewer() {
                                         servings={currentServings}
                                         onServingsChange={setServings}
                                     />
-                                    <RecipeViewerIngredients ingredients={scaledIngredients} />
+                                    <RecipeViewerIngredients
+                                        ref={ingredientsRef}
+                                        ingredients={scaledIngredients}
+                                    />
                                 </div>
 
                                 {/* Right Column: Instructions */}
                                 <div className="space-y-6 lg:col-span-7">
-                                    <RecipeViewerInstructions instructions={recipe.instructions || []} />
+                                    <RecipeViewerInstructions
+                                        ref={instructionsRef}
+                                        instructions={recipe.instructions || []}
+                                    />
                                 </div>
                             </div>
                         );
                     })()
                 )}
             </main>
+
+            {/* Floating Mobile 3-Option Scroll Controller */}
+            {recipe && !loading && !error && (
+                <RecipeScrollController
+                    onScrollToTop={handleScrollToTop}
+                    onScrollToIngredients={handleScrollToIngredients}
+                    onScrollToInstructions={handleScrollToInstructions}
+                />
+            )}
         </div>
     );
 }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState, forwardRef, useImperativeHandle } from 'react';
 import { IconRotate2, IconToolsKitchen, IconChevronDown } from '@tabler/icons-react';
 import type { IngredientSection } from '../../types/recipe';
 import { IngredientViewerItem } from '../molecules/IngredientViewerItem';
@@ -8,13 +8,43 @@ export interface RecipeViewerIngredientsProps {
     className?: string;
 }
 
-export const RecipeViewerIngredients: React.FC<RecipeViewerIngredientsProps> = ({
+export interface RecipeViewerIngredientsHandle {
+    scrollToIngredients: () => void;
+}
+
+export const RecipeViewerIngredients = forwardRef<
+    RecipeViewerIngredientsHandle,
+    RecipeViewerIngredientsProps
+>(({
     ingredients,
     className = '',
-}) => {
+}, ref) => {
     const [checkedKeys, setCheckedKeys] = useState<Set<string>>(new Set());
     const [collapsedSections, setCollapsedSections] = useState<Set<number>>(new Set());
     const [isSectionCollapsed, setIsSectionCollapsed] = useState<boolean>(false);
+
+    useImperativeHandle(ref, () => ({
+        scrollToIngredients: () => {
+            const hadCollapsed = isSectionCollapsed;
+            if (isSectionCollapsed) {
+                setIsSectionCollapsed(false);
+            }
+
+            const executeScroll = () => {
+                const el = document.getElementById('recipe-ingredients');
+                if (el) {
+                    const y = el.getBoundingClientRect().top + window.scrollY - 20;
+                    window.scrollTo({ top: y, behavior: 'smooth' });
+                }
+            };
+
+            if (hadCollapsed) {
+                setTimeout(executeScroll, 60);
+            } else {
+                executeScroll();
+            }
+        },
+    }));
 
     const totalCount = ingredients.reduce((acc, sec) => acc + (sec.items?.length || 0), 0);
 
@@ -48,7 +78,7 @@ export const RecipeViewerIngredients: React.FC<RecipeViewerIngredientsProps> = (
 
     if (!ingredients || totalCount === 0) {
         return (
-            <div className={`p-4 rounded-xl bg-surface border border-border text-center text-xs text-muted-foreground ${className}`}>
+            <div id="recipe-ingredients" className={`scroll-mt-6 p-4 rounded-xl bg-surface border border-border text-center text-xs text-muted-foreground ${className}`}>
                 No ingredients listed for this recipe.
             </div>
         );
@@ -57,7 +87,7 @@ export const RecipeViewerIngredients: React.FC<RecipeViewerIngredientsProps> = (
     const hasSections = ingredients.length > 1 || ingredients.some((sec) => !!sec.title?.trim());
 
     return (
-        <section className={`space-y-4 ${className}`}>
+        <section id="recipe-ingredients" className={`scroll-mt-6 space-y-4 ${className}`}>
             <div className="flex items-center justify-between">
                 <button
                     type="button"
@@ -146,4 +176,6 @@ export const RecipeViewerIngredients: React.FC<RecipeViewerIngredientsProps> = (
             )}
         </section>
     );
-};
+});
+
+RecipeViewerIngredients.displayName = 'RecipeViewerIngredients';

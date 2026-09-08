@@ -15,6 +15,9 @@ export const InstructionViewerItem: React.FC<InstructionViewerItemProps> = ({
 }) => {
     return (
         <div
+            id={`instruction-step-${step.stepNumber}`}
+            data-instruction-step={step.stepNumber}
+            data-step-done={isDone}
             onClick={onToggle}
             role="button"
             tabIndex={0}
@@ -24,7 +27,7 @@ export const InstructionViewerItem: React.FC<InstructionViewerItemProps> = ({
                     onToggle();
                 }
             }}
-            className={`p-3 rounded-2xl bg-surface border transition-all cursor-pointer select-none space-y-3 ${isDone
+            className={`scroll-mt-6 p-3 rounded-2xl bg-surface border transition-all cursor-pointer select-none space-y-3 ${isDone
                 ? 'border-primary/40 bg-primary/5 opacity-80'
                 : 'border-border hover:border-border/80 hover:bg-surface-hover/50'
                 }`}

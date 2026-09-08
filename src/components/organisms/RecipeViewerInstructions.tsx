@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState, forwardRef, useImperativeHandle } from 'react';
 import { IconRotate2, IconListCheck, IconChevronDown } from '@tabler/icons-react';
 import type { InstructionSection } from '../../types/recipe';
 import { InstructionViewerItem } from '../molecules/InstructionViewerItem';
@@ -8,13 +8,84 @@ export interface RecipeViewerInstructionsProps {
     className?: string;
 }
 
-export const RecipeViewerInstructions: React.FC<RecipeViewerInstructionsProps> = ({
+export interface RecipeViewerInstructionsHandle {
+    scrollToFirstUncheckedStep: () => void;
+}
+
+export const RecipeViewerInstructions = forwardRef<
+    RecipeViewerInstructionsHandle,
+    RecipeViewerInstructionsProps
+>(({
     instructions,
     className = '',
-}) => {
+}, ref) => {
     const [completedSteps, setCompletedSteps] = useState<Set<number>>(new Set());
     const [collapsedSections, setCollapsedSections] = useState<Set<number>>(new Set());
     const [isSectionCollapsed, setIsSectionCollapsed] = useState<boolean>(false);
+
+    useImperativeHandle(ref, () => ({
+        scrollToFirstUncheckedStep: () => {
+            const hadSectionCollapsed = isSectionCollapsed;
+            if (isSectionCollapsed) {
+                setIsSectionCollapsed(false);
+            }
+
+            // Find first unchecked step across all sections
+            let targetStepNumber: number | null = null;
+            let targetSectionIdx: number | null = null;
+
+            for (let sIdx = 0; sIdx < instructions.length; sIdx++) {
+                const sec = instructions[sIdx];
+                for (const step of sec.steps || []) {
+                    if (!completedSteps.has(step.stepNumber)) {
+                        targetStepNumber = step.stepNumber;
+                        targetSectionIdx = sIdx;
+                        break;
+                    }
+                }
+                if (targetStepNumber !== null) break;
+            }
+
+            const hadSubSectionCollapsed = targetSectionIdx !== null && collapsedSections.has(targetSectionIdx);
+            if (hadSubSectionCollapsed) {
+                setCollapsedSections((prev) => {
+                    const next = new Set(prev);
+                    next.delete(targetSectionIdx!);
+                    return next;
+                });
+            }
+
+            const executeScroll = () => {
+                const targetElement = targetStepNumber !== null
+                    ? document.getElementById(`instruction-step-${targetStepNumber}`)
+                    : document.getElementById('recipe-instructions');
+
+                if (targetElement) {
+                    const y = targetElement.getBoundingClientRect().top + window.scrollY - 20;
+                    window.scrollTo({ top: y, behavior: 'smooth' });
+
+                    if (targetStepNumber !== null) {
+                        targetElement.classList.add('ring-2', 'ring-primary/60');
+                        setTimeout(() => {
+                            targetElement.classList.remove('ring-2', 'ring-primary/60');
+                        }, 1200);
+                    }
+                } else {
+                    const fallbackEl = document.getElementById('recipe-instructions');
+                    if (fallbackEl) {
+                        const y = fallbackEl.getBoundingClientRect().top + window.scrollY - 20;
+                        window.scrollTo({ top: y, behavior: 'smooth' });
+                    }
+                }
+            };
+
+            if (hadSectionCollapsed || hadSubSectionCollapsed) {
+                setTimeout(executeScroll, 60);
+            } else {
+                executeScroll();
+            }
+        },
+    }));
 
     const totalSteps = instructions.reduce((acc, sec) => acc + (sec.steps?.length || 0), 0);
 
@@ -48,7 +119,7 @@ export const RecipeViewerInstructions: React.FC<RecipeViewerInstructionsProps> =
 
     if (!instructions || totalSteps === 0) {
         return (
-            <div className={`p-4 rounded-xl bg-surface border border-border text-center text-xs text-muted-foreground ${className}`}>
+            <div id="recipe-instructions" className={`scroll-mt-6 p-4 rounded-xl bg-surface border border-border text-center text-xs text-muted-foreground ${className}`}>
                 No instruction steps listed for this recipe.
             </div>
         );
@@ -57,7 +128,7 @@ export const RecipeViewerInstructions: React.FC<RecipeViewerInstructionsProps> =
     const hasSections = instructions.length > 1 || instructions.some((sec) => !!sec.title?.trim());
 
     return (
-        <section className={`space-y-4 ${className}`}>
+        <section id="recipe-instructions" className={`scroll-mt-6 space-y-4 ${className}`}>
             <div className="flex items-center justify-between">
                 <button
                     type="button"
@@ -143,4 +214,6 @@ export const RecipeViewerInstructions: React.FC<RecipeViewerInstructionsProps> =
             )}
         </section>
     );
-};
+});
+
+RecipeViewerInstructions.displayName = 'RecipeViewerInstructions';
