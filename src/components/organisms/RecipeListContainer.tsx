@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { subscribeToRecipes } from '../../services/recipes';
 import { RecipeFilter, RecipeFilterCriteria } from '../molecules/RecipeFilter';
-import { RecipeList } from '../molecules/RecipeList';
+import { RecipeList } from './RecipeList';
 import type { Recipe } from '../../types/recipe';
 import { IconLoader2 } from '@tabler/icons-react';
 

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { FormField } from './FormField';
 import { Input } from '../atoms/Input';
+import { ButtonIcon } from '../atoms/ButtonIcon';
 
 export interface SignUpFormData {
     firstName: string;
@@ -58,12 +59,12 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({
     return (
         <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-2 gap-3">
-                <FormField>
+                <FormField label="First Name" htmlFor="firstName">
                     <Input
                         id="firstName"
                         name="given-name"
                         type="text"
-                        placeholder="First Name"
+                        placeholder="Jane"
                         value={firstName}
                         onChange={(e) => setFirstName(e.target.value)}
                         autoComplete="given-name"
@@ -72,12 +73,12 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({
                     />
                 </FormField>
 
-                <FormField>
+                <FormField label="Last Name" htmlFor="lastName">
                     <Input
                         id="lastName"
                         name="family-name"
                         type="text"
-                        placeholder="Last Name"
+                        placeholder="Doe"
                         value={lastName}
                         onChange={(e) => setLastName(e.target.value)}
                         autoComplete="family-name"
@@ -87,12 +88,12 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({
                 </FormField>
             </div>
 
-            <FormField>
+            <FormField label="Email Address" htmlFor="email">
                 <Input
                     id="email"
                     name="email"
                     type="email"
-                    placeholder="Email"
+                    placeholder="you@example.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     autoComplete="email"
@@ -101,12 +102,12 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({
                 />
             </FormField>
 
-            <FormField>
+            <FormField label="Password" htmlFor="new-password">
                 <Input
                     id="new-password"
                     name="new-password"
                     type="password"
-                    placeholder="Password"
+                    placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     autoComplete="new-password"
@@ -115,12 +116,12 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({
                 />
             </FormField>
 
-            <FormField>
+            <FormField label="Confirm Password" htmlFor="confirm-password">
                 <Input
                     id="confirm-password"
                     name="confirm-password"
                     type="password"
-                    placeholder="Confirm Password"
+                    placeholder="••••••••"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     autoComplete="new-password"
@@ -131,21 +132,22 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({
 
             {/* Button Group: Cancel and Sign Up */}
             <div className="flex items-center gap-3 pt-2">
-                <button
+                <ButtonIcon
                     type="button"
+                    width="expand"
+                    variant="outline"
                     onClick={onCancel}
                     disabled={isLoading}
-                    className="flex-1 h-11 min-h-[44px] flex items-center justify-center border border-border bg-surface hover:bg-surface-hover text-foreground font-medium rounded-xl transition-colors active:scale-98 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                    Cancel
-                </button>
-                <button
+                    text="Cancel"
+                />
+                <ButtonIcon
                     type="submit"
+                    width="expand"
+                    variant="primary"
+                    loading={isLoading}
+                    text={isLoading ? 'Signing up...' : 'Sign Up'}
                     disabled={isLoading}
-                    className="flex-1 h-11 min-h-[44px] flex items-center justify-center bg-primary hover:bg-primary/90 text-primary-foreground font-medium rounded-xl shadow-sm transition-colors active:scale-98 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                    {isLoading ? 'Signing up...' : 'Sign Up'}
-                </button>
+                />
             </div>
         </form>
     );

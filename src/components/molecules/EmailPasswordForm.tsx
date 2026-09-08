@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { FormField } from './FormField';
 import { Input } from '../atoms/Input';
+import { ButtonIcon } from '../atoms/ButtonIcon';
 
 export interface EmailPasswordFormProps {
     onSubmit: (credentials: { email: string; password: string }) => Promise<void>;
@@ -24,7 +25,7 @@ export const EmailPasswordForm: React.FC<EmailPasswordFormProps> = ({
 
     return (
         <form onSubmit={handleSubmit} className="space-y-4">
-            <FormField>
+            <FormField label="Email Address" htmlFor="email">
                 <Input
                     id="email"
                     type="email"
@@ -37,7 +38,7 @@ export const EmailPasswordForm: React.FC<EmailPasswordFormProps> = ({
                 />
             </FormField>
 
-            <FormField>
+            <FormField label="Password" htmlFor="password">
                 <Input
                     id="password"
                     type="password"
@@ -50,13 +51,14 @@ export const EmailPasswordForm: React.FC<EmailPasswordFormProps> = ({
                 />
             </FormField>
 
-            <button
+            <ButtonIcon
                 type="submit"
+                width="full"
+                variant="primary"
+                loading={isLoading}
+                text={isLoading ? 'Signing in...' : submitLabel}
                 disabled={isLoading}
-                className="w-full flex items-center justify-center bg-primary hover:bg-primary/90 text-primary-foreground font-medium h-11 min-h-[44px] px-4 rounded-xl shadow-sm transition-colors active:scale-98 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-                {isLoading ? 'Signing in...' : submitLabel}
-            </button>
+            />
         </form>
     );
 };

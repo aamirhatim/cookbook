@@ -24,18 +24,35 @@ function getStoredPosition(key: string, path: string): number | undefined {
     return undefined;
 }
 
-function saveStoredPosition(key: string, path: string, y: number) {
-    memoryScrollMap.set(key, y);
-    memoryScrollMap.set(path, y);
+let syncTimeout: ReturnType<typeof setTimeout> | null = null;
+
+function flushSessionStorage() {
+    if (syncTimeout) {
+        clearTimeout(syncTimeout);
+        syncTimeout = null;
+    }
     try {
         const item = sessionStorage.getItem(STORAGE_KEY);
         const parsed = item ? JSON.parse(item) : {};
-        parsed[key] = y;
-        parsed[path] = y;
+        memoryScrollMap.forEach((y, key) => {
+            parsed[key] = y;
+        });
         sessionStorage.setItem(STORAGE_KEY, JSON.stringify(parsed));
     } catch {
         // Ignore storage errors
     }
+}
+
+function saveStoredPosition(key: string, path: string, y: number) {
+    // Synchronous in-memory update for fast, jank-free access
+    memoryScrollMap.set(key, y);
+    memoryScrollMap.set(path, y);
+
+    // Debounce writes to persistent sessionStorage to keep scrolling at 60-120fps
+    if (syncTimeout) {
+        clearTimeout(syncTimeout);
+    }
+    syncTimeout = setTimeout(flushSessionStorage, 250);
 }
 
 /**
@@ -53,10 +70,13 @@ export function ScrollToTop() {
         if ('scrollRestoration' in window.history) {
             window.history.scrollRestoration = 'manual';
         }
+        window.addEventListener('beforeunload', flushSessionStorage);
         return () => {
             if ('scrollRestoration' in window.history) {
                 window.history.scrollRestoration = 'auto';
             }
+            window.removeEventListener('beforeunload', flushSessionStorage);
+            flushSessionStorage();
         };
     }, []);
 
@@ -75,6 +95,7 @@ export function ScrollToTop() {
             const loc = currentLocationRef.current;
             saveStoredPosition(loc.key, loc.pathname + loc.search, window.scrollY);
             window.removeEventListener('scroll', handleScroll);
+            flushSessionStorage();
         };
     }, [location.key]);
 

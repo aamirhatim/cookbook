@@ -59,6 +59,7 @@ export interface CreateRecipeInput {
     isVeg: boolean;
     prepTimeMinutes: number;
     cookTimeMinutes: number;
+    equipment?: string[];
     servings: number;
     difficulty: Difficulty;
     tags: string[];

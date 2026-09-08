@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { IconFolderPlus } from '@tabler/icons-react';
-import type { InstructionSection } from '../../types/recipe';
+import type { InstructionSection, InstructionStep } from '../../types/recipe';
 import { InstructionSectionCard } from '../molecules/InstructionSectionCard';
+import { useSectionList } from '../../hooks/useSectionList';
 
 export interface InstructionsFormListProps {
     instructions: InstructionSection[];
@@ -13,135 +14,70 @@ export const InstructionsFormList: React.FC<InstructionsFormListProps> = ({
     onChange
 }) => {
     // Reindex step numbers globally across all sections
-    const reindexSections = (rawSections: InstructionSection[]): InstructionSection[] => {
-        let currentNumber = 1;
-        return rawSections.map((sec) => ({
-            ...sec,
-            steps: (sec.steps || []).map((step) => ({
-                ...step,
-                stepNumber: currentNumber++
-            }))
-        }));
-    };
+    const handleSectionsChange = useCallback(
+        (rawSections: InstructionSection[]) => {
+            let currentNumber = 1;
+            const reindexed = rawSections.map((sec) => ({
+                ...sec,
+                steps: (sec.steps || []).map((step) => ({
+                    ...step,
+                    stepNumber: currentNumber++
+                }))
+            }));
+            onChange(reindexed);
+        },
+        [onChange]
+    );
 
-    const sections = instructions.length > 0 ? instructions : [{ title: '', steps: [] }];
+    const {
+        sections,
+        handleAddSection,
+        handleRemoveSection,
+        handleMoveSection,
+        handleChangeTitle,
+        handleAddItem,
+        handleUpdateItem,
+        handleRemoveItem,
+        handleMoveItem,
+    } = useSectionList<InstructionStep, InstructionSection>({
+        sections: instructions,
+        onChange: handleSectionsChange,
+        getItems: (s) => s.steps || [],
+        setItems: (s, steps) => ({ ...s, steps }),
+        createEmptyItem: () => ({ stepNumber: 0, instruction: '' }),
+        createEmptySection: () => ({
+            title: '',
+            steps: [{ stepNumber: 0, instruction: '' }]
+        }),
+    });
 
-    const updateSections = (newSections: InstructionSection[]) => {
-        onChange(reindexSections(newSections));
-    };
-
-    const handleAddSection = () => {
-        const next = [
-            ...sections,
-            { title: '', steps: [{ stepNumber: 0, instruction: '' }] }
-        ];
-        updateSections(next);
-    };
-
-    const handleRemoveSection = (sectionIndex: number) => {
-        const next = sections.filter((_, idx) => idx !== sectionIndex);
-        updateSections(next.length > 0 ? next : [{ title: '', steps: [] }]);
-    };
-
-    const handleMoveSection = (sectionIndex: number, direction: 'up' | 'down') => {
-        const targetIndex = direction === 'up' ? sectionIndex - 1 : sectionIndex + 1;
-        if (targetIndex < 0 || targetIndex >= sections.length) return;
-        const next = [...sections];
-        const [moved] = next.splice(sectionIndex, 1);
-        next.splice(targetIndex, 0, moved);
-        updateSections(next);
-    };
-
-    const handleChangeTitle = (sectionIndex: number, title: string) => {
-        const next = [...sections];
-        next[sectionIndex] = { ...next[sectionIndex], title };
-        updateSections(next);
-    };
-
-    const handleAddStep = (sectionIndex: number) => {
-        const next = [...sections];
-        const currentSteps = next[sectionIndex].steps || [];
-        next[sectionIndex] = {
-            ...next[sectionIndex],
-            steps: [...currentSteps, { stepNumber: 0, instruction: '' }]
-        };
-        updateSections(next);
-    };
-
-    const handleChangeStepInstruction = (
-        sectionIndex: number,
-        stepIndex: number,
+    const handleChangeInstruction = (
+        secIdx: number,
+        stepIdx: number,
         instruction: string
     ) => {
-        const next = [...sections];
-        const currentSteps = [...(next[sectionIndex].steps || [])];
-        currentSteps[stepIndex] = { ...currentSteps[stepIndex], instruction };
-        next[sectionIndex] = { ...next[sectionIndex], steps: currentSteps };
-        updateSections(next);
+        const step = sections[secIdx].steps[stepIdx];
+        if (!step) return;
+        handleUpdateItem(secIdx, stepIdx, { ...step, instruction });
     };
 
-    const handleChangeStepTip = (
-        sectionIndex: number,
-        stepIndex: number,
+    const handleChangeTip = (
+        secIdx: number,
+        stepIdx: number,
         tip: string | undefined
     ) => {
-        const next = [...sections];
-        const currentSteps = [...(next[sectionIndex].steps || [])];
+        const step = sections[secIdx].steps[stepIdx];
+        if (!step) return;
         if (tip !== undefined) {
-            currentSteps[stepIndex] = { ...currentSteps[stepIndex], tip };
+            handleUpdateItem(secIdx, stepIdx, { ...step, tip });
         } else {
-            const { tip: _removed, ...rest } = currentSteps[stepIndex];
-            currentSteps[stepIndex] = rest;
+            const { tip: _removed, ...rest } = step;
+            handleUpdateItem(secIdx, stepIdx, rest as InstructionStep);
         }
-        next[sectionIndex] = { ...next[sectionIndex], steps: currentSteps };
-        updateSections(next);
-    };
-
-    const handleRemoveStep = (sectionIndex: number, stepIndex: number) => {
-        const next = [...sections];
-        const currentSteps = (next[sectionIndex].steps || []).filter((_, idx) => idx !== stepIndex);
-        next[sectionIndex] = { ...next[sectionIndex], steps: currentSteps };
-        updateSections(next);
-    };
-
-    const handleMoveStep = (
-        sectionIndex: number,
-        stepIndex: number,
-        direction: 'up' | 'down'
-    ) => {
-        const next = sections.map((sec) => ({
-            ...sec,
-            steps: [...(sec.steps || [])]
-        }));
-        const currentSteps = next[sectionIndex].steps;
-        const [movedStep] = currentSteps.splice(stepIndex, 1);
-        if (!movedStep) return;
-
-        if (direction === 'up') {
-            if (stepIndex > 0) {
-                currentSteps.splice(stepIndex - 1, 0, movedStep);
-            } else if (sectionIndex > 0) {
-                next[sectionIndex - 1].steps.push(movedStep);
-            } else {
-                currentSteps.unshift(movedStep);
-                return;
-            }
-        } else {
-            if (stepIndex < currentSteps.length) {
-                currentSteps.splice(stepIndex + 1, 0, movedStep);
-            } else if (sectionIndex < next.length - 1) {
-                next[sectionIndex + 1].steps.unshift(movedStep);
-            } else {
-                currentSteps.push(movedStep);
-                return;
-            }
-        }
-
-        updateSections(next);
     };
 
     return (
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 w-full min-w-0">
             {sections.map((section, idx) => (
                 <InstructionSectionCard
                     key={idx}
@@ -149,23 +85,23 @@ export const InstructionsFormList: React.FC<InstructionsFormListProps> = ({
                     sectionIndex={idx}
                     totalSections={sections.length}
                     onChangeTitle={(title) => handleChangeTitle(idx, title)}
-                    onAddStep={() => handleAddStep(idx)}
+                    onAddStep={() => handleAddItem(idx)}
                     onChangeStepInstruction={(stepIdx, text) =>
-                        handleChangeStepInstruction(idx, stepIdx, text)
+                        handleChangeInstruction(idx, stepIdx, text)
                     }
-                    onChangeStepTip={(stepIdx, tip) => handleChangeStepTip(idx, stepIdx, tip)}
-                    onRemoveStep={(stepIdx) => handleRemoveStep(idx, stepIdx)}
+                    onChangeStepTip={(stepIdx, tip) => handleChangeTip(idx, stepIdx, tip)}
+                    onRemoveStep={(stepIdx) => handleRemoveItem(idx, stepIdx)}
                     onRemoveSection={() => handleRemoveSection(idx)}
                     onMoveUp={() => handleMoveSection(idx, 'up')}
                     onMoveDown={() => handleMoveSection(idx, 'down')}
-                    onMoveStep={(stepIdx, direction) => handleMoveStep(idx, stepIdx, direction)}
+                    onMoveStep={(stepIdx, direction) => handleMoveItem(idx, stepIdx, direction)}
                 />
             ))}
 
             <button
                 type="button"
                 onClick={handleAddSection}
-                className="w-full py-3 flex items-center justify-center gap-2 rounded-xl border border-dashed border-border text-sm font-medium text-muted-foreground hover:text-primary hover:border-primary/50 transition-colors bg-surface"
+                className="w-full py-3 flex items-center justify-center gap-2 rounded-xl border border-dashed border-border text-sm font-medium text-muted-foreground hover:text-primary hover:border-primary/50 transition-colors bg-surface focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
                 <IconFolderPlus className="w-5 h-5" stroke={1.5} />
                 <span>Add Instruction Section</span>

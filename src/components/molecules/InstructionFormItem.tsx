@@ -26,8 +26,8 @@ export const InstructionFormItem: React.FC<InstructionFormItemProps> = ({
     isLast = false
 }) => {
     return (
-        <div className="flex flex-col gap-3 p-3.5 bg-surface rounded-xl border border-border/70 relative">
-            <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-3 p-3.5 bg-surface rounded-xl border border-border/70 relative w-full min-w-0">
+            <div className="flex items-center justify-between w-full min-w-0">
                 <span className="text-xs font-bold text-muted-foreground uppercase tracking-wide">
                     Step {step.stepNumber}
                 </span>
@@ -66,7 +66,7 @@ export const InstructionFormItem: React.FC<InstructionFormItemProps> = ({
             />
 
             {step.tip !== undefined ? (
-                <div className="flex gap-2 items-start mt-0.5 relative">
+                <div className="flex gap-2 items-start mt-0.5 relative w-full min-w-0">
                     <div className="pt-2 text-primary">
                         <IconBulb className="w-5 h-5" stroke={1.5} />
                     </div>

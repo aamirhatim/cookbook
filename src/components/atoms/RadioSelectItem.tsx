@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { IconSquare, IconSquareDot } from '@tabler/icons-react';
+import { IconCircle, IconCircleDot } from '@tabler/icons-react';
 
 export interface RadioSelectItemProps {
   label?: string;
@@ -54,9 +54,9 @@ export const RadioSelectItem: React.FC<RadioSelectItemProps> = ({
     >
       <span className="shrink-0 flex items-center justify-center">
         {isChecked ? (
-          <IconSquareDot className="w-5 h-5 text-primary" stroke={1} />
+          <IconCircleDot className="w-5 h-5 text-primary" stroke={1.5} />
         ) : (
-          <IconSquare className="w-5 h-5 text-muted-foreground" stroke={1} />
+          <IconCircle className="w-5 h-5 text-muted-foreground" stroke={1.5} />
         )}
       </span>
       {label && <span className="text-sm font-medium leading-none">{label}</span>}

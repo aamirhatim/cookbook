@@ -1,26 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import { Searchbar } from '../atoms/Searchbar';
+import { Searchbar } from './Searchbar';
 import { ButtonIcon } from '../atoms/ButtonIcon';
 import { DropdownMenu } from './DropdownMenu';
 import { TimeFilterMobileTray } from './TimeFilterMobileTray';
 import { DifficultyFilterMobileTray } from './DifficultyFilterMobileTray';
 import { CuisineFilterMobileTray } from './CuisineFilterMobileTray';
+import { ActiveFilterChips } from './ActiveFilterChips';
 import type { Difficulty } from '../../types/recipe';
-import type { Icon, IconProps } from '@tabler/icons-react';
 import {
     IconStopwatch,
-    IconTimeDuration5,
-    IconTimeDuration15,
-    IconTimeDuration30,
-    IconTimeDuration60,
     IconHexagonAsterisk,
-    IconHexagonLetterE,
-    IconHexagonLetterM,
-    IconHexagonLetterH,
     IconWorldMap,
     IconCarrot,
-    IconX,
 } from '@tabler/icons-react';
+import {
+    TIME_OPTIONS,
+    TIME_ICON_MAP,
+    DIFFICULTY_OPTIONS,
+    DIFFICULTY_ICON_MAP,
+} from './recipeFilterConstants';
 
 export interface RecipeFilterCriteria {
     searchText: string;
@@ -38,32 +36,6 @@ export interface RecipeFilterProps {
     position?: 'top' | 'bottom';
     className?: string;
 }
-
-const TIME_OPTIONS = [
-    { id: 'time-5', label: '< 5 min', value: '5' },
-    { id: 'time-15', label: '< 15 min', value: '15' },
-    { id: 'time-30', label: '< 30 min', value: '30' },
-    { id: 'time-60', label: '< 1 hr', value: '60' },
-];
-
-const TIME_ICON_MAP: Record<string, React.ComponentType<IconProps> | Icon> = {
-    '5': IconTimeDuration5,
-    '15': IconTimeDuration15,
-    '30': IconTimeDuration30,
-    '60': IconTimeDuration60,
-};
-
-const DIFFICULTY_OPTIONS: { id: string; label: string; value: Difficulty }[] = [
-    { id: 'diff-easy', label: 'Easy', value: 'easy' },
-    { id: 'diff-med', label: 'Medium', value: 'medium' },
-    { id: 'diff-hard', label: 'Hard', value: 'hard' },
-];
-
-const DIFFICULTY_ICON_MAP: Record<Difficulty, React.ComponentType<IconProps> | Icon> = {
-    easy: IconHexagonLetterE,
-    medium: IconHexagonLetterM,
-    hard: IconHexagonLetterH,
-};
 
 export const RecipeFilter: React.FC<RecipeFilterProps> = ({
     onFilterChange,
@@ -88,10 +60,7 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
         const handler = setTimeout(() => {
             setDebouncedSearch(searchInput.trim());
         }, 350);
-
-        return () => {
-            clearTimeout(handler);
-        };
+        return () => clearTimeout(handler);
     }, [searchInput]);
 
     // Propagate filter changes up to parent
@@ -122,13 +91,6 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
             prev.includes(val) ? prev.filter((c) => c !== val) : [...prev, val]
         );
     };
-
-    const hasActiveFilters =
-        searchInput !== '' ||
-        timeFilter !== 'all' ||
-        difficulties.length > 0 ||
-        cuisines.length > 0 ||
-        isVeg;
 
     const handleResetFilters = () => {
         setSearchInput('');
@@ -270,77 +232,17 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
             <div data-recipe-filter-tray-slot="true" className="w-full empty:hidden" />
 
             {/* Active filter badges / reset */}
-            {hasActiveFilters && (
-                <div className="flex items-center gap-2 flex-wrap text-xs">
-                    <span className="text-muted-foreground">Filters:</span>
-                    {timeFilter !== 'all' && (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface border border-border text-foreground font-medium">
-                            &lt; {timeFilter === '60' ? '1 hr' : `${timeFilter} min`}
-                            <button
-                                type="button"
-                                onClick={() => setTimeFilter('all')}
-                                className="hover:text-destructive"
-                                aria-label="Remove time filter"
-                            >
-                                <IconX className="w-3 h-3" stroke={1} />
-                            </button>
-                        </span>
-                    )}
-                    {difficulties.map((diff) => (
-                        <span
-                            key={diff}
-                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface border border-border text-foreground font-medium capitalize"
-                        >
-                            {diff}
-                            <button
-                                type="button"
-                                onClick={() => handleDifficultyToggle(diff)}
-                                className="hover:text-destructive"
-                                aria-label={`Remove ${diff} filter`}
-                            >
-                                <IconX className="w-3 h-3" stroke={1} />
-                            </button>
-                        </span>
-                    ))}
-                    {cuisines.map((c) => (
-                        <span
-                            key={c}
-                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface border border-border text-foreground font-medium capitalize"
-                        >
-                            {c}
-                            <button
-                                type="button"
-                                onClick={() => handleCuisineToggle(c)}
-                                className="hover:text-destructive"
-                                aria-label={`Remove ${c} filter`}
-                            >
-                                <IconX className="w-3 h-3" stroke={1} />
-                            </button>
-                        </span>
-                    ))}
-                    {isVeg && (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface border border-border text-foreground font-medium">
-                            Vegetarian
-                            <button
-                                type="button"
-                                onClick={() => setIsVeg(false)}
-                                className="hover:text-destructive"
-                                aria-label="Remove vegetarian filter"
-                            >
-                                <IconX className="w-3 h-3" stroke={1} />
-                            </button>
-                        </span>
-                    )}
-                    <button
-                        type="button"
-                        onClick={handleResetFilters}
-                        className="text-primary hover:underline font-medium ml-1"
-                    >
-                        Clear all
-                    </button>
-                </div>
-            )}
+            <ActiveFilterChips
+                timeFilter={timeFilter}
+                onRemoveTime={() => setTimeFilter('all')}
+                difficulties={difficulties}
+                onRemoveDifficulty={handleDifficultyToggle}
+                cuisines={cuisines}
+                onRemoveCuisine={handleCuisineToggle}
+                isVeg={isVeg}
+                onRemoveVeg={() => setIsVeg(false)}
+                onResetAll={handleResetFilters}
+            />
         </div>
     );
 };
-

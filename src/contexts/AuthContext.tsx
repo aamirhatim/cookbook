@@ -39,7 +39,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     return (
         <AuthContext.Provider value={{ user, isAdmin, loading }}>
-            {!loading && children}
+            {loading ? (
+                <div className="min-h-screen w-full flex flex-col items-center justify-center bg-background text-muted-foreground gap-3">
+                    <div className="w-10 h-10 rounded-full border-2 border-primary/20 border-t-primary animate-spin" />
+                    <span className="text-xs font-medium tracking-wide uppercase">Initializing kitchen...</span>
+                </div>
+            ) : (
+                children
+            )}
         </AuthContext.Provider>
     );
 };

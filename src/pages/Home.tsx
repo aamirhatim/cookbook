@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { IconNotebook, IconPlus, IconSearch, IconUser, IconBook } from '@tabler/icons-react';
+import { IconNotebook, IconSearch, IconUser, IconBook } from '@tabler/icons-react';
 import { ButtonIcon } from '../components/atoms/ButtonIcon';
 
 export function Home() {
@@ -43,25 +43,15 @@ export function Home() {
                 </div>
                 <h3 className="font-semibold text-foreground">Explore your kitchen</h3>
                 <p className="text-xs sm:text-sm text-muted-foreground max-w-sm mx-auto">
-                    Your digital kitchen is ready. Browse your saved recipes or add a new dish.
+                    Your digital kitchen is ready. Browse your saved recipes and culinary collection.
                 </p>
                 <div className="flex flex-wrap items-center justify-center gap-2.5 pt-2">
-                    <button
-                        type="button"
+                    <ButtonIcon
+                        icon={IconBook}
+                        variant="primary"
+                        text="Browse Recipes"
                         onClick={() => navigate('/recipes')}
-                        className="inline-flex items-center space-x-1.5 px-4 py-2 bg-surface hover:bg-surface-hover text-foreground border border-border rounded-lg text-sm font-medium shadow-sm transition-colors active:scale-98"
-                    >
-                        <IconBook className="w-4 h-4 text-primary" stroke={1.5} />
-                        <span>Browse Recipes</span>
-                    </button>
-                    <button
-                        type="button"
-                        onClick={() => navigate('/admin/recipes/new')}
-                        className="inline-flex items-center space-x-1.5 px-4 py-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg text-sm font-medium shadow-sm transition-colors active:scale-98"
-                    >
-                        <IconPlus className="w-4 h-4" stroke={1.5} />
-                        <span>New Recipe</span>
-                    </button>
+                    />
                 </div>
             </div>
         </div>

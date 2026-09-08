@@ -105,22 +105,22 @@ export function normalizeRecipe(id: string, data: DocumentData): Recipe {
             // Legacy flat Ingredient[]
             ingredients = [{
                 title: '',
-                items: rawIngredients.map((item: any) => ({
-                    name: item.name || '',
-                    amount: item.amount || 0,
-                    unit: item.unit || '',
-                    ...(item.notes ? { notes: item.notes } : {})
+                items: (rawIngredients as Record<string, unknown>[]).map((item) => ({
+                    name: String(item.name || ''),
+                    amount: Number(item.amount || 0),
+                    unit: String(item.unit || ''),
+                    ...(item.notes ? { notes: String(item.notes) } : {})
                 }))
             }];
         } else {
-            ingredients = rawIngredients.map((sec: any) => ({
-                ...(sec.title ? { title: sec.title } : {}),
+            ingredients = (rawIngredients as Record<string, unknown>[]).map((sec) => ({
+                ...(sec.title ? { title: String(sec.title) } : {}),
                 items: Array.isArray(sec.items)
-                    ? sec.items.map((item: any) => ({
-                          name: item.name || '',
-                          amount: item.amount || 0,
-                          unit: item.unit || '',
-                          ...(item.notes ? { notes: item.notes } : {})
+                    ? (sec.items as Record<string, unknown>[]).map((item) => ({
+                          name: String(item.name || ''),
+                          amount: Number(item.amount || 0),
+                          unit: String(item.unit || ''),
+                          ...(item.notes ? { notes: String(item.notes) } : {})
                       }))
                     : []
             }));
@@ -135,20 +135,20 @@ export function normalizeRecipe(id: string, data: DocumentData): Recipe {
             // Legacy flat InstructionStep[]
             instructions = [{
                 title: '',
-                steps: rawInstructions.map((step: any, idx: number) => ({
-                    stepNumber: step.stepNumber || idx + 1,
-                    instruction: step.instruction || '',
-                    ...(step.tip ? { tip: step.tip } : {})
+                steps: (rawInstructions as Record<string, unknown>[]).map((step, idx: number) => ({
+                    stepNumber: Number(step.stepNumber || idx + 1),
+                    instruction: String(step.instruction || ''),
+                    ...(step.tip ? { tip: String(step.tip) } : {})
                 }))
             }];
         } else {
-            instructions = rawInstructions.map((sec: any) => ({
-                ...(sec.title ? { title: sec.title } : {}),
+            instructions = (rawInstructions as Record<string, unknown>[]).map((sec) => ({
+                ...(sec.title ? { title: String(sec.title) } : {}),
                 steps: Array.isArray(sec.steps)
-                    ? sec.steps.map((step: any, idx: number) => ({
-                          stepNumber: step.stepNumber || idx + 1,
-                          instruction: step.instruction || '',
-                          ...(step.tip ? { tip: step.tip } : {})
+                    ? (sec.steps as Record<string, unknown>[]).map((step, idx: number) => ({
+                          stepNumber: Number(step.stepNumber || idx + 1),
+                          instruction: String(step.instruction || ''),
+                          ...(step.tip ? { tip: String(step.tip) } : {})
                       }))
                     : []
             }));
@@ -158,6 +158,8 @@ export function normalizeRecipe(id: string, data: DocumentData): Recipe {
     return {
         ...data,
         id,
+        equipment: Array.isArray(data.equipment) ? data.equipment : [],
+        tags: Array.isArray(data.tags) ? data.tags : [],
         ingredients,
         instructions
     } as Recipe;

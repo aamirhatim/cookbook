@@ -104,7 +104,7 @@ export const RecipeImageUploader: React.FC<RecipeImageUploaderProps> = ({
           />
 
           {/* Action Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20 flex items-end justify-end p-3 gap-2">
+          <div className="absolute inset-0 bg-gradient-to-t from-foreground/75 via-transparent to-foreground/25 flex items-end justify-end p-3 gap-2">
             <ButtonIcon
               icon={IconPencil}
               iconStroke={1}

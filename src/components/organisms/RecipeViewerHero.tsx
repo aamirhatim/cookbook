@@ -157,31 +157,31 @@ export const RecipeViewerHero: React.FC<RecipeViewerHeroProps> = ({
                     </div>
                     <div className="text-xs min-w-0">
                         <p className="text-muted-foreground">Servings</p>
-                        <div className="flex items-center gap-1 mt-0.5">
+                        <div className="flex items-center gap-1.5 mt-0.5">
                             {onServingsChange && (
                                 <button
                                     type="button"
                                     onClick={() => onServingsChange(Math.max(1, currentServings - 1))}
                                     disabled={currentServings <= 1}
-                                    className="w-5 h-5 rounded flex items-center justify-center bg-surface-hover hover:bg-surface border border-border text-muted-foreground hover:text-foreground active:scale-95 transition-all disabled:opacity-30 disabled:pointer-events-none"
+                                    className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center bg-surface-hover hover:bg-surface border border-border text-muted-foreground hover:text-foreground active:scale-95 transition-all disabled:opacity-30 disabled:pointer-events-none focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                                     aria-label="Decrease servings"
                                     title="Decrease servings"
                                 >
-                                    <IconMinus className="w-3 h-3" stroke={2.5} />
+                                    <IconMinus className="w-3.5 h-3.5" stroke={2} />
                                 </button>
                             )}
-                            <span className="font-semibold text-foreground text-center min-w-[14px]">
+                            <span className="font-semibold text-foreground text-center min-w-[20px] text-sm">
                                 {currentServings}
                             </span>
                             {onServingsChange && (
                                 <button
                                     type="button"
                                     onClick={() => onServingsChange(currentServings + 1)}
-                                    className="w-5 h-5 rounded flex items-center justify-center bg-surface-hover hover:bg-surface border border-border text-muted-foreground hover:text-foreground active:scale-95 transition-all"
+                                    className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center bg-surface-hover hover:bg-surface border border-border text-muted-foreground hover:text-foreground active:scale-95 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                                     aria-label="Increase servings"
                                     title="Increase servings"
                                 >
-                                    <IconPlus className="w-3 h-3" stroke={2.5} />
+                                    <IconPlus className="w-3.5 h-3.5" stroke={2} />
                                 </button>
                             )}
                         </div>

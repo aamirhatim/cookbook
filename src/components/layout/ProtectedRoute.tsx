@@ -1,5 +1,6 @@
+import React from 'react';
 import { Navigate, useLocation, Outlet } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../../contexts/AuthContext';
 
 interface ProtectedRouteProps {
     children?: React.ReactNode;
@@ -30,4 +31,3 @@ export const ProtectedRoute = ({ children, requireAdmin = false }: ProtectedRout
 
     return children ? <>{children}</> : <Outlet />;
 };
-

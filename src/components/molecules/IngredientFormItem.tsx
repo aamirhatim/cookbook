@@ -24,8 +24,8 @@ export const IngredientFormItem: React.FC<IngredientFormItemProps> = ({
     isLast = false
 }) => {
     return (
-        <div className="flex flex-col gap-2 p-3 bg-surface rounded-xl border border-border/70 relative">
-            <div className="flex gap-2 items-center w-full">
+        <div className="flex flex-col gap-2 p-3 bg-surface rounded-xl border border-border/70 relative w-full min-w-0">
+            <div className="flex gap-2 items-center w-full min-w-0">
                 <Input
                     placeholder="Ingredient (e.g. olive oil)"
                     className="flex-1 min-w-0 h-9 placeholder:truncate"
@@ -47,7 +47,7 @@ export const IngredientFormItem: React.FC<IngredientFormItemProps> = ({
                     onChange={(e) => onChange('unit', e.target.value)}
                 />
             </div>
-            <div className="flex gap-2 items-center w-full">
+            <div className="flex gap-2 items-center w-full min-w-0">
                 <Input
                     placeholder="Notes (optional, e.g. extra virgin, warm)"
                     className="flex-1 min-w-0 text-sm h-9 bg-surface-hover/50"

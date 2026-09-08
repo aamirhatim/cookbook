@@ -19,7 +19,9 @@ export const InstructionViewerItem: React.FC<InstructionViewerItemProps> = ({
             data-instruction-step={step.stepNumber}
             data-step-done={isDone}
             onClick={onToggle}
-            role="button"
+            role="checkbox"
+            aria-checked={isDone}
+            aria-label={`Step ${step.stepNumber}: ${step.instruction}`}
             tabIndex={0}
             onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
