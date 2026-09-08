@@ -28,20 +28,21 @@ export const IngredientFormItem: React.FC<IngredientFormItemProps> = ({
             <div className="flex gap-2 items-center w-full">
                 <Input
                     type="number"
+                    step="any"
                     placeholder="Qty"
-                    className="w-16 sm:w-20 flex-shrink-0 px-2 h-9"
+                    className="w-14 sm:w-20 shrink-0 px-2 h-9 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                     value={ingredient.amount || ''}
                     onChange={(e) => onChange('amount', parseFloat(e.target.value) || 0)}
                 />
                 <Input
                     placeholder="Unit"
-                    className="w-18 sm:w-24 flex-shrink-0 px-2 h-9"
+                    className="w-16 sm:w-24 shrink-0 px-2 h-9"
                     value={ingredient.unit}
                     onChange={(e) => onChange('unit', e.target.value)}
                 />
                 <Input
                     placeholder="Name (e.g. olive oil)"
-                    className="flex-1 min-w-0 h-9"
+                    className="flex-1 min-w-0 h-9 placeholder:truncate"
                     value={ingredient.name}
                     onChange={(e) => onChange('name', e.target.value)}
                 />
