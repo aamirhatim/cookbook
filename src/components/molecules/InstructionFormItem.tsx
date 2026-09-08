@@ -2,20 +2,28 @@ import React from 'react';
 import type { InstructionStep } from '../../types/recipe';
 import { Textarea } from '../atoms/Textarea';
 import { ButtonIcon } from '../atoms/ButtonIcon';
-import { IconTrash, IconBulb } from '@tabler/icons-react';
+import { IconTrash, IconBulb, IconArrowUp, IconArrowDown } from '@tabler/icons-react';
 
 export interface InstructionFormItemProps {
     step: InstructionStep;
     onChangeInstruction: (instruction: string) => void;
     onChangeTip: (tip: string | undefined) => void;
     onRemove: () => void;
+    onMoveUp?: () => void;
+    onMoveDown?: () => void;
+    isFirst?: boolean;
+    isLast?: boolean;
 }
 
 export const InstructionFormItem: React.FC<InstructionFormItemProps> = ({
     step,
     onChangeInstruction,
     onChangeTip,
-    onRemove
+    onRemove,
+    onMoveUp,
+    onMoveDown,
+    isFirst = false,
+    isLast = false
 }) => {
     return (
         <div className="flex flex-col gap-3 p-3.5 bg-surface rounded-xl border border-border/70 relative">
@@ -23,13 +31,31 @@ export const InstructionFormItem: React.FC<InstructionFormItemProps> = ({
                 <span className="text-xs font-bold text-muted-foreground uppercase tracking-wide">
                     Step {step.stepNumber}
                 </span>
-                <ButtonIcon
-                    icon={IconTrash}
-                    size="small"
-                    onClick={onRemove}
-                    ariaLabel="Remove step"
-                    title="Remove step"
-                />
+                <div className="flex items-center gap-1 shrink-0">
+                    <ButtonIcon
+                        icon={IconArrowUp}
+                        size="small"
+                        onClick={onMoveUp}
+                        disabled={isFirst}
+                        ariaLabel="Move step up"
+                        title="Move step up"
+                    />
+                    <ButtonIcon
+                        icon={IconArrowDown}
+                        size="small"
+                        onClick={onMoveDown}
+                        disabled={isLast}
+                        ariaLabel="Move step down"
+                        title="Move step down"
+                    />
+                    <ButtonIcon
+                        icon={IconTrash}
+                        size="small"
+                        onClick={onRemove}
+                        ariaLabel="Remove step"
+                        title="Remove step"
+                    />
+                </div>
             </div>
 
             <Textarea

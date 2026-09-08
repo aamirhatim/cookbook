@@ -2,18 +2,26 @@ import React from 'react';
 import type { Ingredient } from '../../types/recipe';
 import { Input } from '../atoms/Input';
 import { ButtonIcon } from '../atoms/ButtonIcon';
-import { IconTrash } from '@tabler/icons-react';
+import { IconTrash, IconArrowUp, IconArrowDown } from '@tabler/icons-react';
 
 export interface IngredientFormItemProps {
     ingredient: Ingredient;
     onChange: (field: keyof Ingredient, value: string | number) => void;
     onRemove: () => void;
+    onMoveUp?: () => void;
+    onMoveDown?: () => void;
+    isFirst?: boolean;
+    isLast?: boolean;
 }
 
 export const IngredientFormItem: React.FC<IngredientFormItemProps> = ({
     ingredient,
     onChange,
-    onRemove
+    onRemove,
+    onMoveUp,
+    onMoveDown,
+    isFirst = false,
+    isLast = false
 }) => {
     return (
         <div className="flex flex-col gap-2 p-3 bg-surface rounded-xl border border-border/70 relative">
@@ -45,14 +53,31 @@ export const IngredientFormItem: React.FC<IngredientFormItemProps> = ({
                     value={ingredient.notes || ''}
                     onChange={(e) => onChange('notes', e.target.value)}
                 />
-                <ButtonIcon
-                    icon={IconTrash}
-                    size="small"
-                    onClick={onRemove}
-                    ariaLabel="Remove ingredient"
-                    title="Remove ingredient"
-                    className="shrink-0"
-                />
+                <div className="flex items-center gap-1 shrink-0">
+                    <ButtonIcon
+                        icon={IconArrowUp}
+                        size="small"
+                        onClick={onMoveUp}
+                        disabled={isFirst}
+                        ariaLabel="Move ingredient up"
+                        title="Move ingredient up"
+                    />
+                    <ButtonIcon
+                        icon={IconArrowDown}
+                        size="small"
+                        onClick={onMoveDown}
+                        disabled={isLast}
+                        ariaLabel="Move ingredient down"
+                        title="Move ingredient down"
+                    />
+                    <ButtonIcon
+                        icon={IconTrash}
+                        size="small"
+                        onClick={onRemove}
+                        ariaLabel="Remove ingredient"
+                        title="Remove ingredient"
+                    />
+                </div>
             </div>
         </div>
     );

@@ -14,6 +14,7 @@ export const RecipeViewerIngredients: React.FC<RecipeViewerIngredientsProps> = (
 }) => {
     const [checkedKeys, setCheckedKeys] = useState<Set<string>>(new Set());
     const [collapsedSections, setCollapsedSections] = useState<Set<number>>(new Set());
+    const [isSectionCollapsed, setIsSectionCollapsed] = useState<boolean>(false);
 
     const totalCount = ingredients.reduce((acc, sec) => acc + (sec.items?.length || 0), 0);
 
@@ -58,15 +59,27 @@ export const RecipeViewerIngredients: React.FC<RecipeViewerIngredientsProps> = (
     return (
         <section className={`space-y-4 ${className}`}>
             <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
+                <button
+                    type="button"
+                    onClick={() => setIsSectionCollapsed(!isSectionCollapsed)}
+                    className="flex items-center gap-2 text-left group select-none focus:outline-none rounded-lg py-1 px-1 -ml-1 hover:bg-surface-hover/80 transition-colors"
+                    aria-expanded={!isSectionCollapsed}
+                    title={isSectionCollapsed ? 'Expand Ingredients' : 'Collapse Ingredients'}
+                >
                     <IconToolsKitchen className="w-5 h-5 text-primary" stroke={1.5} />
-                    <h2 className="text-lg font-bold text-foreground">Ingredients</h2>
+                    <h2 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors">Ingredients</h2>
                     <span className="text-xs px-2 py-0.5 rounded-full bg-surface-hover text-muted-foreground font-medium">
                         {totalCount}
                     </span>
-                </div>
+                    <IconChevronDown
+                        className={`w-4 h-4 text-muted-foreground group-hover:text-foreground transition-transform duration-200 ${
+                            isSectionCollapsed ? '-rotate-90' : 'rotate-0'
+                        }`}
+                        stroke={2}
+                    />
+                </button>
 
-                {checkedKeys.size > 0 && (
+                {!isSectionCollapsed && checkedKeys.size > 0 && (
                     <button
                         type="button"
                         onClick={handleReset}
@@ -79,7 +92,8 @@ export const RecipeViewerIngredients: React.FC<RecipeViewerIngredientsProps> = (
                 )}
             </div>
 
-            <div className="space-y-4">
+            {!isSectionCollapsed && (
+                <div className="space-y-4">
                 {ingredients.map((sec, secIdx) => {
                     if (!sec.items || sec.items.length === 0) return null;
                     const isCollapsed = collapsedSections.has(secIdx);
@@ -128,7 +142,8 @@ export const RecipeViewerIngredients: React.FC<RecipeViewerIngredientsProps> = (
                         </div>
                     );
                 })}
-            </div>
+                </div>
+            )}
         </section>
     );
 };

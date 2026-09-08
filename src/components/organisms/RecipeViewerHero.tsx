@@ -8,7 +8,6 @@ import {
     IconHexagonLetterE,
     IconHexagonLetterM,
     IconHexagonLetterH,
-    IconTag,
     IconTool,
 } from '@tabler/icons-react';
 import type { Recipe } from '../../types/recipe';
@@ -51,26 +50,15 @@ export const RecipeViewerHero: React.FC<RecipeViewerHeroProps> = ({
                 )}
             </div>
 
-            {/* Title & Badges */}
+            {/* Title, Description & Tags */}
             <div className="space-y-2">
-                <div className="flex flex-wrap items-center gap-2">
-                    {recipe.cuisine && (
-                        <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary border border-primary/20 capitalize">
-                            {recipe.cuisine}
-                        </span>
-                    )}
-                    {recipe.isVeg && (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary text-secondary-foreground">
-                            <IconCarrot className="w-3.5 h-3.5" stroke={1.5} />
-                            <span>Vegetarian</span>
-                        </span>
-                    )}
-                    {recipe.isPrivate && (
+                {recipe.isPrivate && (
+                    <div className="flex items-center gap-2">
                         <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-muted text-muted-foreground border border-border">
                             Private
                         </span>
-                    )}
-                </div>
+                    </div>
+                )}
 
                 <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-foreground">
                     {recipe.title}
@@ -80,6 +68,31 @@ export const RecipeViewerHero: React.FC<RecipeViewerHeroProps> = ({
                     <p className="text-sm sm:text-base text-muted-foreground leading-relaxed pt-1">
                         {recipe.description}
                     </p>
+                )}
+
+                {/* Dietary, Cuisine & Tags under description */}
+                {(recipe.isVeg || recipe.cuisine || (recipe.tags && recipe.tags.length > 0)) && (
+                    <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                        {recipe.isVeg && (
+                            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary text-secondary-foreground">
+                                <IconCarrot className="w-3.5 h-3.5" stroke={1.5} />
+                                <span>Vegetarian</span>
+                            </span>
+                        )}
+                        {recipe.cuisine && (
+                            <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary border border-primary/20 capitalize">
+                                {recipe.cuisine}
+                            </span>
+                        )}
+                        {recipe.tags && recipe.tags.map((tag) => (
+                            <span
+                                key={tag}
+                                className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-surface-hover text-muted-foreground border border-border/60"
+                            >
+                                #{tag}
+                            </span>
+                        ))}
+                    </div>
                 )}
             </div>
 
@@ -158,26 +171,14 @@ export const RecipeViewerHero: React.FC<RecipeViewerHeroProps> = ({
                 )}
             </div>
 
-            {/* Tags & Equipment */}
-            {((recipe.tags && recipe.tags.length > 0) || (recipe.equipment && recipe.equipment.length > 0)) && (
-                <div className="space-y-2 pt-1">
-                    {recipe.tags && recipe.tags.length > 0 && (
-                        <div className="flex items-center gap-1.5 flex-wrap text-xs">
-                            <IconTag className="w-3.5 h-3.5 text-muted-foreground shrink-0" stroke={1.5} />
-                            {recipe.tags.map((tag) => (
-                                <span key={tag} className="px-2 py-0.5 rounded-md bg-surface-hover text-muted-foreground">#{tag}</span>
-                            ))}
-                        </div>
-                    )}
-                    {recipe.equipment && recipe.equipment.length > 0 && (
-                        <div className="flex items-center gap-1.5 flex-wrap text-xs">
-                            <IconTool className="w-3.5 h-3.5 text-muted-foreground shrink-0" stroke={1.5} />
-                            <span className="text-muted-foreground">Tools:</span>
-                            {recipe.equipment.map((item) => (
-                                <span key={item} className="px-2 py-0.5 rounded-md bg-surface border border-border text-foreground font-medium">{item}</span>
-                            ))}
-                        </div>
-                    )}
+            {/* Equipment */}
+            {recipe.equipment && recipe.equipment.length > 0 && (
+                <div className="flex items-center gap-1.5 flex-wrap text-xs pt-1">
+                    <IconTool className="w-3.5 h-3.5 text-muted-foreground shrink-0" stroke={1.5} />
+                    <span className="text-muted-foreground">Tools:</span>
+                    {recipe.equipment.map((item) => (
+                        <span key={item} className="px-2 py-0.5 rounded-md bg-surface border border-border text-foreground font-medium">{item}</span>
+                    ))}
                 </div>
             )}
         </section>

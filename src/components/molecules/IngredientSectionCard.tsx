@@ -16,6 +16,7 @@ export interface IngredientSectionCardProps {
     onRemoveSection: () => void;
     onMoveUp?: () => void;
     onMoveDown?: () => void;
+    onMoveItem?: (itemIndex: number, direction: 'up' | 'down') => void;
 }
 
 export const IngredientSectionCard: React.FC<IngredientSectionCardProps> = ({
@@ -28,7 +29,8 @@ export const IngredientSectionCard: React.FC<IngredientSectionCardProps> = ({
     onRemoveItem,
     onRemoveSection,
     onMoveUp,
-    onMoveDown
+    onMoveDown,
+    onMoveItem
 }) => {
     const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
 
@@ -117,14 +119,25 @@ export const IngredientSectionCard: React.FC<IngredientSectionCardProps> = ({
                 <>
                     {/* List of Ingredients */}
                     <div className="flex flex-col gap-2.5">
-                        {section.items.map((item, itemIdx) => (
-                            <IngredientFormItem
-                                key={itemIdx}
-                                ingredient={item}
-                                onChange={(field, val) => onChangeItem(itemIdx, field, val)}
-                                onRemove={() => onRemoveItem(itemIdx)}
-                            />
-                        ))}
+                        {section.items.map((item, itemIdx) => {
+                            const isFirst = sectionIndex === 0 && itemIdx === 0;
+                            const isLast =
+                                sectionIndex === totalSections - 1 &&
+                                itemIdx === section.items.length - 1;
+
+                            return (
+                                <IngredientFormItem
+                                    key={itemIdx}
+                                    ingredient={item}
+                                    onChange={(field, val) => onChangeItem(itemIdx, field, val)}
+                                    onRemove={() => onRemoveItem(itemIdx)}
+                                    onMoveUp={onMoveItem ? () => onMoveItem(itemIdx, 'up') : undefined}
+                                    onMoveDown={onMoveItem ? () => onMoveItem(itemIdx, 'down') : undefined}
+                                    isFirst={isFirst}
+                                    isLast={isLast}
+                                />
+                            );
+                        })}
 
                         {section.items.length === 0 && (
                             <div className="py-3 px-4 rounded-xl border border-dashed border-border/70 text-center text-xs text-muted-foreground">

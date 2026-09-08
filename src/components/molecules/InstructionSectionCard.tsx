@@ -17,6 +17,7 @@ export interface InstructionSectionCardProps {
     onRemoveSection: () => void;
     onMoveUp?: () => void;
     onMoveDown?: () => void;
+    onMoveStep?: (stepIndex: number, direction: 'up' | 'down') => void;
 }
 
 export const InstructionSectionCard: React.FC<InstructionSectionCardProps> = ({
@@ -30,7 +31,8 @@ export const InstructionSectionCard: React.FC<InstructionSectionCardProps> = ({
     onRemoveStep,
     onRemoveSection,
     onMoveUp,
-    onMoveDown
+    onMoveDown,
+    onMoveStep
 }) => {
     const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
 
@@ -119,15 +121,26 @@ export const InstructionSectionCard: React.FC<InstructionSectionCardProps> = ({
                 <>
                     {/* List of Steps */}
                     <div className="flex flex-col gap-2.5">
-                        {section.steps.map((step, stepIdx) => (
-                            <InstructionFormItem
-                                key={stepIdx}
-                                step={step}
-                                onChangeInstruction={(text) => onChangeStepInstruction(stepIdx, text)}
-                                onChangeTip={(tip) => onChangeStepTip(stepIdx, tip)}
-                                onRemove={() => onRemoveStep(stepIdx)}
-                            />
-                        ))}
+                        {section.steps.map((step, stepIdx) => {
+                            const isFirst = sectionIndex === 0 && stepIdx === 0;
+                            const isLast =
+                                sectionIndex === totalSections - 1 &&
+                                stepIdx === section.steps.length - 1;
+
+                            return (
+                                <InstructionFormItem
+                                    key={stepIdx}
+                                    step={step}
+                                    onChangeInstruction={(text) => onChangeStepInstruction(stepIdx, text)}
+                                    onChangeTip={(tip) => onChangeStepTip(stepIdx, tip)}
+                                    onRemove={() => onRemoveStep(stepIdx)}
+                                    onMoveUp={onMoveStep ? () => onMoveStep(stepIdx, 'up') : undefined}
+                                    onMoveDown={onMoveStep ? () => onMoveStep(stepIdx, 'down') : undefined}
+                                    isFirst={isFirst}
+                                    isLast={isLast}
+                                />
+                            );
+                        })}
 
                         {section.steps.length === 0 && (
                             <div className="py-3 px-4 rounded-xl border border-dashed border-border/70 text-center text-xs text-muted-foreground">

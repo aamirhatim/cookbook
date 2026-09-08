@@ -77,7 +77,7 @@ export const ButtonIcon: React.FC<ButtonIconProps> = ({
   disabled = false,
   ...rest
 }) => {
-  const shouldTrackToggle = isToggle || defaultActive !== false || onToggle !== undefined;
+  const shouldTrackToggle = isToggle || defaultActive !== false || onToggle !== undefined || controlledActive !== undefined;
   const isControlled = controlledActive !== undefined;
   const [internalActive, setInternalActive] = useState<boolean>(defaultActive);
 

@@ -104,6 +104,42 @@ export const InstructionsFormList: React.FC<InstructionsFormListProps> = ({
         updateSections(next);
     };
 
+    const handleMoveStep = (
+        sectionIndex: number,
+        stepIndex: number,
+        direction: 'up' | 'down'
+    ) => {
+        const next = sections.map((sec) => ({
+            ...sec,
+            steps: [...(sec.steps || [])]
+        }));
+        const currentSteps = next[sectionIndex].steps;
+        const [movedStep] = currentSteps.splice(stepIndex, 1);
+        if (!movedStep) return;
+
+        if (direction === 'up') {
+            if (stepIndex > 0) {
+                currentSteps.splice(stepIndex - 1, 0, movedStep);
+            } else if (sectionIndex > 0) {
+                next[sectionIndex - 1].steps.push(movedStep);
+            } else {
+                currentSteps.unshift(movedStep);
+                return;
+            }
+        } else {
+            if (stepIndex < currentSteps.length) {
+                currentSteps.splice(stepIndex + 1, 0, movedStep);
+            } else if (sectionIndex < next.length - 1) {
+                next[sectionIndex + 1].steps.unshift(movedStep);
+            } else {
+                currentSteps.push(movedStep);
+                return;
+            }
+        }
+
+        updateSections(next);
+    };
+
     return (
         <div className="flex flex-col gap-4">
             {sections.map((section, idx) => (
@@ -122,6 +158,7 @@ export const InstructionsFormList: React.FC<InstructionsFormListProps> = ({
                     onRemoveSection={() => handleRemoveSection(idx)}
                     onMoveUp={() => handleMoveSection(idx, 'up')}
                     onMoveDown={() => handleMoveSection(idx, 'down')}
+                    onMoveStep={(stepIdx, direction) => handleMoveStep(idx, stepIdx, direction)}
                 />
             ))}
 

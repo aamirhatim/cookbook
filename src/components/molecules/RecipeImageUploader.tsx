@@ -10,6 +10,7 @@ export interface RecipeImageUploaderProps {
   onSelectImage: (file: File) => void;
   onRemoveImage: () => void;
   disabled?: boolean;
+  className?: string;
 }
 
 const MAX_IMAGE_SIZE_BYTES = 5 * 1024 * 1024; // 5MB
@@ -19,7 +20,8 @@ export const RecipeImageUploader: React.FC<RecipeImageUploaderProps> = ({
   selectedFile,
   onSelectImage,
   onRemoveImage,
-  disabled = false
+  disabled = false,
+  className = ''
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -75,7 +77,7 @@ export const RecipeImageUploader: React.FC<RecipeImageUploaderProps> = ({
   };
 
   return (
-    <div className="w-full">
+    <div className={`w-full ${className}`}>
       {/* Hidden Native File Input */}
       <input
         ref={fileInputRef}
@@ -94,7 +96,7 @@ export const RecipeImageUploader: React.FC<RecipeImageUploaderProps> = ({
           aria-label="Add Recipe Cover Photo"
         />
       ) : (
-        <div className="relative w-full h-48 sm:h-56 rounded-2xl overflow-hidden border border-border bg-surface shadow-sm group">
+        <div className="relative w-full h-48 sm:h-56 md:h-64 rounded-2xl overflow-hidden border border-border bg-surface shadow-sm group">
           <img
             src={activeImageUrl}
             alt="Recipe cover preview"
