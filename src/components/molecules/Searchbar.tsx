@@ -9,6 +9,7 @@ export interface SearchbarProps {
   disabled?: boolean;
   onClear?: () => void;
   autoFocus?: boolean;
+  onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
 }
 
 export const Searchbar: React.FC<SearchbarProps> = ({
@@ -19,6 +20,7 @@ export const Searchbar: React.FC<SearchbarProps> = ({
   disabled = false,
   onClear,
   autoFocus = false,
+  onFocus,
 }) => {
   const handleClear = () => {
     onChange('');
@@ -37,6 +39,7 @@ export const Searchbar: React.FC<SearchbarProps> = ({
         placeholder={placeholder}
         disabled={disabled}
         autoFocus={autoFocus}
+        onFocus={onFocus}
         className="w-full min-h-[44px] pl-11 pr-11 py-2.5 text-sm rounded-lg bg-surface border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
       />
       {value && (

@@ -3,6 +3,7 @@ import type { Icon, IconProps } from '@tabler/icons-react';
 import { ButtonIcon } from '../atoms/ButtonIcon';
 import { DropdownList, DropdownItem } from './DropdownList';
 import { DropdownMobileTray } from './DropdownMobileTray';
+import { useIsMobile } from '../../hooks/useIsMobile';
 
 export type DropdownMenuVariant = 'default' | 'mobile';
 
@@ -46,20 +47,7 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({
     const isOpen = isControlled ? controlledOpen : internalOpen;
     const containerRef = useRef<HTMLDivElement>(null);
 
-    const [isMobileScreen, setIsMobileScreen] = useState(() =>
-        typeof window !== 'undefined' ? window.matchMedia('(max-width: 639px)').matches : false
-    );
-
-    useEffect(() => {
-        if (typeof window === 'undefined') return;
-        const mediaQuery = window.matchMedia('(max-width: 639px)');
-        const updateMatch = (e: MediaQueryListEvent) => {
-            setIsMobileScreen(e.matches);
-        };
-        mediaQuery.addEventListener('change', updateMatch);
-        return () => mediaQuery.removeEventListener('change', updateMatch);
-    }, []);
-
+    const isMobileScreen = useIsMobile();
     const isMobileVariant = variant === 'mobile' || (variant !== 'default' && isMobileScreen);
 
     const setOpen = (next: boolean) => {
