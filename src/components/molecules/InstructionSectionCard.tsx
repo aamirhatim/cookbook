@@ -40,6 +40,13 @@ export const InstructionSectionCard: React.FC<InstructionSectionCardProps> = ({
         <div className="flex flex-col gap-3 p-3.5 sm:p-4 bg-surface-hover/60 rounded-2xl border border-border">
             {/* Section Header Controls */}
             <div className="flex items-center gap-2">
+                <Input
+                    placeholder={totalSections > 1 ? 'Section Title (e.g. Prepare Dough, Bake)' : 'Section Title (optional)'}
+                    className="flex-1 font-semibold text-sm h-9 bg-surface"
+                    value={section.title || ''}
+                    onChange={(e) => onChangeTitle(e.target.value)}
+                />
+
                 <button
                     type="button"
                     onClick={() => setIsCollapsed(!isCollapsed)}
@@ -54,13 +61,6 @@ export const InstructionSectionCard: React.FC<InstructionSectionCardProps> = ({
                         stroke={2}
                     />
                 </button>
-
-                <Input
-                    placeholder={totalSections > 1 ? 'Section Title (e.g. Prepare Dough, Bake)' : 'Section Title (optional)'}
-                    className="flex-1 font-semibold text-sm h-9 bg-surface"
-                    value={section.title || ''}
-                    onChange={(e) => onChangeTitle(e.target.value)}
-                />
 
                 {totalSections > 1 && (
                     <div className="flex items-center gap-1 shrink-0">

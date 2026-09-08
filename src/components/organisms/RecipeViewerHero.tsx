@@ -9,12 +9,16 @@ import {
     IconHexagonLetterM,
     IconHexagonLetterH,
     IconTool,
+    IconPlus,
+    IconMinus,
 } from '@tabler/icons-react';
 import type { Recipe } from '../../types/recipe';
 
 export interface RecipeViewerHeroProps {
     recipe: Recipe;
     className?: string;
+    servings?: number;
+    onServingsChange?: (servings: number) => void;
 }
 
 const difficultyIcons = {
@@ -26,7 +30,11 @@ const difficultyIcons = {
 export const RecipeViewerHero: React.FC<RecipeViewerHeroProps> = ({
     recipe,
     className = '',
+    servings: controlledServings,
+    onServingsChange,
 }) => {
+    const baseServings = recipe.servings && recipe.servings > 0 ? recipe.servings : 1;
+    const currentServings = controlledServings !== undefined ? controlledServings : baseServings;
     const prepMinutes = recipe.prepTimeMinutes ?? 0;
     const cookMinutes = recipe.cookTimeMinutes ?? 0;
     const totalTime = prepMinutes + cookMinutes;
@@ -143,15 +151,40 @@ export const RecipeViewerHero: React.FC<RecipeViewerHeroProps> = ({
                 </div>
 
                 {/* Servings */}
-                <div className={`flex items-center gap-2.5 ${!DifficultyIcon ? 'col-span-2 sm:col-span-1' : ''}`}>
+                <div className={`flex items-center gap-2 sm:gap-2.5 ${!DifficultyIcon ? 'col-span-2 sm:col-span-1' : ''}`}>
                     <div className="w-8 h-8 rounded-lg bg-surface-hover flex items-center justify-center text-muted-foreground shrink-0">
                         <IconUsers className="w-4 h-4" stroke={1.5} />
                     </div>
-                    <div className="text-xs">
+                    <div className="text-xs min-w-0">
                         <p className="text-muted-foreground">Servings</p>
-                        <p className="font-semibold text-foreground">
-                            {recipe.servings ? `${recipe.servings} people` : 'N/A'}
-                        </p>
+                        <div className="flex items-center gap-1 mt-0.5">
+                            {onServingsChange && (
+                                <button
+                                    type="button"
+                                    onClick={() => onServingsChange(Math.max(1, currentServings - 1))}
+                                    disabled={currentServings <= 1}
+                                    className="w-5 h-5 rounded flex items-center justify-center bg-surface-hover hover:bg-surface border border-border text-muted-foreground hover:text-foreground active:scale-95 transition-all disabled:opacity-30 disabled:pointer-events-none"
+                                    aria-label="Decrease servings"
+                                    title="Decrease servings"
+                                >
+                                    <IconMinus className="w-3 h-3" stroke={2.5} />
+                                </button>
+                            )}
+                            <span className="font-semibold text-foreground text-center min-w-[14px]">
+                                {currentServings}
+                            </span>
+                            {onServingsChange && (
+                                <button
+                                    type="button"
+                                    onClick={() => onServingsChange(currentServings + 1)}
+                                    className="w-5 h-5 rounded flex items-center justify-center bg-surface-hover hover:bg-surface border border-border text-muted-foreground hover:text-foreground active:scale-95 transition-all"
+                                    aria-label="Increase servings"
+                                    title="Increase servings"
+                                >
+                                    <IconPlus className="w-3 h-3" stroke={2.5} />
+                                </button>
+                            )}
+                        </div>
                     </div>
                 </div>
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import { IconCheck } from '@tabler/icons-react';
 import type { Ingredient } from '../../types/recipe';
+import { formatAmount } from '../../lib/formatAmount';
 
 export interface IngredientViewerItemProps {
     ingredient: Ingredient;
@@ -40,7 +41,7 @@ export const IngredientViewerItem: React.FC<IngredientViewerItemProps> = ({
             {/* Ingredient Details */}
             <div className="flex-1 text-sm leading-snug">
                 <span className={`font-semibold text-foreground ${isChecked ? 'line-through text-muted-foreground' : ''}`}>
-                    {ingredient.amount > 0 ? `${ingredient.amount} ` : ''}
+                    {ingredient.amount > 0 ? `${formatAmount(ingredient.amount)} ` : ''}
                     {ingredient.unit ? `${ingredient.unit} ` : ''}
                 </span>
                 <span className={`text-foreground ${isChecked ? 'line-through text-muted-foreground' : ''}`}>

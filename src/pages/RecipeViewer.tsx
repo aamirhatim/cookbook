@@ -19,6 +19,9 @@ export function RecipeViewer() {
     const [recipe, setRecipe] = useState<Recipe | null>(
         initialRecipe && initialRecipe.id === recipeId ? initialRecipe : null
     );
+    const [servings, setServings] = useState<number>(
+        (initialRecipe && initialRecipe.id === recipeId && initialRecipe.servings) ? initialRecipe.servings : 1
+    );
     const [loading, setLoading] = useState<boolean>(!recipe);
     const [error, setError] = useState<string | null>(null);
 
@@ -40,6 +43,9 @@ export function RecipeViewer() {
                     setError('Recipe not found.');
                 } else {
                     setRecipe(fetchedRecipe);
+                    if (fetchedRecipe.servings) {
+                        setServings(fetchedRecipe.servings);
+                    }
                 }
             } catch (err) {
                 if (!isMounted) return;
@@ -115,19 +121,39 @@ export function RecipeViewer() {
                         </button>
                     </div>
                 ) : (
-                    /* Responsive Layout: Stacked on mobile, 2-column on large screens */
-                    <div className="space-y-6 lg:space-y-0 lg:grid lg:grid-cols-12 lg:gap-8 items-start">
-                        {/* Left Column: Hero & Ingredients */}
-                        <div className="space-y-6 lg:col-span-5">
-                            <RecipeViewerHero recipe={recipe} />
-                            <RecipeViewerIngredients ingredients={recipe.ingredients || []} />
-                        </div>
+                    (() => {
+                        const baseServings = recipe.servings && recipe.servings > 0 ? recipe.servings : 1;
+                        const currentServings = servings > 0 ? servings : baseServings;
+                        const scaleRatio = baseServings > 0 ? currentServings / baseServings : 1;
 
-                        {/* Right Column: Instructions */}
-                        <div className="space-y-6 lg:col-span-7">
-                            <RecipeViewerInstructions instructions={recipe.instructions || []} />
-                        </div>
-                    </div>
+                        const scaledIngredients = (recipe.ingredients || []).map((sec) => ({
+                            ...sec,
+                            items: (sec.items || []).map((item) => ({
+                                ...item,
+                                amount: item.amount > 0 ? Math.round(item.amount * scaleRatio * 1000) / 1000 : item.amount,
+                            })),
+                        }));
+
+                        return (
+                            /* Responsive Layout: Stacked on mobile, 2-column on large screens */
+                            <div className="space-y-6 lg:space-y-0 lg:grid lg:grid-cols-12 lg:gap-8 items-start">
+                                {/* Left Column: Hero & Ingredients */}
+                                <div className="space-y-6 lg:col-span-5">
+                                    <RecipeViewerHero
+                                        recipe={recipe}
+                                        servings={currentServings}
+                                        onServingsChange={setServings}
+                                    />
+                                    <RecipeViewerIngredients ingredients={scaledIngredients} />
+                                </div>
+
+                                {/* Right Column: Instructions */}
+                                <div className="space-y-6 lg:col-span-7">
+                                    <RecipeViewerInstructions instructions={recipe.instructions || []} />
+                                </div>
+                            </div>
+                        );
+                    })()
                 )}
             </main>
         </div>

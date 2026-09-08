@@ -109,14 +109,14 @@ export const RecipeViewerIngredients: React.FC<RecipeViewerIngredientsProps> = (
                                     aria-expanded={!isCollapsed}
                                 >
                                     <div className="flex items-center gap-1.5">
+                                        <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground group-hover:text-foreground transition-colors">
+                                            {sectionTitle}
+                                        </h3>
                                         <IconChevronDown
                                             className={`w-4 h-4 text-muted-foreground group-hover:text-foreground transition-transform duration-200 ${isCollapsed ? '-rotate-90' : 'rotate-0'
                                                 }`}
                                             stroke={2}
                                         />
-                                        <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground group-hover:text-foreground transition-colors">
-                                            {sectionTitle}
-                                        </h3>
                                     </div>
                                     <span className="text-[11px] text-muted-foreground font-medium">
                                         {sec.items.length} {sec.items.length === 1 ? 'item' : 'items'}
