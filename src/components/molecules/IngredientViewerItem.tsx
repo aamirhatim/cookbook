@@ -21,6 +21,11 @@ export const IngredientViewerItem: React.FC<IngredientViewerItemProps> = ({
             : `(${trimmedNotes})`
         : null;
 
+    const formattedQuantity = [
+        ingredient.amount > 0 ? formatAmount(ingredient.amount) : '',
+        ingredient.unit || ''
+    ].filter(Boolean).join(' ');
+
     return (
         <button
             type="button"
@@ -38,13 +43,9 @@ export const IngredientViewerItem: React.FC<IngredientViewerItemProps> = ({
                 <IconCheck className="w-3.5 h-3.5" stroke={2.5} />
             </span>
 
-            {/* Ingredient Details */}
-            <div className="flex-1 text-sm leading-snug">
-                <span className={`font-semibold text-foreground ${isChecked ? 'line-through text-muted-foreground' : ''}`}>
-                    {ingredient.amount > 0 ? `${formatAmount(ingredient.amount)} ` : ''}
-                    {ingredient.unit ? `${ingredient.unit} ` : ''}
-                </span>
-                <span className={`text-foreground ${isChecked ? 'line-through text-muted-foreground' : ''}`}>
+            {/* Ingredient + Notes (Fixed Width) */}
+            <div className="w-44 sm:w-60 shrink-0 text-sm leading-snug">
+                <span className={`font-medium text-foreground ${isChecked ? 'line-through text-muted-foreground' : ''}`}>
                     {ingredient.name}
                 </span>
                 {formattedNotes && (
@@ -53,6 +54,16 @@ export const IngredientViewerItem: React.FC<IngredientViewerItemProps> = ({
                     </span>
                 )}
             </div>
+
+            {/* Quantity */}
+            {formattedQuantity && (
+                <div
+                    className={`flex-1 min-w-0 text-sm font-semibold text-foreground leading-snug ${isChecked ? 'line-through text-muted-foreground' : ''
+                        }`}
+                >
+                    {formattedQuantity}
+                </div>
+            )}
         </button>
     );
 };

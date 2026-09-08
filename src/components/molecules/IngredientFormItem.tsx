@@ -27,6 +27,12 @@ export const IngredientFormItem: React.FC<IngredientFormItemProps> = ({
         <div className="flex flex-col gap-2 p-3 bg-surface rounded-xl border border-border/70 relative">
             <div className="flex gap-2 items-center w-full">
                 <Input
+                    placeholder="Ingredient (e.g. olive oil)"
+                    className="flex-1 min-w-0 h-9 placeholder:truncate"
+                    value={ingredient.name}
+                    onChange={(e) => onChange('name', e.target.value)}
+                />
+                <Input
                     type="number"
                     step="any"
                     placeholder="Qty"
@@ -39,12 +45,6 @@ export const IngredientFormItem: React.FC<IngredientFormItemProps> = ({
                     className="w-16 sm:w-24 shrink-0 px-2 h-9"
                     value={ingredient.unit}
                     onChange={(e) => onChange('unit', e.target.value)}
-                />
-                <Input
-                    placeholder="Name (e.g. olive oil)"
-                    className="flex-1 min-w-0 h-9 placeholder:truncate"
-                    value={ingredient.name}
-                    onChange={(e) => onChange('name', e.target.value)}
                 />
             </div>
             <div className="flex gap-2 items-center w-full">
