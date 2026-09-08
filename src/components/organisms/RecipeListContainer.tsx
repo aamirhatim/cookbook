@@ -4,6 +4,7 @@ import { RecipeFilter, RecipeFilterCriteria } from '../molecules/RecipeFilter';
 import { RecipeList } from './RecipeList';
 import type { Recipe } from '../../types/recipe';
 import { IconLoader2 } from '@tabler/icons-react';
+import { useFavorites } from '../../hooks/useFavorites';
 
 export interface RecipeListContainerProps {
   authorId?: string;
@@ -22,6 +23,7 @@ export const RecipeListContainer: React.FC<RecipeListContainerProps> = ({
   className = '',
   viewMode = 'responsive',
 }) => {
+  const { isFavorite } = useFavorites();
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -32,6 +34,7 @@ export const RecipeListContainer: React.FC<RecipeListContainerProps> = ({
     difficulties: [],
     cuisines: [],
     isVeg: false,
+    onlyFavorites: false,
   });
 
   useEffect(() => {
@@ -120,9 +123,14 @@ export const RecipeListContainer: React.FC<RecipeListContainerProps> = ({
         return false;
       }
 
+      // 6. Favorites filter
+      if (filters.onlyFavorites && !isFavorite(recipe.id)) {
+        return false;
+      }
+
       return true;
     });
-  }, [recipes, filters]);
+  }, [recipes, filters, isFavorite]);
 
   const isStickyActive = isStickyFilter !== undefined ? isStickyFilter : stickyFilter;
 
@@ -144,6 +152,11 @@ export const RecipeListContainer: React.FC<RecipeListContainerProps> = ({
             recipes={filteredRecipes}
             onRecipeClick={onRecipeClick}
             viewMode={viewMode}
+            emptyMessage={
+              filters.onlyFavorites
+                ? 'No favorite recipes found matching your filters.'
+                : 'No recipes found matching your filters.'
+            }
           />
         )}
       </div>

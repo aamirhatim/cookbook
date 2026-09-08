@@ -1,4 +1,4 @@
-import { doc, setDoc, getDoc, deleteDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, setDoc, getDoc, deleteDoc, serverTimestamp, arrayUnion, arrayRemove } from 'firebase/firestore';
 import { deleteUser, signOut, User } from 'firebase/auth';
 import { db, auth } from '../lib/firebase';
 import type { UserProfile } from '../types/user';
@@ -24,6 +24,7 @@ export async function createUserProfile(input: CreateUserProfileInput): Promise<
         lastName,
         displayName,
         email,
+        favorites: [],
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
     };
@@ -139,5 +140,44 @@ export async function deleteUserAccount(user: User): Promise<void> {
     await deleteUserProfile(user.uid);
     // Delete user from Firebase Auth
     await deleteUser(user);
+}
+
+/**
+ * Adds a recipe ID to the user's favorites array in Firestore.
+ * Uses setDoc with merge: true so it works even if the profile doc is missing fields.
+ */
+export async function addFavoriteRecipe(uid: string, recipeId: string): Promise<void> {
+    const userDocRef = doc(db, 'users', uid);
+    await setDoc(
+        userDocRef,
+        {
+            favorites: arrayUnion(recipeId),
+            updatedAt: serverTimestamp(),
+        },
+        { merge: true }
+    );
+}
+
+/**
+ * Removes a recipe ID from the user's favorites array in Firestore.
+ */
+export async function removeFavoriteRecipe(uid: string, recipeId: string): Promise<void> {
+    const userDocRef = doc(db, 'users', uid);
+    await setDoc(
+        userDocRef,
+        {
+            favorites: arrayRemove(recipeId),
+            updatedAt: serverTimestamp(),
+        },
+        { merge: true }
+    );
+}
+
+/**
+ * Retrieves the array of favorited recipe IDs for a user.
+ */
+export async function getUserFavorites(uid: string): Promise<string[]> {
+    const profile = await getUserProfile(uid);
+    return profile?.favorites || [];
 }
 

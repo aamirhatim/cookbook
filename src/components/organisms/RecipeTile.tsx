@@ -8,6 +8,7 @@ import {
     IconCarrot,
 } from '@tabler/icons-react';
 import type { Recipe } from '../../types/recipe';
+import { FavoriteButton } from '../molecules/FavoriteButton';
 
 export interface RecipeTileProps {
     recipe: Recipe;
@@ -34,14 +35,23 @@ export const RecipeTile: React.FC<RecipeTileProps> = ({
         }
     };
 
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            handleClick();
+        }
+    };
+
     const DifficultyIcon = recipe.difficulty ? difficultyIcons[recipe.difficulty] : null;
 
     return (
-        <button
-            type="button"
+        <div
+            role="button"
+            tabIndex={0}
             onClick={handleClick}
+            onKeyDown={handleKeyDown}
             aria-label={`Recipe: ${recipe.title}`}
-            className={`w-full text-left flex flex-col rounded-2xl bg-surface border border-border hover:border-border/80 hover:shadow-md transition-all duration-200 group overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.99] ${className}`}
+            className={`w-full text-left flex flex-col rounded-2xl bg-surface border border-border hover:border-border/80 hover:shadow-md transition-all duration-200 group overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.99] cursor-pointer ${className}`}
         >
             {/* Cover Photo / Thumbnail */}
             <div className="aspect-[16/10] w-full overflow-hidden relative bg-surface-hover border-b border-border">
@@ -61,22 +71,10 @@ export const RecipeTile: React.FC<RecipeTileProps> = ({
 
                 {/* Floating Top Badges */}
                 <div className="absolute top-2.5 left-2.5 right-2.5 flex items-center justify-between pointer-events-none gap-2">
-                    {recipe.cuisine ? (
-                        <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-background/85 backdrop-blur-md text-foreground border border-border/50 shadow-sm capitalize">
-                            {recipe.cuisine}
-                        </span>
-                    ) : (
-                        <span />
-                    )}
-
                     <div className="flex items-center gap-1.5">
-                        {recipe.isVeg && (
-                            <span
-                                className="p-1 rounded-full bg-background/85 backdrop-blur-md text-foreground border border-border/50 shadow-sm"
-                                title="Vegetarian"
-                                aria-label="Vegetarian"
-                            >
-                                <IconCarrot className="w-3.5 h-3.5" stroke={1.5} />
+                        {recipe.cuisine && (
+                            <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-background/85 backdrop-blur-md text-foreground border border-border/50 shadow-sm capitalize">
+                                {recipe.cuisine}
                             </span>
                         )}
                         {recipe.isPrivate && (
@@ -84,6 +82,15 @@ export const RecipeTile: React.FC<RecipeTileProps> = ({
                                 Private
                             </span>
                         )}
+                    </div>
+
+                    <div className="pointer-events-auto">
+                        <FavoriteButton
+                            recipeId={recipe.id}
+                            recipeTitle={recipe.title}
+                            size="small"
+                            className="bg-background/85 backdrop-blur-md shadow-sm border border-border/50 hover:bg-background"
+                        />
                     </div>
                 </div>
 
@@ -129,17 +136,32 @@ export const RecipeTile: React.FC<RecipeTileProps> = ({
                         </span>
                     </div>
 
-                    {DifficultyIcon && (
-                        <div
-                            className="flex items-center gap-1 shrink-0 capitalize"
-                            title={`Difficulty: ${recipe.difficulty}`}
-                        >
-                            <DifficultyIcon className="w-3.5 h-3.5" stroke={1.5} />
-                            <span className="hidden sm:inline">{recipe.difficulty}</span>
-                        </div>
-                    )}
+                    <div className="flex items-center gap-2 shrink-0">
+                        {DifficultyIcon && (
+                            <div
+                                className="flex items-center gap-1 capitalize"
+                                title={`Difficulty: ${recipe.difficulty}`}
+                            >
+                                <DifficultyIcon className="w-3.5 h-3.5" stroke={1.5} />
+                                <span className="hidden sm:inline">{recipe.difficulty}</span>
+                            </div>
+                        )}
+
+                        {DifficultyIcon && recipe.isVeg && <span>•</span>}
+
+                        {recipe.isVeg && (
+                            <div
+                                className="flex items-center gap-1"
+                                title="Vegetarian"
+                                aria-label="Vegetarian"
+                            >
+                                <IconCarrot className="w-3.5 h-3.5" stroke={1.5} />
+                                <span className="hidden sm:inline">Veg</span>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
-        </button>
+        </div>
     );
 };

@@ -1,5 +1,5 @@
 import React from 'react';
-import { IconX } from '@tabler/icons-react';
+import { IconX, IconHeartFilled } from '@tabler/icons-react';
 import type { Difficulty } from '../../types/recipe';
 
 export interface ActiveFilterChipsProps {
@@ -11,6 +11,8 @@ export interface ActiveFilterChipsProps {
   onRemoveCuisine: (cuisine: string) => void;
   isVeg: boolean;
   onRemoveVeg: () => void;
+  onlyFavorites?: boolean;
+  onRemoveFavorites?: () => void;
   onResetAll: () => void;
   className?: string;
 }
@@ -24,6 +26,8 @@ export const ActiveFilterChips: React.FC<ActiveFilterChipsProps> = ({
   onRemoveCuisine,
   isVeg,
   onRemoveVeg,
+  onlyFavorites = false,
+  onRemoveFavorites,
   onResetAll,
   className = '',
 }) => {
@@ -31,7 +35,8 @@ export const ActiveFilterChips: React.FC<ActiveFilterChipsProps> = ({
     timeFilter !== 'all' ||
     difficulties.length > 0 ||
     cuisines.length > 0 ||
-    isVeg;
+    isVeg ||
+    onlyFavorites;
 
   if (!hasActiveFilters) {
     return null;
@@ -40,6 +45,23 @@ export const ActiveFilterChips: React.FC<ActiveFilterChipsProps> = ({
   return (
     <div className={`flex items-center gap-2 flex-wrap text-xs ${className}`}>
       <span className="text-muted-foreground font-medium">Filters:</span>
+
+      {onlyFavorites && (
+        <span className="inline-flex items-center gap-1.5 pl-2.5 pr-1.5 py-1 rounded-full bg-surface border border-border text-foreground font-medium">
+          <IconHeartFilled className="w-3.5 h-3.5 text-destructive" />
+          Favorites
+          {onRemoveFavorites && (
+            <button
+              type="button"
+              onClick={onRemoveFavorites}
+              className="w-5 h-5 flex items-center justify-center rounded-full text-muted-foreground hover:text-destructive hover:bg-surface-hover transition-colors"
+              aria-label="Remove favorites filter"
+            >
+              <IconX className="w-3 h-3" stroke={1.5} />
+            </button>
+          )}
+        </span>
+      )}
 
       {timeFilter !== 'all' && (
         <span className="inline-flex items-center gap-1.5 pl-2.5 pr-1.5 py-1 rounded-full bg-surface border border-border text-foreground font-medium">

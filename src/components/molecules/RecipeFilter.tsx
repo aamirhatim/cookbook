@@ -12,7 +12,11 @@ import {
     IconHexagonAsterisk,
     IconWorldMap,
     IconCarrot,
+    IconHeart,
+    IconHeartFilled,
 } from '@tabler/icons-react';
+import { useAuth } from '../../contexts/AuthContext';
+import { useAuthModal } from '../../contexts/AuthModalContext';
 import {
     TIME_OPTIONS,
     TIME_ICON_MAP,
@@ -26,6 +30,7 @@ export interface RecipeFilterCriteria {
     difficulties: Difficulty[];
     cuisines: string[];
     isVeg: boolean;
+    onlyFavorites: boolean;
 }
 
 export interface RecipeFilterProps {
@@ -47,13 +52,23 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
 }) => {
     const isStickyActive = isSticky !== undefined ? isSticky : sticky;
     const isBottom = position === 'bottom';
+    const { user } = useAuth();
+    const { requireAuth } = useAuthModal();
     const [searchInput, setSearchInput] = useState('');
     const [debouncedSearch, setDebouncedSearch] = useState('');
     const [timeFilter, setTimeFilter] = useState<string>('all');
     const [difficulties, setDifficulties] = useState<Difficulty[]>([]);
     const [cuisines, setCuisines] = useState<string[]>([]);
     const [isVeg, setIsVeg] = useState<boolean>(false);
+    const [onlyFavorites, setOnlyFavorites] = useState<boolean>(false);
     const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+
+    // If user signs out, reset favorites filter
+    useEffect(() => {
+        if (!user && onlyFavorites) {
+            setOnlyFavorites(false);
+        }
+    }, [user, onlyFavorites]);
 
     // Debounce search input to avoid filtering on every keystroke
     useEffect(() => {
@@ -72,8 +87,9 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
             difficulties,
             cuisines,
             isVeg,
+            onlyFavorites,
         });
-    }, [debouncedSearch, timeFilter, difficulties, cuisines, isVeg, onFilterChange]);
+    }, [debouncedSearch, timeFilter, difficulties, cuisines, isVeg, onlyFavorites, onFilterChange]);
 
     const handleTimeSelect = (val: string) => {
         setTimeFilter((prev) => (prev === val || val === 'all' ? 'all' : val));
@@ -99,6 +115,18 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
         setDifficulties([]);
         setCuisines([]);
         setIsVeg(false);
+        setOnlyFavorites(false);
+    };
+
+    const handleToggleFavorites = (active: boolean) => {
+        if (active && !user) {
+            requireAuth(() => setOnlyFavorites(true), {
+                title: 'View Favorites',
+                description: 'Sign in or create an account to view your favorited recipes.',
+            });
+            return;
+        }
+        setOnlyFavorites(active);
     };
 
     const cuisineOptions = availableCuisines.map((c) => ({
@@ -225,6 +253,18 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
                         title={isVeg ? 'Vegetarian only (Active)' : 'Filter by Vegetarian'}
                         ariaLabel="Filter by Vegetarian"
                     />
+
+                    <ButtonIcon
+                        icon={IconHeart}
+                        activeIcon={IconHeartFilled}
+                        isToggle
+                        active={onlyFavorites}
+                        onToggle={handleToggleFavorites}
+                        title={onlyFavorites ? 'Favorites only (Active)' : 'Filter by Favorites'}
+                        ariaLabel="Filter by Favorites"
+                        activeClassName="text-destructive border-destructive/40 focus:ring-destructive/30"
+                        inactiveClassName="text-muted-foreground hover:text-destructive hover:border-destructive/20"
+                    />
                 </div>
             </div>
 
@@ -241,6 +281,8 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
                 onRemoveCuisine={handleCuisineToggle}
                 isVeg={isVeg}
                 onRemoveVeg={() => setIsVeg(false)}
+                onlyFavorites={onlyFavorites}
+                onRemoveFavorites={() => setOnlyFavorites(false)}
                 onResetAll={handleResetFilters}
             />
         </div>

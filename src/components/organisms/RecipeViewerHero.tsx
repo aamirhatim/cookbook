@@ -13,6 +13,7 @@ import {
     IconMinus,
 } from '@tabler/icons-react';
 import type { Recipe } from '../../types/recipe';
+import { FavoriteButton } from '../molecules/FavoriteButton';
 
 export interface RecipeViewerHeroProps {
     recipe: Recipe;
@@ -68,9 +69,18 @@ export const RecipeViewerHero: React.FC<RecipeViewerHeroProps> = ({
                     </div>
                 )}
 
-                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-foreground">
-                    {recipe.title}
-                </h1>
+                <div className="flex items-center justify-between gap-3">
+                    <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-foreground flex-1 min-w-0">
+                        {recipe.title}
+                    </h1>
+                    <FavoriteButton
+                        recipeId={recipe.id}
+                        recipeTitle={recipe.title}
+                        size="default"
+                        variant="subtle"
+                        className="shrink-0"
+                    />
+                </div>
 
                 {recipe.description && (
                     <p className="text-sm sm:text-base text-muted-foreground leading-relaxed pt-1">

@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import { ToastProvider } from './contexts/ToastContext';
 import { AuthModalProvider } from './contexts/AuthModalContext';
+import { FavoritesProvider } from './contexts/FavoritesContext';
 import { ProtectedRoute } from './components/layout/ProtectedRoute';
 import { ScrollToTop } from './components/layout/ScrollToTop';
 import { IconLoader2 } from '@tabler/icons-react';
@@ -30,7 +31,8 @@ export default function App() {
         <AuthProvider>
             <ToastProvider>
                 <AuthModalProvider>
-                    <ScrollToTop />
+                    <FavoritesProvider>
+                        <ScrollToTop />
                     <div className="max-w-lg md:max-w-4xl lg:max-w-6xl xl:max-w-7xl mx-auto min-h-screen flex flex-col justify-between px-4 py-4">
                     <main className="flex-1 min-w-0 w-full">
                         <Suspense fallback={<RouteLoadingFallback />}>
@@ -58,19 +60,20 @@ export default function App() {
                                             </ProtectedRoute>
                                         }
                                     />
-                                    <Route
-                                        path="/admin/recipes/:recipeId"
-                                        element={
-                                            <ProtectedRoute requireAdmin>
-                                                <RecipeEditor />
-                                            </ProtectedRoute>
-                                        }
-                                    />
-                                </Route>
-                            </Routes>
-                        </Suspense>
-                    </main>
-                </div>
+                                        <Route
+                                            path="/admin/recipes/:recipeId"
+                                            element={
+                                                <ProtectedRoute requireAdmin>
+                                                    <RecipeEditor />
+                                                </ProtectedRoute>
+                                            }
+                                        />
+                                    </Route>
+                                </Routes>
+                            </Suspense>
+                        </main>
+                    </div>
+                    </FavoritesProvider>
                 </AuthModalProvider>
             </ToastProvider>
         </AuthProvider>

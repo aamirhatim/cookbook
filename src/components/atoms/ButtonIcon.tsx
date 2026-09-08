@@ -114,14 +114,14 @@ export const ButtonIcon: React.FC<ButtonIconProps> = ({
   // Normalized variant
   const normalizedVariant: ButtonIconVariant = variant === 'small' ? 'subtle' : variant;
 
-  // Semantic styles for active and inactive states
+  // Semantic styles for active and inactive states (background color does not change on active/select)
   const getVariantStyles = () => {
     switch (normalizedVariant) {
       case 'solid':
       case 'primary':
         if (shouldTrackToggle) {
           return isActive
-            ? 'bg-primary text-primary-foreground border-primary hover:bg-primary/90 shadow-sm'
+            ? 'bg-surface text-primary border-primary hover:bg-surface-hover hover:text-primary active:bg-surface-hover shadow-sm'
             : 'bg-surface text-muted-foreground border-border hover:bg-surface-hover hover:text-foreground active:bg-surface-hover';
         }
         return 'bg-primary text-primary-foreground border-primary hover:bg-primary/90 shadow-sm active:bg-primary/80';
@@ -132,9 +132,13 @@ export const ButtonIcon: React.FC<ButtonIconProps> = ({
       case 'destructive-subtle':
         return 'bg-destructive/10 text-destructive border-destructive/30 hover:bg-destructive/15 active:bg-destructive/20';
       case 'outline':
-        return 'bg-transparent text-foreground border-border hover:bg-surface-hover active:bg-surface-hover';
+        return isActive
+          ? 'bg-transparent text-primary border-primary hover:bg-surface-hover hover:text-primary active:bg-surface-hover'
+          : 'bg-transparent text-foreground border-border hover:bg-surface-hover active:bg-surface-hover';
       case 'ghost':
-        return 'bg-transparent text-foreground border-transparent hover:bg-surface-hover active:bg-surface-hover';
+        return isActive
+          ? 'bg-transparent text-primary border-transparent hover:bg-surface-hover hover:text-primary active:bg-surface-hover'
+          : 'bg-transparent text-foreground border-transparent hover:bg-surface-hover active:bg-surface-hover';
       case 'fab':
         return isActive
           ? 'bg-primary text-primary-foreground border-transparent hover:bg-primary/90 shadow-xl ring-2 ring-ring ring-offset-2 ring-offset-background'
@@ -142,7 +146,7 @@ export const ButtonIcon: React.FC<ButtonIconProps> = ({
       case 'subtle':
       default:
         return isActive
-          ? 'bg-primary/15 text-primary border-primary/40 hover:bg-primary/20 shadow-xs'
+          ? 'bg-surface text-primary border-primary/40 hover:bg-surface-hover hover:text-primary active:bg-surface-hover shadow-xs'
           : 'bg-surface text-muted-foreground border-border hover:bg-surface-hover hover:text-foreground active:bg-surface-hover';
     }
   };

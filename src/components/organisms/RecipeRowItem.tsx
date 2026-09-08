@@ -8,6 +8,7 @@ import {
     IconCarrot,
 } from '@tabler/icons-react';
 import type { Recipe } from '../../types/recipe';
+import { FavoriteButton } from '../molecules/FavoriteButton';
 
 export interface RecipeRowItemProps {
     recipe: Recipe;
@@ -34,14 +35,23 @@ export const RecipeRowItem: React.FC<RecipeRowItemProps> = ({
         }
     };
 
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            handleClick();
+        }
+    };
+
     const DifficultyIcon = recipe.difficulty ? difficultyIcons[recipe.difficulty] : null;
 
     return (
-        <button
-            type="button"
+        <div
+            role="button"
+            tabIndex={0}
             onClick={handleClick}
+            onKeyDown={handleKeyDown}
             aria-label={`Recipe: ${recipe.title}`}
-            className={`w-full text-left rounded-xl bg-surface border border-border hover:bg-surface-hover hover:border-border/80 transition-all flex flex-col shadow-sm overflow-hidden group focus:outline-none focus-visible:ring-2 focus-visible:ring-ring ${className}`}
+            className={`w-full text-left rounded-xl bg-surface border border-border hover:bg-surface-hover hover:border-border/80 transition-all flex flex-col shadow-sm overflow-hidden group focus:outline-none focus-visible:ring-2 focus-visible:ring-ring cursor-pointer ${className}`}
         >
             {/* Top Image banner */}
             <div className="w-full h-[120px] overflow-hidden bg-surface-hover border-b border-border shrink-0 relative">
@@ -57,6 +67,16 @@ export const RecipeRowItem: React.FC<RecipeRowItemProps> = ({
                         <IconChefHat className="w-6 h-6" stroke={1} />
                     </div>
                 )}
+
+                {/* Floating Top Right Favorite Button */}
+                <div className="absolute top-2.5 right-2.5 z-10">
+                    <FavoriteButton
+                        recipeId={recipe.id}
+                        recipeTitle={recipe.title}
+                        size="small"
+                        className="bg-background/85 backdrop-blur-md shadow-sm border border-border/50 hover:bg-background"
+                    />
+                </div>
             </div>
 
             {/* Content Details */}
@@ -66,7 +86,7 @@ export const RecipeRowItem: React.FC<RecipeRowItemProps> = ({
                         {recipe.title}
                     </h3>
                     {recipe.isPrivate && (
-                        <span className="text-xs px-2 py-0.5 rounded-full bg-secondary text-secondary-foreground font-medium">
+                        <span className="text-xs px-2 py-0.5 rounded-full bg-secondary text-secondary-foreground font-medium shrink-0">
                             Private
                         </span>
                     )}
@@ -119,6 +139,6 @@ export const RecipeRowItem: React.FC<RecipeRowItemProps> = ({
                     )}
                 </div>
             </div>
-        </button>
+        </div>
     );
 };
