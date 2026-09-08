@@ -96,9 +96,8 @@ export const RecipeViewerIngredients: React.FC<RecipeViewerIngredientsProps> = (
                                 >
                                     <div className="flex items-center gap-1.5">
                                         <IconChevronDown
-                                            className={`w-4 h-4 text-muted-foreground group-hover:text-foreground transition-transform duration-200 ${
-                                                isCollapsed ? '-rotate-90' : 'rotate-0'
-                                            }`}
+                                            className={`w-4 h-4 text-muted-foreground group-hover:text-foreground transition-transform duration-200 ${isCollapsed ? '-rotate-90' : 'rotate-0'
+                                                }`}
                                             stroke={2}
                                         />
                                         <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground group-hover:text-foreground transition-colors">
@@ -112,7 +111,7 @@ export const RecipeViewerIngredients: React.FC<RecipeViewerIngredientsProps> = (
                             )}
 
                             {!isCollapsed && (
-                                <div className="rounded-2xl bg-surface border border-border divide-y divide-border/50 overflow-hidden shadow-sm">
+                                <div className="py-2 rounded-2xl bg-surface border border-border divide-y divide-border/50 overflow-hidden shadow-sm">
                                     {sec.items.map((ing, itemIdx) => {
                                         const key = `${secIdx}-${itemIdx}`;
                                         return (

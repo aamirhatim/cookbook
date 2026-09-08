@@ -13,21 +13,26 @@ export const IngredientViewerItem: React.FC<IngredientViewerItemProps> = ({
     isChecked,
     onToggle
 }) => {
+    const trimmedNotes = ingredient.notes?.trim();
+    const formattedNotes = trimmedNotes
+        ? trimmedNotes.startsWith('(') && trimmedNotes.endsWith(')')
+            ? trimmedNotes
+            : `(${trimmedNotes})`
+        : null;
+
     return (
         <button
             type="button"
             onClick={onToggle}
-            className={`w-full min-h-[48px] px-4 py-3 text-left flex items-start gap-3 transition-colors hover:bg-surface-hover active:bg-surface-hover/80 ${
-                isChecked ? 'bg-surface-hover/40' : ''
-            }`}
+            className={`w-full px-3 py-1.5 text-left flex items-center gap-3 transition-colors hover:bg-surface-hover active:bg-surface-hover/80 ${isChecked ? 'bg-surface-hover/40' : ''
+                }`}
         >
             {/* Checkbox indicator */}
             <span
-                className={`w-5 h-5 rounded-md mt-0.5 flex items-center justify-center shrink-0 border transition-all ${
-                    isChecked
-                        ? 'bg-primary border-primary text-primary-foreground'
-                        : 'border-input bg-surface text-transparent'
-                }`}
+                className={`w-5 h-5 rounded-md flex items-center justify-center shrink-0 border transition-all ${isChecked
+                    ? 'bg-primary border-primary text-primary-foreground'
+                    : 'border-input bg-surface text-transparent'
+                    }`}
             >
                 <IconCheck className="w-3.5 h-3.5" stroke={2.5} />
             </span>
@@ -41,9 +46,9 @@ export const IngredientViewerItem: React.FC<IngredientViewerItemProps> = ({
                 <span className={`text-foreground ${isChecked ? 'line-through text-muted-foreground' : ''}`}>
                     {ingredient.name}
                 </span>
-                {ingredient.notes && (
-                    <span className={`block text-xs text-muted-foreground mt-0.5 ${isChecked ? 'line-through' : ''}`}>
-                        ({ingredient.notes})
+                {formattedNotes && (
+                    <span className={`text-muted-foreground ${isChecked ? 'line-through' : ''}`}>
+                        {' '}{formattedNotes}
                     </span>
                 )}
             </div>

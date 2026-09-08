@@ -1,7 +1,8 @@
 import React from 'react';
 import {
     IconChefHat,
-    IconStopwatch,
+    IconClock,
+    IconFlame,
     IconUsers,
     IconCarrot,
     IconHexagonLetterE,
@@ -27,7 +28,9 @@ export const RecipeViewerHero: React.FC<RecipeViewerHeroProps> = ({
     recipe,
     className = '',
 }) => {
-    const totalTime = (recipe.prepTimeMinutes || 0) + (recipe.cookTimeMinutes || 0);
+    const prepMinutes = recipe.prepTimeMinutes ?? 0;
+    const cookMinutes = recipe.cookTimeMinutes ?? 0;
+    const totalTime = prepMinutes + cookMinutes;
     const DifficultyIcon = recipe.difficulty ? difficultyIcons[recipe.difficulty] : null;
 
     return (
@@ -81,20 +84,53 @@ export const RecipeViewerHero: React.FC<RecipeViewerHeroProps> = ({
             </div>
 
             {/* Quick Metrics Bar */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 p-3 rounded-xl bg-surface border border-border">
-                <div className="flex items-center gap-2.5">
+            <div
+                className={`grid grid-cols-2 ${
+                    DifficultyIcon ? 'sm:grid-cols-4 lg:grid-cols-2' : 'sm:grid-cols-3'
+                } gap-2.5 p-3 rounded-xl bg-surface border border-border`}
+            >
+                {/* Prep Time */}
+                <div
+                    className="flex items-center gap-2.5"
+                    title={totalTime > 0 ? `Total time: ${totalTime} min` : undefined}
+                >
                     <div className="w-8 h-8 rounded-lg bg-surface-hover flex items-center justify-center text-muted-foreground shrink-0">
-                        <IconStopwatch className="w-4 h-4" stroke={1.5} />
+                        <IconClock className="w-4 h-4" stroke={1.5} />
                     </div>
                     <div className="text-xs">
-                        <p className="text-muted-foreground">Total Time</p>
+                        <p className="text-muted-foreground">Prep Time</p>
                         <p className="font-semibold text-foreground">
-                            {totalTime > 0 ? `${totalTime} min` : 'N/A'}
+                            {prepMinutes > 0
+                                ? `${prepMinutes} min`
+                                : totalTime > 0
+                                ? '0 min'
+                                : 'N/A'}
                         </p>
                     </div>
                 </div>
 
-                <div className="flex items-center gap-2.5">
+                {/* Cook Time */}
+                <div
+                    className="flex items-center gap-2.5"
+                    title={totalTime > 0 ? `Total time: ${totalTime} min` : undefined}
+                >
+                    <div className="w-8 h-8 rounded-lg bg-surface-hover flex items-center justify-center text-muted-foreground shrink-0">
+                        <IconFlame className="w-4 h-4" stroke={1.5} />
+                    </div>
+                    <div className="text-xs">
+                        <p className="text-muted-foreground">Cook Time</p>
+                        <p className="font-semibold text-foreground">
+                            {cookMinutes > 0
+                                ? `${cookMinutes} min`
+                                : totalTime > 0
+                                ? '0 min'
+                                : 'N/A'}
+                        </p>
+                    </div>
+                </div>
+
+                {/* Servings */}
+                <div className={`flex items-center gap-2.5 ${!DifficultyIcon ? 'col-span-2 sm:col-span-1' : ''}`}>
                     <div className="w-8 h-8 rounded-lg bg-surface-hover flex items-center justify-center text-muted-foreground shrink-0">
                         <IconUsers className="w-4 h-4" stroke={1.5} />
                     </div>
@@ -106,8 +142,9 @@ export const RecipeViewerHero: React.FC<RecipeViewerHeroProps> = ({
                     </div>
                 </div>
 
+                {/* Difficulty */}
                 {DifficultyIcon && (
-                    <div className="flex items-center gap-2.5 col-span-2 sm:col-span-1">
+                    <div className="flex items-center gap-2.5">
                         <div className="w-8 h-8 rounded-lg bg-surface-hover flex items-center justify-center text-muted-foreground shrink-0">
                             <DifficultyIcon className="w-4 h-4" stroke={1.5} />
                         </div>

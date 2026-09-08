@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { IconArrowLeft, IconEdit, IconLoader2, IconAlertCircle } from '@tabler/icons-react';
+import { IconArrowLeft, IconPencil, IconLoader2, IconAlertCircle } from '@tabler/icons-react';
 import { getRecipe } from '../services/recipes';
 import type { Recipe } from '../types/recipe';
 import { useAuth } from '../contexts/AuthContext';
@@ -80,15 +80,13 @@ export function RecipeViewer() {
                 />
 
                 {isAdmin && recipe && (
-                    <button
-                        type="button"
+                    <ButtonIcon
+                        icon={IconPencil}
                         onClick={() => navigate(`/admin/recipes/${recipe.id}`, { state: { recipe } })}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface border border-border hover:bg-surface-hover text-foreground text-xs font-medium transition-colors shadow-sm active:scale-95"
                         title="Edit recipe in admin editor"
-                    >
-                        <IconEdit className="w-4 h-4 text-primary" stroke={1.5} />
-                        <span>Edit Recipe</span>
-                    </button>
+                        ariaLabel="Edit recipe"
+                        className="shrink-0"
+                    />
                 )}
             </header>
 

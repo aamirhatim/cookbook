@@ -44,9 +44,8 @@ export const IngredientSectionCard: React.FC<IngredientSectionCardProps> = ({
                     title={isCollapsed ? 'Expand section' : 'Collapse section'}
                 >
                     <IconChevronDown
-                        className={`w-4 h-4 transition-transform duration-200 ${
-                            isCollapsed ? '-rotate-90' : 'rotate-0'
-                        }`}
+                        className={`w-4 h-4 transition-transform duration-200 ${isCollapsed ? '-rotate-90' : 'rotate-0'
+                            }`}
                         stroke={2}
                     />
                 </button>
@@ -109,8 +108,7 @@ export const IngredientSectionCard: React.FC<IngredientSectionCardProps> = ({
                     <span>
                         {section.items.length} {section.items.length === 1 ? 'ingredient' : 'ingredients'}
                         {section.items.length > 0 &&
-                            ` (${section.items.filter((i) => i.name).map((i) => i.name).slice(0, 3).join(', ')}${
-                                section.items.length > 3 ? '...' : ''
+                            ` (${section.items.filter((i) => i.name).map((i) => i.name).slice(0, 3).join(', ')}${section.items.length > 3 ? '...' : ''
                             })`}
                     </span>
                     <span className="font-semibold text-primary text-xs">Expand</span>
