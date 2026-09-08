@@ -96,9 +96,8 @@ export const RecipeViewerInstructions: React.FC<RecipeViewerInstructionsProps> =
                                 >
                                     <div className="flex items-center gap-1.5">
                                         <IconChevronDown
-                                            className={`w-4 h-4 text-muted-foreground group-hover:text-foreground transition-transform duration-200 ${
-                                                isCollapsed ? '-rotate-90' : 'rotate-0'
-                                            }`}
+                                            className={`w-4 h-4 text-muted-foreground group-hover:text-foreground transition-transform duration-200 ${isCollapsed ? '-rotate-90' : 'rotate-0'
+                                                }`}
                                             stroke={2}
                                         />
                                         <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground group-hover:text-foreground transition-colors">
@@ -112,7 +111,7 @@ export const RecipeViewerInstructions: React.FC<RecipeViewerInstructionsProps> =
                             )}
 
                             {!isCollapsed && (
-                                <div className="space-y-3">
+                                <div className="space-y-1">
                                     {sec.steps.map((step) => (
                                         <InstructionViewerItem
                                             key={step.stepNumber}
