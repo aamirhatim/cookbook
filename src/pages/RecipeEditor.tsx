@@ -1,14 +1,13 @@
 import { useState } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 import {
-  IconArrowLeft,
   IconLoader2,
   IconAlertCircle,
-  IconCheck,
   IconX,
+  IconDeviceFloppy,
 } from '@tabler/icons-react';
 import type { Recipe } from '../types/recipe';
-import { ButtonIcon } from '../components/atoms/ButtonIcon';
+import { RecipeEditorHeader } from '../components/molecules/RecipeEditorHeader';
 import { RecipeMetadataForm } from '../components/molecules/RecipeMetadataForm';
 import { CollapsibleSection } from '../components/molecules/CollapsibleSection';
 import { IngredientsFormList } from '../components/organisms/IngredientsFormList';
@@ -51,16 +50,17 @@ export function RecipeEditor() {
 
   return (
     <div className="space-y-6 w-full pb-20">
-      {/* Header with Back Button */}
-      <header className="pt-2 flex items-center gap-3">
-        <ButtonIcon
-          icon={IconArrowLeft}
-          onClick={goBack}
-          disabled={saving}
-          title="Go back"
-          ariaLabel="Go back"
-        />
-      </header>
+      {/* Header with Back Button and Actions */}
+      <RecipeEditorHeader
+        onBack={goBack}
+        onSave={handleSave}
+        onCancel={handleCancel}
+        saving={saving}
+        isNew={isNew}
+        recipeId={recipeId}
+        recipeTitle={recipe?.title || formData.title}
+        disabled={saving}
+      />
 
       {/* Main Content Area */}
       <div className="w-full min-w-0">
@@ -150,7 +150,7 @@ export function RecipeEditor() {
                 {saving ? (
                   <IconLoader2 className="w-5 h-5 animate-spin" stroke={1} />
                 ) : (
-                  <IconCheck className="w-5 h-5" stroke={1} />
+                  <IconDeviceFloppy className="w-5 h-5" stroke={1} />
                 )}
                 Save Recipe
               </button>
