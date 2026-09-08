@@ -99,9 +99,21 @@ export function RecipeEditor() {
     }
   }, [recipe]);
 
+  const goBack = () => {
+    if (window.history.length > 1) {
+      navigate(-1);
+    } else {
+      navigate('/admin/recipes');
+    }
+  };
+
+  const handleBack = () => {
+    goBack();
+  };
+
   const handleCancel = () => {
     showToast('Recipe changes canceled', 'info');
-    navigate('/admin/recipes');
+    goBack();
   };
 
   const handleSave = async () => {
@@ -192,7 +204,7 @@ export function RecipeEditor() {
       }
       
       showToast('Recipe saved successfully!', 'success');
-      navigate('/admin/recipes');
+      goBack();
     } catch (err: any) {
       console.error('Error saving recipe:', err);
       showToast(err.message || 'Failed to save recipe. Please try again.', 'error');
@@ -227,10 +239,10 @@ export function RecipeEditor() {
       <header className="pt-2 flex items-center gap-3">
         <ButtonIcon
           icon={IconArrowLeft}
-          onClick={handleCancel}
+          onClick={handleBack}
           disabled={saving}
-          title="Back to Recipes"
-          ariaLabel="Back to Recipes"
+          title="Go back"
+          ariaLabel="Go back"
         />
       </header>
 
