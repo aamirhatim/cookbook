@@ -3,7 +3,7 @@ import { RecipeRowItem } from './RecipeRowItem';
 import { RecipeTile } from './RecipeTile';
 import type { Recipe } from '../../types/recipe';
 import { IconToolsKitchen2 } from '@tabler/icons-react';
-import { useMediaQuery } from '../../hooks/useMediaQuery';
+import { useIsMobile } from '../../hooks/useIsMobile';
 
 export interface RecipeListProps {
   recipes: Recipe[];
@@ -20,7 +20,7 @@ export const RecipeList: React.FC<RecipeListProps> = ({
   className = '',
   viewMode = 'responsive',
 }) => {
-  const isDesktop = useMediaQuery('(min-width: 768px)');
+  const isMobile = useIsMobile();
 
   if (recipes.length === 0) {
     return (
@@ -36,7 +36,7 @@ export const RecipeList: React.FC<RecipeListProps> = ({
     );
   }
 
-  const effectiveMode = viewMode === 'responsive' ? (isDesktop ? 'tile' : 'list') : viewMode;
+  const effectiveMode = viewMode === 'responsive' ? (isMobile ? 'list' : 'tile') : viewMode;
 
   if (effectiveMode === 'list') {
     return (
