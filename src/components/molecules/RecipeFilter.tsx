@@ -5,7 +5,7 @@ import { DropdownMenu } from './DropdownMenu';
 import { TimeFilterMobileTray } from './TimeFilterMobileTray';
 import { DifficultyFilterMobileTray } from './DifficultyFilterMobileTray';
 import { CuisineFilterMobileTray } from './CuisineFilterMobileTray';
-import { ActiveFilterChips } from './ActiveFilterChips';
+import { useMediaQuery } from '../../hooks/useMediaQuery';
 import type { Difficulty } from '../../types/recipe';
 import {
     IconStopwatch,
@@ -14,6 +14,9 @@ import {
     IconCarrot,
     IconHeart,
     IconHeartFilled,
+    IconAdjustmentsHorizontal,
+    IconSearch,
+    IconWashDrycleanOff,
 } from '@tabler/icons-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useAuthModal } from '../../contexts/AuthModalContext';
@@ -52,8 +55,11 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
 }) => {
     const isStickyActive = isSticky !== undefined ? isSticky : sticky;
     const isBottom = position === 'bottom';
+    const isMobile = useMediaQuery('(max-width: 639px)');
     const { user } = useAuth();
     const { requireAuth } = useAuthModal();
+    const [toolbarMode, setToolbarMode] = useState<'search' | 'filters'>('search');
+    const [shouldAutoFocusSearch, setShouldAutoFocusSearch] = useState(false);
     const [searchInput, setSearchInput] = useState('');
     const [debouncedSearch, setDebouncedSearch] = useState('');
     const [timeFilter, setTimeFilter] = useState<string>('all');
@@ -62,6 +68,13 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
     const [isVeg, setIsVeg] = useState<boolean>(false);
     const [onlyFavorites, setOnlyFavorites] = useState<boolean>(false);
     const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+
+    const hasActiveFilters =
+        timeFilter !== 'all' ||
+        difficulties.length > 0 ||
+        cuisines.length > 0 ||
+        isVeg ||
+        onlyFavorites;
 
     // If user signs out, reset favorites filter
     useEffect(() => {
@@ -109,13 +122,23 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
     };
 
     const handleResetFilters = () => {
-        setSearchInput('');
-        setDebouncedSearch('');
         setTimeFilter('all');
         setDifficulties([]);
         setCuisines([]);
         setIsVeg(false);
         setOnlyFavorites(false);
+        setActiveDropdown(null);
+    };
+
+    const handleOpenFilters = () => {
+        setShouldAutoFocusSearch(false);
+        setToolbarMode('filters');
+    };
+
+    const handleCollapseToSearch = () => {
+        setShouldAutoFocusSearch(true);
+        setActiveDropdown(null);
+        setToolbarMode('search');
     };
 
     const handleToggleFavorites = (active: boolean) => {
@@ -154,8 +177,8 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
         difficulties.length === 1
             ? `Difficulty: ${difficulties[0].charAt(0).toUpperCase() + difficulties[0].slice(1)}`
             : difficulties.length > 1
-            ? `Difficulty (${difficulties.length} selected)`
-            : 'Difficulty';
+                ? `Difficulty (${difficulties.length} selected)`
+                : 'Difficulty';
 
     const stickyClasses = isStickyActive
         ? isBottom
@@ -163,128 +186,178 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
             : 'sticky top-0 z-20 bg-background/95 backdrop-blur-md py-3.5 border-b border-border/40'
         : '';
 
+    const renderFilterButtons = () => (
+        <>
+            <DropdownMenu
+                icon={timeIcon}
+                title="Max cooking time"
+                buttonTitle={timeButtonTitle}
+                ariaLabel={timeButtonTitle}
+                type="radio"
+                items={TIME_OPTIONS}
+                selectedValues={timeFilter}
+                onSelect={handleTimeSelect}
+                hasActiveFilters={timeFilter !== 'all'}
+                placement={isBottom ? 'top' : 'bottom'}
+                open={activeDropdown === 'time'}
+                onOpenChange={(open) => setActiveDropdown(open ? 'time' : null)}
+                mobileLayout={({ close }) => (
+                    <TimeFilterMobileTray
+                        selectedValue={timeFilter}
+                        onSelect={handleTimeSelect}
+                        onClose={close}
+                    />
+                )}
+            />
+
+            <DropdownMenu
+                icon={difficultyIcon}
+                title="Difficulty"
+                buttonTitle={difficultyButtonTitle}
+                ariaLabel={difficultyButtonTitle}
+                type="multi"
+                items={DIFFICULTY_OPTIONS}
+                selectedValues={difficulties}
+                onSelect={handleDifficultyToggle}
+                hasActiveFilters={difficulties.length > 0}
+                placement={isBottom ? 'top' : 'bottom'}
+                open={activeDropdown === 'diff'}
+                onOpenChange={(open) => setActiveDropdown(open ? 'diff' : null)}
+                mobileLayout={({ close }) => (
+                    <DifficultyFilterMobileTray
+                        selectedValues={difficulties}
+                        onSelect={handleDifficultyToggle}
+                        onClose={close}
+                    />
+                )}
+            />
+
+            {cuisineOptions.length > 0 && (
+                <DropdownMenu
+                    icon={IconWorldMap}
+                    title="Cuisine"
+                    type="multi"
+                    items={cuisineOptions}
+                    selectedValues={cuisines}
+                    onSelect={handleCuisineToggle}
+                    hasActiveFilters={cuisines.length > 0}
+                    placement={isBottom ? 'top' : 'bottom'}
+                    open={activeDropdown === 'cuisine'}
+                    onOpenChange={(open) => setActiveDropdown(open ? 'cuisine' : null)}
+                    mobileLayout={({ close }) => (
+                        <CuisineFilterMobileTray
+                            items={cuisineOptions}
+                            selectedValues={cuisines}
+                            onSelect={handleCuisineToggle}
+                            onClose={close}
+                        />
+                    )}
+                />
+            )}
+
+            <ButtonIcon
+                icon={IconCarrot}
+                isToggle
+                active={isVeg}
+                onToggle={setIsVeg}
+                title={isVeg ? 'Vegetarian only (Active)' : 'Filter by Vegetarian'}
+                ariaLabel="Filter by Vegetarian"
+            />
+
+            <ButtonIcon
+                icon={IconHeart}
+                activeIcon={IconHeartFilled}
+                isToggle
+                active={onlyFavorites}
+                onToggle={handleToggleFavorites}
+                title={onlyFavorites ? 'Favorites only (Active)' : 'Filter by Favorites'}
+                ariaLabel="Filter by Favorites"
+                activeClassName="text-destructive border-destructive/40 focus:ring-destructive/30"
+                inactiveClassName="text-muted-foreground hover:text-destructive hover:border-destructive/20"
+            />
+
+            <ButtonIcon
+                icon={IconWashDrycleanOff}
+                onClick={handleResetFilters}
+                disabled={!hasActiveFilters}
+                title={hasActiveFilters ? 'Reset all filters' : 'No filters applied'}
+                ariaLabel="Reset all filters"
+                className={hasActiveFilters ? 'text-destructive/80 hover:text-destructive hover:border-destructive/30' : ''}
+            />
+        </>
+    );
+
     return (
         <div
             data-recipe-filter-bar="true"
             className={`flex ${isBottom ? 'flex-col-reverse' : 'flex-col'} gap-2.5 w-full ${stickyClasses} ${className}`}
         >
-            <div className="flex items-center gap-2 w-full">
-                <Searchbar
-                    value={searchInput}
-                    onChange={setSearchInput}
-                    placeholder="Search recipes, ingredients, tags..."
-                    className="flex-1"
-                />
-
-                {/* Filter Dropdowns & Toggles */}
-                <div className="flex items-center gap-1.5 shrink-0">
-                    <DropdownMenu
-                        icon={timeIcon}
-                        title="Max cooking time"
-                        buttonTitle={timeButtonTitle}
-                        ariaLabel={timeButtonTitle}
-                        type="radio"
-                        items={TIME_OPTIONS}
-                        selectedValues={timeFilter}
-                        onSelect={handleTimeSelect}
-                        hasActiveFilters={timeFilter !== 'all'}
-                        placement={isBottom ? 'top' : 'bottom'}
-                        open={activeDropdown === 'time'}
-                        onOpenChange={(open) => setActiveDropdown(open ? 'time' : null)}
-                        mobileLayout={({ close }) => (
-                            <TimeFilterMobileTray
-                                selectedValue={timeFilter}
-                                onSelect={handleTimeSelect}
-                                onClose={close}
-                            />
-                        )}
-                    />
-
-                    <DropdownMenu
-                        icon={difficultyIcon}
-                        title="Difficulty"
-                        buttonTitle={difficultyButtonTitle}
-                        ariaLabel={difficultyButtonTitle}
-                        type="multi"
-                        items={DIFFICULTY_OPTIONS}
-                        selectedValues={difficulties}
-                        onSelect={handleDifficultyToggle}
-                        hasActiveFilters={difficulties.length > 0}
-                        placement={isBottom ? 'top' : 'bottom'}
-                        open={activeDropdown === 'diff'}
-                        onOpenChange={(open) => setActiveDropdown(open ? 'diff' : null)}
-                        mobileLayout={({ close }) => (
-                            <DifficultyFilterMobileTray
-                                selectedValues={difficulties}
-                                onSelect={handleDifficultyToggle}
-                                onClose={close}
-                            />
-                        )}
-                    />
-
-                    {cuisineOptions.length > 0 && (
-                        <DropdownMenu
-                            icon={IconWorldMap}
-                            title="Cuisine"
-                            type="multi"
-                            items={cuisineOptions}
-                            selectedValues={cuisines}
-                            onSelect={handleCuisineToggle}
-                            hasActiveFilters={cuisines.length > 0}
-                            placement={isBottom ? 'top' : 'bottom'}
-                            open={activeDropdown === 'cuisine'}
-                            onOpenChange={(open) => setActiveDropdown(open ? 'cuisine' : null)}
-                            mobileLayout={({ close }) => (
-                                <CuisineFilterMobileTray
-                                    items={cuisineOptions}
-                                    selectedValues={cuisines}
-                                    onSelect={handleCuisineToggle}
-                                    onClose={close}
-                                />
-                            )}
+            {isMobile ? (
+                /* Mobile: Toggle view between Search Mode and Filters Mode */
+                toolbarMode === 'search' ? (
+                    <div className="flex items-center gap-2 w-full">
+                        <Searchbar
+                            value={searchInput}
+                            onChange={setSearchInput}
+                            placeholder="Search recipes, ingredients, tags..."
+                            className="flex-1 min-w-0"
+                            autoFocus={shouldAutoFocusSearch}
                         />
-                    )}
 
-                    <ButtonIcon
-                        icon={IconCarrot}
-                        isToggle
-                        active={isVeg}
-                        onToggle={setIsVeg}
-                        title={isVeg ? 'Vegetarian only (Active)' : 'Filter by Vegetarian'}
-                        ariaLabel="Filter by Vegetarian"
+                        <ButtonIcon
+                            icon={IconAdjustmentsHorizontal}
+                            onClick={handleOpenFilters}
+                            active={hasActiveFilters}
+                            title={hasActiveFilters ? 'Filters applied (Tap to edit)' : 'Filter recipes'}
+                            ariaLabel={hasActiveFilters ? 'Filters applied (Tap to edit)' : 'Filter recipes'}
+                            className="shrink-0"
+                        />
+                    </div>
+                ) : (
+                    <div className="flex items-center justify-center gap-1.5 w-full overflow-x-auto no-scrollbar py-0.5">
+                        {/* Collapsed Search Button */}
+                        <ButtonIcon
+                            icon={IconSearch}
+                            onClick={handleCollapseToSearch}
+                            active={Boolean(debouncedSearch || searchInput)}
+                            title={
+                                searchInput
+                                    ? `Search: "${searchInput}" (Tap to expand)`
+                                    : 'Search recipes (Tap to expand)'
+                            }
+                            ariaLabel={
+                                searchInput
+                                    ? `Search: "${searchInput}" (Tap to expand)`
+                                    : 'Search recipes (Tap to expand)'
+                            }
+                            className="shrink-0"
+                        />
+
+                        {/* Divider line between search button and filter buttons */}
+                        <div className="h-6 w-px bg-border shrink-0 mx-0.5" aria-hidden="true" />
+
+                        {/* Centered Filter Buttons & Reset */}
+                        {renderFilterButtons()}
+                    </div>
+                )
+            ) : (
+                /* Desktop / Tablet: Always show full Search bar and all filter buttons */
+                <div className="flex items-center gap-2 w-full">
+                    <Searchbar
+                        value={searchInput}
+                        onChange={setSearchInput}
+                        placeholder="Search recipes, ingredients, tags..."
+                        className="flex-1 min-w-0"
                     />
 
-                    <ButtonIcon
-                        icon={IconHeart}
-                        activeIcon={IconHeartFilled}
-                        isToggle
-                        active={onlyFavorites}
-                        onToggle={handleToggleFavorites}
-                        title={onlyFavorites ? 'Favorites only (Active)' : 'Filter by Favorites'}
-                        ariaLabel="Filter by Favorites"
-                        activeClassName="text-destructive border-destructive/40 focus:ring-destructive/30"
-                        inactiveClassName="text-muted-foreground hover:text-destructive hover:border-destructive/20"
-                    />
+                    <div className="flex items-center gap-1.5 shrink-0">
+                        {renderFilterButtons()}
+                    </div>
                 </div>
-            </div>
+            )}
 
             {/* Mobile Tray Slot: expands inside the filter, above existing search and filtering tools */}
             <div data-recipe-filter-tray-slot="true" className="w-full empty:hidden" />
-
-            {/* Active filter badges / reset */}
-            <ActiveFilterChips
-                timeFilter={timeFilter}
-                onRemoveTime={() => setTimeFilter('all')}
-                difficulties={difficulties}
-                onRemoveDifficulty={handleDifficultyToggle}
-                cuisines={cuisines}
-                onRemoveCuisine={handleCuisineToggle}
-                isVeg={isVeg}
-                onRemoveVeg={() => setIsVeg(false)}
-                onlyFavorites={onlyFavorites}
-                onRemoveFavorites={() => setOnlyFavorites(false)}
-                onResetAll={handleResetFilters}
-            />
         </div>
     );
 };
