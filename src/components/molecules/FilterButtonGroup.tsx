@@ -44,6 +44,7 @@ export interface FilterButtonGroupProps {
     activeDropdown: string | null;
     onActiveDropdownChange: (dropdown: string | null) => void;
     position?: 'top' | 'bottom';
+    showFavorites?: boolean;
 }
 
 /**
@@ -67,6 +68,7 @@ export const FilterButtonGroup: React.FC<FilterButtonGroupProps> = ({
     activeDropdown,
     onActiveDropdownChange,
     position = 'bottom',
+    showFavorites = true,
 }) => {
     const isBottom = position === 'bottom';
 
@@ -170,17 +172,19 @@ export const FilterButtonGroup: React.FC<FilterButtonGroupProps> = ({
                 ariaLabel="Filter by Vegetarian"
             />
 
-            <ButtonIcon
-                icon={IconHeart}
-                activeIcon={IconHeartFilled}
-                isToggle
-                active={onlyFavorites}
-                onToggle={onFavoritesToggle}
-                title={onlyFavorites ? 'Favorites only (Active)' : 'Filter by Favorites'}
-                ariaLabel="Filter by Favorites"
-                activeClassName="text-destructive border-destructive/40 focus:ring-destructive/30"
-                inactiveClassName="text-muted-foreground hover:text-destructive hover:border-destructive/20"
-            />
+            {showFavorites && (
+                <ButtonIcon
+                    icon={IconHeart}
+                    activeIcon={IconHeartFilled}
+                    isToggle
+                    active={onlyFavorites}
+                    onToggle={onFavoritesToggle}
+                    title={onlyFavorites ? 'Favorites only (Active)' : 'Filter by Favorites'}
+                    ariaLabel="Filter by Favorites"
+                    activeClassName="text-destructive border-destructive/40 focus:ring-destructive/30"
+                    inactiveClassName="text-muted-foreground hover:text-destructive hover:border-destructive/20"
+                />
+            )}
 
             <ButtonIcon
                 icon={IconWashDrycleanOff}

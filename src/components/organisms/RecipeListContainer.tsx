@@ -9,21 +9,29 @@ import { useFavorites } from '../../hooks/useFavorites';
 export interface RecipeListContainerProps {
   authorId?: string;
   onRecipeClick?: (recipe: Recipe) => void;
+  onEditRecipe?: (recipe: Recipe) => void;
+  onDeleteRecipe?: (recipe: Recipe) => void;
+  onTogglePublishRecipe?: (recipe: Recipe) => void;
   stickyFilter?: boolean;
   isStickyFilter?: boolean;
   className?: string;
-  viewMode?: 'responsive' | 'list' | 'tile';
+  viewMode?: 'responsive' | 'list' | 'tile' | 'admin';
   filterPosition?: 'top' | 'bottom';
+  showFavoritesFilter?: boolean;
 }
 
 export const RecipeListContainer: React.FC<RecipeListContainerProps> = ({
   authorId,
   onRecipeClick,
+  onEditRecipe,
+  onDeleteRecipe,
+  onTogglePublishRecipe,
   stickyFilter,
   isStickyFilter,
   className = '',
   viewMode = 'responsive',
   filterPosition = 'bottom',
+  showFavoritesFilter,
 }) => {
   const { isFavorite } = useFavorites();
   const [recipes, setRecipes] = useState<Recipe[]>([]);
@@ -144,6 +152,9 @@ export const RecipeListContainer: React.FC<RecipeListContainerProps> = ({
   const listBottomPadding =
     filterPosition === 'bottom' && isStickyActive ? 'pb-28 sm:pb-32' : 'pb-4';
 
+  const effectiveShowFavorites =
+    showFavoritesFilter !== undefined ? showFavoritesFilter : viewMode !== 'admin';
+
   const filterToolbar =
     isStickyActive && filterPosition === 'bottom' ? (
       <div
@@ -156,6 +167,7 @@ export const RecipeListContainer: React.FC<RecipeListContainerProps> = ({
             availableCuisines={availableCuisines}
             position="bottom"
             sticky={false}
+            showFavoritesFilter={effectiveShowFavorites}
           />
         </div>
       </div>
@@ -175,6 +187,7 @@ export const RecipeListContainer: React.FC<RecipeListContainerProps> = ({
           availableCuisines={availableCuisines}
           position={filterPosition}
           sticky={false}
+          showFavoritesFilter={effectiveShowFavorites}
         />
       </div>
     );
@@ -198,6 +211,9 @@ export const RecipeListContainer: React.FC<RecipeListContainerProps> = ({
           <RecipeList
             recipes={filteredRecipes}
             onRecipeClick={onRecipeClick}
+            onEditRecipe={onEditRecipe}
+            onDeleteRecipe={onDeleteRecipe}
+            onTogglePublishRecipe={onTogglePublishRecipe}
             viewMode={viewMode}
             emptyMessage={
               filters.onlyFavorites

@@ -21,6 +21,7 @@ export interface RecipeFilterProps {
     isSticky?: boolean;
     position?: 'top' | 'bottom';
     className?: string;
+    showFavoritesFilter?: boolean;
 }
 
 /**
@@ -34,6 +35,7 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
     isSticky,
     position = 'bottom',
     className = '',
+    showFavoritesFilter = true,
 }) => {
     const isStickyActive = isSticky !== undefined ? isSticky : sticky;
     const isBottom = position === 'bottom';
@@ -159,6 +161,7 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
                                 activeDropdown={activeDropdown}
                                 onActiveDropdownChange={setActiveDropdown}
                                 position={position}
+                                showFavorites={showFavoritesFilter}
                             />
                         </div>
                     </div>
@@ -191,6 +194,7 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
                             activeDropdown={activeDropdown}
                             onActiveDropdownChange={setActiveDropdown}
                             position={position}
+                            showFavorites={showFavoritesFilter}
                         />
                     </div>
                 </div>
