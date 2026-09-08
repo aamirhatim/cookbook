@@ -1,9 +1,23 @@
 import { useNavigate } from 'react-router-dom';
 import { IconNotebook, IconSearch, IconUser, IconBook } from '@tabler/icons-react';
 import { ButtonIcon } from '../components/atoms/ButtonIcon';
+import { useAuthModal } from '../hooks/useAuthModal';
 
 export function Home() {
     const navigate = useNavigate();
+    const { requireAuth } = useAuthModal();
+
+    const handleAccountClick = () => {
+        requireAuth(
+            () => {
+                navigate('/account');
+            },
+            {
+                title: 'Account',
+                description: 'Sign in or create an account to view and manage your profile.',
+            }
+        );
+    };
 
     return (
         <div className="space-y-6">
@@ -18,7 +32,7 @@ export function Home() {
                 </div>
                 <ButtonIcon
                     icon={IconUser}
-                    onClick={() => navigate('/account')}
+                    onClick={handleAccountClick}
                     title="Account"
                     ariaLabel="Account"
                     className="shrink-0"

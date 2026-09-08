@@ -38,11 +38,13 @@ export default function App() {
                                 <Route path="/login" element={<Login />} />
                                 <Route path="/signup" element={<SignUp />} />
 
-                                {/* All app routes are protected: user must log in to access */}
+                                {/* Public routes */}
+                                <Route path="/" element={<Home />} />
+                                <Route path="/recipes" element={<RecipesList />} />
+                                <Route path="/recipes/:recipeId" element={<RecipeViewer />} />
+
+                                {/* Protected member routes */}
                                 <Route element={<ProtectedRoute />}>
-                                    <Route path="/" element={<Home />} />
-                                    <Route path="/recipes" element={<RecipesList />} />
-                                    <Route path="/recipes/:recipeId" element={<RecipeViewer />} />
                                     <Route path="/account" element={<Account />} />
                                     <Route
                                         path="/admin"
