@@ -1,12 +1,10 @@
 import { useState } from 'react';
 import { useNavigate, Navigate, useLocation } from 'react-router-dom';
-import { createUserWithEmailAndPassword, updateProfile, User } from 'firebase/auth';
 import { IconNotebook } from '@tabler/icons-react';
-import { auth } from '../lib/firebase';
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../hooks/useToast';
 import { SignUpForm, SignUpFormData } from '../components/molecules/SignUpForm';
-import { createUserProfile, setUserCustomClaim, rollbackUserCreation } from '../services/users';
+import { registerUser, parseAuthError } from '../services/auth';
 
 export function SignUp() {
     const [error, setError] = useState<string | null>(null);
@@ -38,56 +36,14 @@ export function SignUp() {
     const handleSignUp = async (data: SignUpFormData) => {
         setIsLoading(true);
         setError(null);
-        let createdUser: User | null = null;
 
         try {
-            // 1. Create user in Firebase Auth
-            const userCredential = await createUserWithEmailAndPassword(auth, data.email, data.password);
-            createdUser = userCredential.user;
-
-            // 2. Set user display name
-            const fullName = `${data.firstName} ${data.lastName}`.trim();
-            await updateProfile(createdUser, { displayName: fullName });
-
-            // 3. Assign default 'user' custom claim
-            await setUserCustomClaim(createdUser.uid, 'user');
-
-            // 4. Create profile entry in 'users' Firestore collection
-            await createUserProfile({
-                uid: createdUser.uid,
-                firstName: data.firstName,
-                lastName: data.lastName,
-                email: data.email,
-            });
-
-            // 5. Notify user of successful account creation
+            await registerUser(data);
             showToast('Account created successfully! Welcome to Recipe Book.', 'success');
-
-            // 6. Navigate to intended destination or home
             navigate(from, { replace: true });
         } catch (err: any) {
             console.error('Sign up error:', err);
-
-            // Roll back any artifacts created on backend if user creation failed mid-flow
-            if (createdUser) {
-                try {
-                    await rollbackUserCreation(createdUser);
-                } catch (rollbackErr) {
-                    console.error('Error rolling back user creation:', rollbackErr);
-                }
-            }
-
-            let message = 'Failed to create account. Please try again.';
-            if (err.code === 'auth/email-already-in-use') {
-                message = 'An account with this email already exists.';
-            } else if (err.code === 'auth/invalid-email') {
-                message = 'Please enter a valid email address.';
-            } else if (err.code === 'auth/weak-password') {
-                message = 'Password is too weak. Please use at least 6 characters.';
-            } else if (err.message) {
-                message = err.message;
-            }
-
+            const message = parseAuthError(err);
             setError(message);
             showToast(message, 'error');
             navigate('/signup', { replace: true });
