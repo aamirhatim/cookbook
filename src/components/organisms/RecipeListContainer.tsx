@@ -13,15 +13,17 @@ export interface RecipeListContainerProps {
   isStickyFilter?: boolean;
   className?: string;
   viewMode?: 'responsive' | 'list' | 'tile';
+  filterPosition?: 'top' | 'bottom';
 }
 
 export const RecipeListContainer: React.FC<RecipeListContainerProps> = ({
   authorId,
   onRecipeClick,
-  stickyFilter = true,
+  stickyFilter,
   isStickyFilter,
   className = '',
   viewMode = 'responsive',
+  filterPosition = 'bottom',
 }) => {
   const { isFavorite } = useFavorites();
   const [recipes, setRecipes] = useState<Recipe[]>([]);
@@ -132,12 +134,57 @@ export const RecipeListContainer: React.FC<RecipeListContainerProps> = ({
     });
   }, [recipes, filters, isFavorite]);
 
-  const isStickyActive = isStickyFilter !== undefined ? isStickyFilter : stickyFilter;
+  const isStickyActive =
+    isStickyFilter !== undefined
+      ? isStickyFilter
+      : stickyFilter !== undefined
+        ? stickyFilter
+        : filterPosition === 'bottom';
+
+  const listBottomPadding =
+    filterPosition === 'bottom' && isStickyActive ? 'pb-28 sm:pb-32' : 'pb-4';
+
+  const filterToolbar =
+    isStickyActive && filterPosition === 'bottom' ? (
+      <div
+        data-recipe-filter-bar="true"
+        className="fixed bottom-0 left-0 right-0 z-30 bg-background/95 backdrop-blur-md border-t border-border/40 py-3 shadow-lg"
+      >
+        <div className="max-w-lg md:max-w-4xl lg:max-w-6xl xl:max-w-7xl mx-auto px-4 w-full">
+          <RecipeFilter
+            onFilterChange={setFilters}
+            availableCuisines={availableCuisines}
+            position="bottom"
+            sticky={false}
+          />
+        </div>
+      </div>
+    ) : (
+      <div
+        data-recipe-filter-bar="true"
+        className={
+          filterPosition === 'top'
+            ? isStickyActive
+              ? 'sticky top-0 z-20 bg-background/95 backdrop-blur-md pb-4 pt-1 border-b border-border/40 mb-4'
+              : 'w-full pb-4'
+            : 'w-full pt-4 border-t border-border/40'
+        }
+      >
+        <RecipeFilter
+          onFilterChange={setFilters}
+          availableCuisines={availableCuisines}
+          position={filterPosition}
+          sticky={false}
+        />
+      </div>
+    );
 
   return (
     <div className={`flex flex-col w-full ${className}`}>
-      {/* Recipe List Area with bottom padding to ensure content is not obscured by the bottom filter */}
-      <div className={isStickyActive ? 'pb-28 sm:pb-32' : 'pb-4'}>
+      {filterPosition === 'top' && filterToolbar}
+
+      {/* Recipe List Area with bottom padding to ensure content is not obscured when filter is fixed at bottom */}
+      <div className={listBottomPadding}>
         {loading ? (
           <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
             <IconLoader2 className="w-8 h-8 animate-spin text-primary mb-2" stroke={1} />
@@ -161,31 +208,7 @@ export const RecipeListContainer: React.FC<RecipeListContainerProps> = ({
         )}
       </div>
 
-      {/* Recipe Filter positioned at the bottom of the viewport */}
-      {isStickyActive ? (
-        <div
-          data-recipe-filter-bar="true"
-          className="fixed bottom-0 left-0 right-0 z-30 bg-background/95 backdrop-blur-md border-t border-border/40 py-3 shadow-lg"
-        >
-          <div className="max-w-lg md:max-w-4xl lg:max-w-6xl xl:max-w-7xl mx-auto px-4 w-full">
-            <RecipeFilter
-              onFilterChange={setFilters}
-              availableCuisines={availableCuisines}
-              position="bottom"
-              sticky={false}
-            />
-          </div>
-        </div>
-      ) : (
-        <div data-recipe-filter-bar="true" className="w-full pt-4 border-t border-border/40">
-          <RecipeFilter
-            onFilterChange={setFilters}
-            availableCuisines={availableCuisines}
-            position="bottom"
-            sticky={false}
-          />
-        </div>
-      )}
+      {filterPosition === 'bottom' && filterToolbar}
     </div>
   );
 };
