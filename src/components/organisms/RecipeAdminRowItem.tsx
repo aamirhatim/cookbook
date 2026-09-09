@@ -26,15 +26,20 @@ export const RecipeAdminRowItem: React.FC<RecipeAdminRowItemProps> = ({
     onClick,
     className = '',
 }) => {
-    const isPublished = !recipe.isPrivate;
+    const isPublished = Boolean(recipe.isPublished);
+    const [isConfirmingPublish, setIsConfirmingPublish] = useState(false);
+    const resetPublishTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
     const resetTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-    // Clean up timer on unmount
+    // Clean up timers on unmount
     useEffect(() => {
         return () => {
             if (resetTimerRef.current) {
                 clearTimeout(resetTimerRef.current);
+            }
+            if (resetPublishTimerRef.current) {
+                clearTimeout(resetPublishTimerRef.current);
             }
         };
     }, []);
@@ -52,7 +57,21 @@ export const RecipeAdminRowItem: React.FC<RecipeAdminRowItemProps> = ({
 
     const handlePublishClick = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.stopPropagation();
-        onTogglePublish?.(recipe);
+        if (isConfirmingPublish) {
+            if (resetPublishTimerRef.current) {
+                clearTimeout(resetPublishTimerRef.current);
+            }
+            setIsConfirmingPublish(false);
+            onTogglePublish?.(recipe);
+        } else {
+            setIsConfirmingPublish(true);
+            if (resetPublishTimerRef.current) {
+                clearTimeout(resetPublishTimerRef.current);
+            }
+            resetPublishTimerRef.current = setTimeout(() => {
+                setIsConfirmingPublish(false);
+            }, 4000);
+        }
     };
 
     const handleDeleteClick = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -111,13 +130,22 @@ export const RecipeAdminRowItem: React.FC<RecipeAdminRowItemProps> = ({
                 className="flex items-center gap-1.5 sm:gap-2 shrink-0"
                 onClick={(e) => e.stopPropagation()}
             >
-                {/* Publish / unpublish placeholder button */}
+                {/* Publish / unpublish button with 2-step confirmation */}
                 <ButtonIcon
-                    icon={isPublished ? IconBookDownload : IconBookUpload}
-                    variant="subtle"
-                    title={isPublished ? 'Unpublish recipe (Coming soon)' : 'Publish recipe (Coming soon)'}
-                    ariaLabel={isPublished ? 'Unpublish recipe (Coming soon)' : 'Publish recipe (Coming soon)'}
+                    icon={isConfirmingPublish ? IconCheck : (isPublished ? IconBookDownload : IconBookUpload)}
+                    variant={isConfirmingPublish ? 'primary' : 'subtle'}
+                    title={
+                        isConfirmingPublish
+                            ? (isPublished ? 'Click again to confirm unpublish' : 'Click again to confirm publish')
+                            : (isPublished ? 'Unpublish recipe' : 'Publish recipe')
+                    }
+                    ariaLabel={
+                        isConfirmingPublish
+                            ? (isPublished ? `Confirm unpublish ${recipe.title}` : `Confirm publish ${recipe.title}`)
+                            : (isPublished ? `Unpublish ${recipe.title}` : `Publish ${recipe.title}`)
+                    }
                     onClick={handlePublishClick}
+                    className={isConfirmingPublish ? 'animate-pulse ring-2 ring-primary/40' : ''}
                 />
 
                 {/* Inline 2-step Delete button */}

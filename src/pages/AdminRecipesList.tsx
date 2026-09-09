@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { RecipeListContainer } from '../components/organisms/RecipeListContainer';
 import { ButtonIcon } from '../components/atoms/ButtonIcon';
 import { useToast } from '../hooks/useToast';
-import { deleteRecipe } from '../services/recipes';
+import { deleteRecipe, publishRecipe, unpublishRecipe } from '../services/recipes';
 import type { Recipe } from '../types/recipe';
 
 export function AdminRecipesList() {
@@ -24,8 +24,19 @@ export function AdminRecipesList() {
         }
     };
 
-    const handleTogglePublish = (recipe: Recipe) => {
-        showToast(`Publishing settings for "${recipe.title}" coming soon.`, 'info');
+    const handleTogglePublish = async (recipe: Recipe) => {
+        try {
+            if (recipe.isPublished) {
+                await unpublishRecipe(recipe.id);
+                showToast(`Recipe "${recipe.title}" unpublished.`, 'success');
+            } else {
+                await publishRecipe(recipe.id);
+                showToast(`Recipe "${recipe.title}" published.`, 'success');
+            }
+        } catch (error) {
+            console.error('Failed to update recipe publish status:', error);
+            showToast('Failed to update publishing status. Please try again.', 'error');
+        }
     };
 
     return (

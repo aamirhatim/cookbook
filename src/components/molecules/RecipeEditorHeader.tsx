@@ -17,11 +17,13 @@ export interface RecipeEditorHeaderProps {
     onBack: () => void;
     onSave?: () => void;
     onCancel?: () => void;
+    onTogglePublish?: () => void | Promise<void>;
+    publishing?: boolean;
     saving?: boolean;
     isNew?: boolean;
     recipeId?: string;
     recipeTitle?: string;
-    isPrivate?: boolean;
+    isPublished?: boolean;
     disabled?: boolean;
 }
 
@@ -29,16 +31,19 @@ export const RecipeEditorHeader: React.FC<RecipeEditorHeaderProps> = ({
     onBack,
     onSave,
     onCancel,
+    onTogglePublish,
+    publishing = false,
     saving = false,
     isNew = false,
     recipeId,
     recipeTitle,
-    isPrivate = false,
+    isPublished = false,
     disabled = false,
 }) => {
-    const isPublished = !isPrivate;
     const navigate = useNavigate();
     const { showToast } = useToast();
+    const [isConfirmingPublish, setIsConfirmingPublish] = useState(false);
+    const resetPublishTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
     const resetTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -48,11 +53,28 @@ export const RecipeEditorHeader: React.FC<RecipeEditorHeaderProps> = ({
             if (resetTimerRef.current) {
                 clearTimeout(resetTimerRef.current);
             }
+            if (resetPublishTimerRef.current) {
+                clearTimeout(resetPublishTimerRef.current);
+            }
         };
     }, []);
 
     const handlePublishClick = () => {
-        showToast('Publishing settings coming soon.', 'info');
+        if (isConfirmingPublish) {
+            if (resetPublishTimerRef.current) {
+                clearTimeout(resetPublishTimerRef.current);
+            }
+            setIsConfirmingPublish(false);
+            onTogglePublish?.();
+        } else {
+            setIsConfirmingPublish(true);
+            if (resetPublishTimerRef.current) {
+                clearTimeout(resetPublishTimerRef.current);
+            }
+            resetPublishTimerRef.current = setTimeout(() => {
+                setIsConfirmingPublish(false);
+            }, 4000);
+        }
     };
 
     const handleDeleteClick = async () => {
@@ -84,7 +106,7 @@ export const RecipeEditorHeader: React.FC<RecipeEditorHeaderProps> = ({
         }
     };
 
-    const isBusy = disabled || saving || isDeleting;
+    const isBusy = disabled || saving || isDeleting || publishing;
 
     return (
         <header className="pt-2 flex items-center justify-between gap-2 sm:gap-3">
@@ -125,14 +147,24 @@ export const RecipeEditorHeader: React.FC<RecipeEditorHeaderProps> = ({
                     />
                 )}
 
-                {/* 3. Publish / unpublish placeholder button */}
+                {/* 3. Publish / unpublish button with 2-step confirmation */}
                 <ButtonIcon
-                    icon={isPublished ? IconBookDownload : IconBookUpload}
-                    variant="subtle"
+                    icon={isConfirmingPublish ? IconCheck : (isPublished ? IconBookDownload : IconBookUpload)}
+                    variant={isConfirmingPublish ? 'primary' : 'subtle'}
+                    loading={publishing}
                     disabled={isBusy}
-                    title={isPublished ? 'Unpublish recipe (Coming soon)' : 'Publish recipe (Coming soon)'}
-                    ariaLabel={isPublished ? 'Unpublish recipe (Coming soon)' : 'Publish recipe (Coming soon)'}
+                    title={
+                        isConfirmingPublish
+                            ? (isPublished ? 'Click again to confirm unpublish' : 'Click again to confirm publish')
+                            : (isPublished ? 'Unpublish recipe' : 'Publish recipe')
+                    }
+                    ariaLabel={
+                        isConfirmingPublish
+                            ? (isPublished ? `Confirm unpublish ${recipeTitle || 'recipe'}` : `Confirm publish ${recipeTitle || 'recipe'}`)
+                            : (isPublished ? `Unpublish ${recipeTitle || 'recipe'}` : `Publish ${recipeTitle || 'recipe'}`)
+                    }
                     onClick={handlePublishClick}
+                    className={isConfirmingPublish ? 'animate-pulse ring-2 ring-primary/40' : ''}
                 />
 
                 {/* 4. Inline 2-step Delete Button (shown when editing existing recipe) */}

@@ -85,9 +85,9 @@ export const RecipeRowItem: React.FC<RecipeRowItemProps> = ({
                     <h3 className="text-base font-semibold text-foreground truncate max-w-full group-hover:text-primary transition-colors">
                         {recipe.title}
                     </h3>
-                    {recipe.isPrivate && (
+                    {!recipe.isPublished && (
                         <span className="text-xs px-2 py-0.5 rounded-full bg-secondary text-secondary-foreground font-medium shrink-0">
-                            Private
+                            Unpublished
                         </span>
                     )}
                 </div>

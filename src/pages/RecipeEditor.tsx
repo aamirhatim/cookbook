@@ -13,10 +13,13 @@ import { CollapsibleSection } from '../components/molecules/CollapsibleSection';
 import { IngredientsFormList } from '../components/organisms/IngredientsFormList';
 import { InstructionsFormList } from '../components/organisms/InstructionsFormList';
 import { useRecipeForm } from '../hooks/useRecipeForm';
+import { useToast } from '../hooks/useToast';
+import { publishRecipe, unpublishRecipe } from '../services/recipes';
 
 export function RecipeEditor() {
   const { recipeId } = useParams<{ recipeId: string }>();
   const location = useLocation();
+  const { showToast } = useToast();
   const initialRecipe = (location.state as { recipe?: Recipe } | null)?.recipe;
 
   const {
@@ -36,8 +39,38 @@ export function RecipeEditor() {
     goBack,
   } = useRecipeForm(recipeId, initialRecipe);
 
+  const [publishing, setPublishing] = useState(false);
   const [isIngredientsCollapsed, setIsIngredientsCollapsed] = useState(false);
   const [isInstructionsCollapsed, setIsInstructionsCollapsed] = useState(false);
+
+  const handleTogglePublish = async () => {
+    const nextPublished = !formData.isPublished;
+    if (!isNew && recipeId) {
+      try {
+        setPublishing(true);
+        if (nextPublished) {
+          await publishRecipe(recipeId);
+          showToast(`Recipe "${formData.title || 'Recipe'}" published.`, 'success');
+        } else {
+          await unpublishRecipe(recipeId);
+          showToast(`Recipe "${formData.title || 'Recipe'}" unpublished.`, 'success');
+        }
+        handleChange('isPublished', nextPublished);
+      } catch (err) {
+        console.error('Failed to update publish state:', err);
+        showToast('Failed to update recipe publishing status.', 'error');
+      } finally {
+        setPublishing(false);
+      }
+    } else {
+      handleChange('isPublished', nextPublished);
+      if (nextPublished) {
+        showToast(`Recipe "${formData.title || 'Recipe'}" will be published on save.`, 'success');
+      } else {
+        showToast(`Recipe "${formData.title || 'Recipe'}" will be unpublished on save.`, 'success');
+      }
+    }
+  };
 
   const ingredientCount = (formData.ingredients || []).reduce(
     (acc, s) => acc + (s.items?.length || 0),
@@ -55,12 +88,14 @@ export function RecipeEditor() {
         onBack={goBack}
         onSave={handleSave}
         onCancel={handleCancel}
+        onTogglePublish={handleTogglePublish}
+        publishing={publishing}
         saving={saving}
         isNew={isNew}
         recipeId={recipeId}
         recipeTitle={recipe?.title || formData.title}
-        isPrivate={formData.isPrivate}
-        disabled={saving}
+        isPublished={formData.isPublished}
+        disabled={saving || publishing}
       />
 
       {/* Main Content Area */}

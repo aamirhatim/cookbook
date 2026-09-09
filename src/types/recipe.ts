@@ -43,7 +43,7 @@ export interface Recipe {
     imageStoragePath?: string;
     authorId: string;
     authorName?: string;
-    isPrivate: boolean;
+    isPublished: boolean;
     createdAt: Timestamp;
     updatedAt: Timestamp;
 }
@@ -67,7 +67,7 @@ export interface CreateRecipeInput {
     instructions: InstructionSection[];
     authorId: string;
     authorName?: string;
-    isPrivate?: boolean;
+    isPublished?: boolean;
 }
 
 /**
@@ -85,7 +85,7 @@ export interface RecipeFilters {
     tag?: string;
     difficulty?: Difficulty;
     isVeg?: boolean;
-    includePrivate?: boolean;
+    includeUnpublished?: boolean;
     limitCount?: number;
 }
 

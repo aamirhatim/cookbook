@@ -77,9 +77,9 @@ export const RecipeTile: React.FC<RecipeTileProps> = ({
                                 {recipe.cuisine}
                             </span>
                         )}
-                        {recipe.isPrivate && (
+                        {!recipe.isPublished && (
                             <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-secondary text-secondary-foreground shadow-sm">
-                                Private
+                                Unpublished
                             </span>
                         )}
                     </div>

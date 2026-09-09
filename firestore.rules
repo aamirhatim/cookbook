@@ -20,8 +20,8 @@ service cloud.firestore {
 
         // Recipes collection
         match /recipes/{recipeId} {
-            // Allow anyone to view public recipes; private recipes require admin
-            allow read: if resource.data.isPrivate != true || isAdmin();
+            // Allow anyone to view published recipes; unpublished recipes require admin
+            allow read: if resource.data.isPublished == true || isAdmin();
 
             // Only admin users can create, update, or delete recipes
             allow create, update, delete: if isAdmin();

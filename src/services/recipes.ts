@@ -155,9 +155,12 @@ export function normalizeRecipe(id: string, data: DocumentData): Recipe {
         }
     }
 
+    const isPublished = data.isPublished !== undefined ? Boolean(data.isPublished) : true;
+
     return {
         ...data,
         id,
+        isPublished,
         equipment: Array.isArray(data.equipment) ? data.equipment : [],
         tags: Array.isArray(data.tags) ? data.tags : [],
         ingredients,
@@ -187,7 +190,7 @@ export async function createRecipe(
     const recipeData = stripUndefined({
         ...input,
         id: recipeId,
-        isPrivate: input.isPrivate ?? false,
+        isPublished: input.isPublished ?? false,
         imageUrl: imageUrl ?? null,
         imageStoragePath: imageStoragePath ?? null,
         createdAt: serverTimestamp(),
@@ -227,9 +230,11 @@ function buildRecipeQueryConstraints(filters: RecipeFilters = {}): QueryConstrai
 
     if (filters.authorId) {
         constraints.push(where('authorId', '==', filters.authorId));
-    } else if (!filters.includePrivate) {
-        // If querying globally without authorId, default to public recipes only
-        constraints.push(where('isPrivate', '==', false));
+    }
+
+    if (!filters.includeUnpublished) {
+        // If includeUnpublished is false (default), show only published recipes
+        constraints.push(where('isPublished', '==', true));
     }
 
     if (filters.cuisine) {
@@ -353,3 +358,26 @@ export async function deleteRecipe(recipeId: string): Promise<void> {
     const recipeRef = doc(db, RECIPES_COLLECTION, recipeId);
     await deleteDoc(recipeRef);
 }
+
+/**
+ * Publishes a recipe, making it publicly visible.
+ */
+export async function publishRecipe(recipeId: string): Promise<void> {
+    const recipeRef = doc(db, RECIPES_COLLECTION, recipeId);
+    await updateDoc(recipeRef, {
+        isPublished: true,
+        updatedAt: serverTimestamp()
+    });
+}
+
+/**
+ * Unpublishes a recipe, keeping it accessible only to admins.
+ */
+export async function unpublishRecipe(recipeId: string): Promise<void> {
+    const recipeRef = doc(db, RECIPES_COLLECTION, recipeId);
+    await updateDoc(recipeRef, {
+        isPublished: false,
+        updatedAt: serverTimestamp()
+    });
+}
+

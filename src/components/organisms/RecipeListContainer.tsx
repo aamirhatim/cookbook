@@ -51,7 +51,10 @@ export const RecipeListContainer: React.FC<RecipeListContainerProps> = ({
     setLoading(true);
     setError(null);
 
-    const queryFilters = authorId ? { authorId } : {};
+    const queryFilters = {
+      ...(authorId ? { authorId } : {}),
+      ...(viewMode === 'admin' ? { includeUnpublished: true } : {}),
+    };
 
     const unsubscribe = subscribeToRecipes(
       queryFilters,
@@ -69,7 +72,7 @@ export const RecipeListContainer: React.FC<RecipeListContainerProps> = ({
     return () => {
       unsubscribe();
     };
-  }, [authorId]);
+  }, [authorId, viewMode]);
 
   // Extract unique available cuisines from loaded recipes
   const availableCuisines = useMemo(() => {

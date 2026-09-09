@@ -61,10 +61,10 @@ export const RecipeViewerHero: React.FC<RecipeViewerHeroProps> = ({
 
             {/* Title, Description & Tags */}
             <div className="space-y-2">
-                {recipe.isPrivate && (
+                {!recipe.isPublished && (
                     <div className="flex items-center gap-2">
-                        <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-muted text-muted-foreground border border-border">
-                            Private
+                        <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary text-secondary-foreground border border-border">
+                            Unpublished
                         </span>
                     </div>
                 )}
