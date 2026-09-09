@@ -59,6 +59,7 @@ export function RecipeEditor() {
         isNew={isNew}
         recipeId={recipeId}
         recipeTitle={recipe?.title || formData.title}
+        isPrivate={formData.isPrivate}
         disabled={saving}
       />
 

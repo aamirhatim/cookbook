@@ -2,7 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
     IconArrowLeft,
-    IconWorld,
+    IconBookUpload,
+    IconBookDownload,
     IconTrash,
     IconCheck,
     IconX,
@@ -20,6 +21,7 @@ export interface RecipeEditorHeaderProps {
     isNew?: boolean;
     recipeId?: string;
     recipeTitle?: string;
+    isPrivate?: boolean;
     disabled?: boolean;
 }
 
@@ -31,8 +33,10 @@ export const RecipeEditorHeader: React.FC<RecipeEditorHeaderProps> = ({
     isNew = false,
     recipeId,
     recipeTitle,
+    isPrivate = false,
     disabled = false,
 }) => {
+    const isPublished = !isPrivate;
     const navigate = useNavigate();
     const { showToast } = useToast();
     const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
@@ -123,11 +127,11 @@ export const RecipeEditorHeader: React.FC<RecipeEditorHeaderProps> = ({
 
                 {/* 3. Publish / unpublish placeholder button */}
                 <ButtonIcon
-                    icon={IconWorld}
+                    icon={isPublished ? IconBookDownload : IconBookUpload}
                     variant="subtle"
                     disabled={isBusy}
-                    title="Publish / unpublish (Coming soon)"
-                    ariaLabel="Publish or unpublish recipe (Coming soon)"
+                    title={isPublished ? 'Unpublish recipe (Coming soon)' : 'Publish recipe (Coming soon)'}
+                    ariaLabel={isPublished ? 'Unpublish recipe (Coming soon)' : 'Publish recipe (Coming soon)'}
                     onClick={handlePublishClick}
                 />
 

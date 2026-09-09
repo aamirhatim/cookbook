@@ -3,7 +3,8 @@ import {
     IconChefHat,
     IconTrash,
     IconCheck,
-    IconWorld,
+    IconBookUpload,
+    IconBookDownload,
 } from '@tabler/icons-react';
 import type { Recipe } from '../../types/recipe';
 import { ButtonIcon } from '../atoms/ButtonIcon';
@@ -25,6 +26,7 @@ export const RecipeAdminRowItem: React.FC<RecipeAdminRowItemProps> = ({
     onClick,
     className = '',
 }) => {
+    const isPublished = !recipe.isPrivate;
     const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
     const resetTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -111,10 +113,10 @@ export const RecipeAdminRowItem: React.FC<RecipeAdminRowItemProps> = ({
             >
                 {/* Publish / unpublish placeholder button */}
                 <ButtonIcon
-                    icon={IconWorld}
+                    icon={isPublished ? IconBookDownload : IconBookUpload}
                     variant="subtle"
-                    title="Publish / unpublish (Coming soon)"
-                    ariaLabel="Publish or unpublish recipe (Coming soon)"
+                    title={isPublished ? 'Unpublish recipe (Coming soon)' : 'Publish recipe (Coming soon)'}
+                    ariaLabel={isPublished ? 'Unpublish recipe (Coming soon)' : 'Publish recipe (Coming soon)'}
                     onClick={handlePublishClick}
                 />
 
