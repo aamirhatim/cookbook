@@ -4,7 +4,7 @@ import { IconArrowLeft, IconPencil, IconLoader2, IconAlertCircle } from '@tabler
 import { getRecipe } from '../services/recipes';
 import type { Recipe } from '../types/recipe';
 import { useAuth } from '../contexts/AuthContext';
-import { ButtonIcon } from '../components/atoms/ButtonIcon';
+import { IconButton } from '../components/atoms/IconButton';
 import { RecipeViewerHero } from '../components/organisms/RecipeViewerHero';
 import { RecipeViewerIngredients, type RecipeViewerIngredientsHandle } from '../components/organisms/RecipeViewerIngredients';
 import { RecipeViewerInstructions, type RecipeViewerInstructionsHandle } from '../components/organisms/RecipeViewerInstructions';
@@ -124,7 +124,7 @@ export function RecipeViewer() {
         <div className="space-y-6 w-full pb-16">
             {/* Navigation Header */}
             <header className="pt-2 flex items-center justify-between gap-3">
-                <ButtonIcon
+                <IconButton
                     icon={IconArrowLeft}
                     onClick={handleBack}
                     title="Back to Recipes"
@@ -133,7 +133,7 @@ export function RecipeViewer() {
                 />
 
                 {isAdmin && recipe && (
-                    <ButtonIcon
+                    <IconButton
                         icon={IconPencil}
                         onClick={() => navigate(`/admin/recipes/${recipe.id}`, { state: { recipe } })}
                         title="Edit recipe in admin editor"

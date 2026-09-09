@@ -6,7 +6,7 @@ import {
     IconTimeDuration30,
     IconTimeDuration60,
 } from '@tabler/icons-react';
-import { ButtonIcon } from '../atoms/ButtonIcon';
+import { IconButton } from '../atoms/IconButton';
 
 export interface TimeDurationOption {
     id: string;
@@ -83,7 +83,7 @@ export const TimeFilterMobileTray: React.FC<TimeFilterMobileTrayProps> = ({
                             className="flex items-center justify-center w-full cursor-pointer"
                             onClick={() => handleItemClick(option.value)}
                         >
-                            <ButtonIcon
+                            <IconButton
                                 icon={option.icon}
                                 active={isSelected}
                                 onClick={(e) => {

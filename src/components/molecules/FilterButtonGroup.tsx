@@ -1,5 +1,5 @@
 import React from 'react';
-import { ButtonIcon } from '../atoms/ButtonIcon';
+import { IconButton } from '../atoms/IconButton';
 import { DropdownMenu } from './DropdownMenu';
 import { TimeFilterMobileTray } from './TimeFilterMobileTray';
 import { DifficultyFilterMobileTray } from './DifficultyFilterMobileTray';
@@ -163,7 +163,7 @@ export const FilterButtonGroup: React.FC<FilterButtonGroupProps> = ({
                 />
             )}
 
-            <ButtonIcon
+            <IconButton
                 icon={IconCarrot}
                 isToggle
                 active={isVeg}
@@ -173,7 +173,7 @@ export const FilterButtonGroup: React.FC<FilterButtonGroupProps> = ({
             />
 
             {showFavorites && (
-                <ButtonIcon
+                <IconButton
                     icon={IconHeart}
                     activeIcon={IconHeartFilled}
                     isToggle
@@ -186,7 +186,7 @@ export const FilterButtonGroup: React.FC<FilterButtonGroupProps> = ({
                 />
             )}
 
-            <ButtonIcon
+            <IconButton
                 icon={IconWashDrycleanOff}
                 onClick={onResetFilters}
                 disabled={!hasActiveFilters}

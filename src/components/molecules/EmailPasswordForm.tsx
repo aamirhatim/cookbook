@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { FormField } from './FormField';
 import { Input } from '../atoms/Input';
-import { ButtonIcon } from '../atoms/ButtonIcon';
+import { Button } from '../atoms/Button';
 
 export interface EmailPasswordFormProps {
     onSubmit: (credentials: { email: string; password: string }) => Promise<void>;
@@ -51,7 +51,7 @@ export const EmailPasswordForm: React.FC<EmailPasswordFormProps> = ({
                 />
             </FormField>
 
-            <ButtonIcon
+            <Button
                 type="submit"
                 width="full"
                 variant="primary"

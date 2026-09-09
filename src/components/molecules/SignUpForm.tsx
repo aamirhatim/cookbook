@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { FormField } from './FormField';
 import { Input } from '../atoms/Input';
-import { ButtonIcon } from '../atoms/ButtonIcon';
+import { Button } from '../atoms/Button';
 
 export interface SignUpFormData {
     firstName: string;
@@ -132,17 +132,17 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({
 
             {/* Button Group: Cancel and Sign Up */}
             <div className="flex items-center gap-3 pt-2">
-                <ButtonIcon
+                <Button
                     type="button"
-                    width="expand"
+                    width="fill"
                     variant="outline"
                     onClick={onCancel}
                     disabled={isLoading}
                     text="Cancel"
                 />
-                <ButtonIcon
+                <Button
                     type="submit"
-                    width="expand"
+                    width="fill"
                     variant="primary"
                     loading={isLoading}
                     text={isLoading ? 'Signing up...' : 'Sign Up'}

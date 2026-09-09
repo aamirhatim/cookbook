@@ -1,13 +1,14 @@
 import React from 'react';
 import { IconHeart, IconHeartFilled } from '@tabler/icons-react';
-import { ButtonIcon, type ButtonIconSize, type ButtonIconVariant } from '../atoms/ButtonIcon';
+import { IconButton } from '../atoms/IconButton';
+import type { ButtonSize, ButtonVariant } from '../atoms/buttonStyles';
 import { useFavorites } from '../../hooks/useFavorites';
 
 export interface FavoriteButtonProps {
     recipeId: string;
     recipeTitle?: string;
-    size?: ButtonIconSize;
-    variant?: ButtonIconVariant;
+    size?: ButtonSize | 'default';
+    variant?: ButtonVariant;
     className?: string;
 }
 
@@ -39,7 +40,7 @@ export const FavoriteButton: React.FC<FavoriteButtonProps> = ({
         : actionText;
 
     return (
-        <ButtonIcon
+        <IconButton
             icon={IconHeart}
             activeIcon={IconHeartFilled}
             active={isFav}

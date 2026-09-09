@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { IconUser } from '@tabler/icons-react';
-import { ButtonIcon } from '../components/atoms/ButtonIcon';
+import { IconButton } from '../components/atoms/IconButton';
 import { useAuthModal } from '../hooks/useAuthModal';
 import { RecipeListContainer } from '../components/organisms/RecipeListContainer';
 import type { Recipe } from '../types/recipe';
@@ -33,7 +33,7 @@ export function Home() {
                         All Recipes
                     </h1>
                 </div>
-                <ButtonIcon
+                <IconButton
                     icon={IconUser}
                     onClick={handleAccountClick}
                     title="Account"

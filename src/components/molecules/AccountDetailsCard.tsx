@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { IconMail, IconLogout, IconShieldCheck, IconTrash } from '@tabler/icons-react';
-import { ButtonIcon } from '../atoms/ButtonIcon';
+import { Button } from '../atoms/Button';
 import type { UserProfile } from '../../types/user';
 
 interface AccountDetailsCardProps {
@@ -85,7 +85,7 @@ export const AccountDetailsCard: React.FC<AccountDetailsCardProps> = ({
             {/* Account Actions */}
             <div className="pt-2 border-t border-border space-y-3">
                 {/* Sign Out Button */}
-                <ButtonIcon
+                <Button
                     icon={IconLogout}
                     text="Sign Out"
                     width="full"
@@ -105,17 +105,17 @@ export const AccountDetailsCard: React.FC<AccountDetailsCardProps> = ({
                             </p>
                         </div>
                         <div className="flex items-center gap-2 pt-1">
-                            <ButtonIcon
+                            <Button
                                 text="Cancel"
-                                width="expand"
+                                width="fill"
                                 variant="subtle"
                                 disabled={isDeletingAccount}
                                 onClick={() => setIsConfirmingDelete(false)}
                             />
-                            <ButtonIcon
+                            <Button
                                 icon={IconTrash}
                                 text="Confirm Delete"
-                                width="expand"
+                                width="fill"
                                 variant="destructive"
                                 loading={isDeletingAccount}
                                 disabled={isDeletingAccount}
@@ -124,7 +124,7 @@ export const AccountDetailsCard: React.FC<AccountDetailsCardProps> = ({
                         </div>
                     </div>
                 ) : (
-                    <ButtonIcon
+                    <Button
                         icon={IconTrash}
                         text="Delete Account"
                         width="full"

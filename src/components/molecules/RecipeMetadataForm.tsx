@@ -12,7 +12,7 @@ import {
 import type { Recipe, Difficulty, ProteinType } from '../../types/recipe';
 import { Input } from '../atoms/Input';
 import { Textarea } from '../atoms/Textarea';
-import { ButtonIcon } from '../atoms/ButtonIcon';
+import { IconButton } from '../atoms/IconButton';
 import { FormField } from './FormField';
 import { RecipeImageUploader } from './RecipeImageUploader';
 
@@ -146,7 +146,7 @@ export const RecipeMetadataForm: React.FC<RecipeMetadataFormProps> = ({
                     : IconHexagonLetterH;
                 const label = diff.charAt(0).toUpperCase() + diff.slice(1);
                 return (
-                  <ButtonIcon
+                  <IconButton
                     key={diff}
                     type="button"
                     role="radio"
@@ -169,7 +169,7 @@ export const RecipeMetadataForm: React.FC<RecipeMetadataFormProps> = ({
 
           <FormField label="Vegetarian" className="shrink-0">
             <div className="flex items-center h-11">
-              <ButtonIcon
+              <IconButton
                 type="button"
                 icon={IconCarrot}
                 isToggle
@@ -190,7 +190,7 @@ export const RecipeMetadataForm: React.FC<RecipeMetadataFormProps> = ({
               {PROTEIN_OPTIONS.map((item) => {
                 const isSelected = formData.protein?.includes(item.value) ?? false;
                 return (
-                  <ButtonIcon
+                  <IconButton
                     key={item.value}
                     type="button"
                     icon={item.icon}

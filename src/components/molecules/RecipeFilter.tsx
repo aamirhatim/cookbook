@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Searchbar } from './Searchbar';
-import { ButtonIcon } from '../atoms/ButtonIcon';
+import { IconButton } from '../atoms/IconButton';
 import { FilterButtonGroup } from './FilterButtonGroup';
 import { useIsMobile } from '../../hooks/useIsMobile';
 import {
@@ -110,7 +110,7 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
                             onFocus={() => setShouldAutoFocusSearch(false)}
                         />
 
-                        <ButtonIcon
+                        <IconButton
                             icon={IconAdjustmentsHorizontal}
                             onClick={handleOpenFilters}
                             active={hasActiveFilters}
@@ -123,7 +123,7 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
                     <div className="w-full overflow-x-auto no-scrollbar py-0.5">
                         <div className="flex items-center gap-1.5 w-max mx-auto px-1">
                             {/* Collapsed Search Button */}
-                            <ButtonIcon
+                            <IconButton
                                 icon={IconSearch}
                                 onClick={handleCollapseToSearch}
                                 active={Boolean(debouncedSearch || searchInput)}

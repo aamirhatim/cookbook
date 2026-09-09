@@ -8,7 +8,7 @@ import { useUserProfile } from '../hooks/useUserProfile';
 import { useToast } from '../hooks/useToast';
 import { deleteUserAccount } from '../services/users';
 import { AccountDetailsCard } from '../components/molecules/AccountDetailsCard';
-import { ButtonIcon } from '../components/atoms/ButtonIcon';
+import { IconButton } from '../components/atoms/IconButton';
 
 export function Account() {
     const navigate = useNavigate();
@@ -62,7 +62,7 @@ export function Account() {
             {/* Top Navigation Header */}
             <header className="pt-2 flex items-center justify-between gap-4">
                 <div className="flex items-center space-x-3">
-                    <ButtonIcon
+                    <IconButton
                         icon={IconArrowLeft}
                         onClick={handleBack}
                         title="Go back"

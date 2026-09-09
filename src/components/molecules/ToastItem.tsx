@@ -1,6 +1,6 @@
 import React from 'react';
 import { IconCircleCheck, IconAlertCircle, IconInfoCircle, IconX } from '@tabler/icons-react';
-import { ButtonIcon } from '../atoms/ButtonIcon';
+import { IconButton } from '../atoms/IconButton';
 
 export type ToastType = 'success' | 'error' | 'info';
 
@@ -54,7 +54,7 @@ export const ToastItem: React.FC<ToastItemProps> = ({
                 </p>
             </div>
 
-            <ButtonIcon
+            <IconButton
                 icon={IconX}
                 size="small"
                 onClick={() => onDismiss(id)}

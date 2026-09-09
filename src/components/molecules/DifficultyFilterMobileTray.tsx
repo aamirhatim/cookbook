@@ -5,7 +5,7 @@ import {
     IconHexagonLetterM,
     IconHexagonLetterH,
 } from '@tabler/icons-react';
-import { ButtonIcon } from '../atoms/ButtonIcon';
+import { IconButton } from '../atoms/IconButton';
 import type { Difficulty } from '../../types/recipe';
 
 export interface DifficultyOption {
@@ -70,7 +70,7 @@ export const DifficultyFilterMobileTray: React.FC<DifficultyFilterMobileTrayProp
                             className="flex flex-col items-center gap-1.5 w-full cursor-pointer"
                             onClick={() => onSelect(option.value)}
                         >
-                            <ButtonIcon
+                            <IconButton
                                 icon={option.icon}
                                 active={active}
                                 onClick={(e) => {

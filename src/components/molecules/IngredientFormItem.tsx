@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Ingredient } from '../../types/recipe';
 import { Input } from '../atoms/Input';
-import { ButtonIcon } from '../atoms/ButtonIcon';
+import { IconButton } from '../atoms/IconButton';
 import { IconTrash, IconArrowUp, IconArrowDown } from '@tabler/icons-react';
 
 export interface IngredientFormItemProps {
@@ -55,7 +55,7 @@ export const IngredientFormItem: React.FC<IngredientFormItemProps> = ({
                     onChange={(e) => onChange('notes', e.target.value)}
                 />
                 <div className="flex items-center gap-1 shrink-0">
-                    <ButtonIcon
+                    <IconButton
                         icon={IconArrowUp}
                         size="small"
                         onClick={onMoveUp}
@@ -63,7 +63,7 @@ export const IngredientFormItem: React.FC<IngredientFormItemProps> = ({
                         ariaLabel="Move ingredient up"
                         title="Move ingredient up"
                     />
-                    <ButtonIcon
+                    <IconButton
                         icon={IconArrowDown}
                         size="small"
                         onClick={onMoveDown}
@@ -71,7 +71,7 @@ export const IngredientFormItem: React.FC<IngredientFormItemProps> = ({
                         ariaLabel="Move ingredient down"
                         title="Move ingredient down"
                     />
-                    <ButtonIcon
+                    <IconButton
                         icon={IconTrash}
                         size="small"
                         onClick={onRemove}

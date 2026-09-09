@@ -1,7 +1,7 @@
 import { IconArrowLeft, IconPlus } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
 import { RecipeListContainer } from '../components/organisms/RecipeListContainer';
-import { ButtonIcon } from '../components/atoms/ButtonIcon';
+import { IconButton } from '../components/atoms/IconButton';
 import { useToast } from '../hooks/useToast';
 import { deleteRecipe, publishRecipe, unpublishRecipe } from '../services/recipes';
 import type { Recipe } from '../types/recipe';
@@ -43,7 +43,7 @@ export function AdminRecipesList() {
         <div className="space-y-6 w-full">
             <header className="pt-2 flex items-center justify-between gap-3">
                 <div className="flex items-center space-x-3 min-w-0">
-                    <ButtonIcon
+                    <IconButton
                         icon={IconArrowLeft}
                         onClick={() => navigate(-1)}
                         title="Go back"
@@ -57,7 +57,7 @@ export function AdminRecipesList() {
                     </div>
                 </div>
 
-                <ButtonIcon
+                <IconButton
                     icon={IconPlus}
                     onClick={() => navigate('/admin/recipes/new')}
                     title="Add new recipe"

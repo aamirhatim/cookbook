@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import type { Icon, IconProps } from '@tabler/icons-react';
-import { ButtonIcon } from '../atoms/ButtonIcon';
+import { IconButton } from '../atoms/IconButton';
 import { DropdownList, DropdownItem } from './DropdownList';
 import { DropdownMobileTray } from './DropdownMobileTray';
 import { useIsMobile } from '../../hooks/useIsMobile';
@@ -88,7 +88,7 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({
 
     return (
         <div ref={containerRef} className={`relative inline-block ${className}`}>
-            <ButtonIcon
+            <IconButton
                 icon={icon}
                 onClick={toggleOpen}
                 active={isOpen || hasActiveFilters}

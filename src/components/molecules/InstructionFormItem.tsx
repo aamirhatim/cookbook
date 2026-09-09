@@ -1,7 +1,7 @@
 import React from 'react';
 import type { InstructionStep } from '../../types/recipe';
 import { Textarea } from '../atoms/Textarea';
-import { ButtonIcon } from '../atoms/ButtonIcon';
+import { IconButton } from '../atoms/IconButton';
 import { IconTrash, IconBulb, IconArrowUp, IconArrowDown } from '@tabler/icons-react';
 
 export interface InstructionFormItemProps {
@@ -32,7 +32,7 @@ export const InstructionFormItem: React.FC<InstructionFormItemProps> = ({
                     Step {step.stepNumber}
                 </span>
                 <div className="flex items-center gap-1 shrink-0">
-                    <ButtonIcon
+                    <IconButton
                         icon={IconArrowUp}
                         size="small"
                         onClick={onMoveUp}
@@ -40,7 +40,7 @@ export const InstructionFormItem: React.FC<InstructionFormItemProps> = ({
                         ariaLabel="Move step up"
                         title="Move step up"
                     />
-                    <ButtonIcon
+                    <IconButton
                         icon={IconArrowDown}
                         size="small"
                         onClick={onMoveDown}
@@ -48,7 +48,7 @@ export const InstructionFormItem: React.FC<InstructionFormItemProps> = ({
                         ariaLabel="Move step down"
                         title="Move step down"
                     />
-                    <ButtonIcon
+                    <IconButton
                         icon={IconTrash}
                         size="small"
                         onClick={onRemove}
@@ -76,7 +76,7 @@ export const InstructionFormItem: React.FC<InstructionFormItemProps> = ({
                         onChange={(e) => onChangeTip(e.target.value)}
                         className="min-h-[55px] text-sm flex-1 bg-surface-hover/50"
                     />
-                    <ButtonIcon
+                    <IconButton
                         icon={IconTrash}
                         size="small"
                         onClick={() => onChangeTip(undefined)}

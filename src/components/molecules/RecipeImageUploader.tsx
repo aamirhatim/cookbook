@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { IconPencil, IconTrash } from '@tabler/icons-react';
-import { ButtonIcon } from '../atoms/ButtonIcon';
+import { IconButton } from '../atoms/IconButton';
 import { ImageUploadPlaceholder } from './ImageUploadPlaceholder';
 import { useToast } from '../../hooks/useToast';
 
@@ -105,7 +105,7 @@ export const RecipeImageUploader: React.FC<RecipeImageUploaderProps> = ({
 
           {/* Action Overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-foreground/75 via-transparent to-foreground/25 flex items-end justify-end p-3 gap-2">
-            <ButtonIcon
+            <IconButton
               icon={IconPencil}
               iconStroke={1}
               onClick={handleOpenPicker}
@@ -115,7 +115,7 @@ export const RecipeImageUploader: React.FC<RecipeImageUploaderProps> = ({
               className="shadow-md backdrop-blur-xs"
             />
 
-            <ButtonIcon
+            <IconButton
               icon={IconTrash}
               iconStroke={1}
               onClick={handleRemove}

@@ -8,7 +8,7 @@ import {
     IconX,
     IconDeviceFloppy,
 } from '@tabler/icons-react';
-import { ButtonIcon } from '../atoms/ButtonIcon';
+import { IconButton } from '../atoms/IconButton';
 import { ConfirmationButton } from '../atoms/ConfirmationButton';
 import { useToast } from '../../hooks/useToast';
 import { deleteRecipe } from '../../services/recipes';
@@ -64,7 +64,7 @@ export const RecipeEditorHeader: React.FC<RecipeEditorHeaderProps> = ({
     return (
         <header className="pt-2 flex items-center justify-between gap-2 sm:gap-3">
             {/* Back Button */}
-            <ButtonIcon
+            <IconButton
                 icon={IconArrowLeft}
                 onClick={onBack}
                 disabled={isBusy}
@@ -77,7 +77,7 @@ export const RecipeEditorHeader: React.FC<RecipeEditorHeaderProps> = ({
             <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
                 {/* 1. Cancel Button */}
                 {onCancel && (
-                    <ButtonIcon
+                    <IconButton
                         icon={IconX}
                         variant="subtle"
                         disabled={isBusy}
@@ -89,7 +89,7 @@ export const RecipeEditorHeader: React.FC<RecipeEditorHeaderProps> = ({
 
                 {/* 2. Save Button */}
                 {onSave && (
-                    <ButtonIcon
+                    <IconButton
                         icon={IconDeviceFloppy}
                         variant="subtle"
                         loading={saving}

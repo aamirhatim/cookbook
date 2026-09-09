@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { IconPlus, IconTrash, IconArrowUp, IconArrowDown, IconChevronDown } from '@tabler/icons-react';
 import { Input } from '../atoms/Input';
-import { ButtonIcon } from '../atoms/ButtonIcon';
+import { IconButton } from '../atoms/IconButton';
 
 export interface SectionCardProps {
     title: string;
@@ -69,7 +69,7 @@ export const SectionCard: React.FC<SectionCardProps> = ({
                 {totalSections > 1 && (
                     <div className="flex items-center gap-1 shrink-0">
                         {onMoveUp && (
-                            <ButtonIcon
+                            <IconButton
                                 icon={IconArrowUp}
                                 size="small"
                                 onClick={onMoveUp}
@@ -79,7 +79,7 @@ export const SectionCard: React.FC<SectionCardProps> = ({
                             />
                         )}
                         {onMoveDown && (
-                            <ButtonIcon
+                            <IconButton
                                 icon={IconArrowDown}
                                 size="small"
                                 onClick={onMoveDown}
@@ -88,7 +88,7 @@ export const SectionCard: React.FC<SectionCardProps> = ({
                                 title="Move section down"
                             />
                         )}
-                        <ButtonIcon
+                        <IconButton
                             icon={IconTrash}
                             size="small"
                             onClick={onRemoveSection}
