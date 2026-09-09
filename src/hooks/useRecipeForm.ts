@@ -25,6 +25,7 @@ const DEFAULT_FORM_DATA: Partial<Recipe> = {
   ingredients: [{ title: '', items: [] }],
   instructions: [{ title: '', steps: [] }],
   isPublished: false,
+  protein: [],
 };
 
 export function useRecipeForm(recipeId?: string, initialRecipe?: Recipe | null) {
@@ -186,6 +187,7 @@ export function useRecipeForm(recipeId?: string, initialRecipe?: Recipe | null) 
           authorId: user.uid,
           authorName: user.displayName || 'Unknown Author',
           isPublished: formData.isPublished ?? false,
+          protein: formData.protein || [],
         };
         await createRecipe(newRecipeInput, selectedImageFile || undefined);
       } else {
@@ -203,6 +205,7 @@ export function useRecipeForm(recipeId?: string, initialRecipe?: Recipe | null) 
           ingredients: finalIngredients,
           instructions: finalInstructions,
           isPublished: formData.isPublished ?? false,
+          protein: formData.protein || [],
         };
         await updateRecipe(
           recipeId!,

@@ -4,8 +4,12 @@ import {
   IconHexagonLetterM,
   IconHexagonLetterH,
   IconCarrot,
+  IconFish,
+  IconCanary,
+  IconMeat,
+  IconCube,
 } from '@tabler/icons-react';
-import type { Recipe, Difficulty } from '../../types/recipe';
+import type { Recipe, Difficulty, ProteinType } from '../../types/recipe';
 import { Input } from '../atoms/Input';
 import { Textarea } from '../atoms/Textarea';
 import { ButtonIcon } from '../atoms/ButtonIcon';
@@ -21,6 +25,13 @@ export interface RecipeMetadataFormProps {
   onRemoveImage: () => void;
   disabled?: boolean;
 }
+
+const PROTEIN_OPTIONS: { value: ProteinType; label: string; icon: typeof IconFish }[] = [
+  { value: 'fish', label: 'Fish', icon: IconFish },
+  { value: 'poultry', label: 'Poultry', icon: IconCanary },
+  { value: 'red meat', label: 'Red Meat', icon: IconMeat },
+  { value: 'tofu', label: 'Tofu', icon: IconCube },
+];
 
 export const RecipeMetadataForm: React.FC<RecipeMetadataFormProps> = ({
   formData,
@@ -39,6 +50,14 @@ export const RecipeMetadataForm: React.FC<RecipeMetadataFormProps> = ({
   const handleEquipmentChange = (val: string) => {
     const equipArray = val.split(',').map((e) => e.trim()).filter(Boolean);
     onChange('equipment', equipArray);
+  };
+
+  const handleProteinToggle = (proteinItem: ProteinType) => {
+    const current = formData.protein || [];
+    const next = current.includes(proteinItem)
+      ? current.filter((p) => p !== proteinItem)
+      : [...current, proteinItem];
+    onChange('protein', next);
   };
 
   return (
@@ -104,7 +123,7 @@ export const RecipeMetadataForm: React.FC<RecipeMetadataFormProps> = ({
           </FormField>
         </div>
 
-        <div className="flex items-start gap-3 sm:gap-4 flex-wrap sm:flex-nowrap">
+        <div className="flex items-start gap-3 sm:gap-4 flex-wrap">
           <FormField label="Servings" className="w-20 sm:w-24 shrink-0">
             <Input
               type="number"
@@ -163,6 +182,31 @@ export const RecipeMetadataForm: React.FC<RecipeMetadataFormProps> = ({
                 iconStroke={1.5}
                 disabled={disabled}
               />
+            </div>
+          </FormField>
+
+          <FormField label="Protein" className="shrink-0">
+            <div className="flex items-center gap-1.5 sm:gap-2 h-11" role="group" aria-label="Protein selection">
+              {PROTEIN_OPTIONS.map((item) => {
+                const isSelected = formData.protein?.includes(item.value) ?? false;
+                return (
+                  <ButtonIcon
+                    key={item.value}
+                    type="button"
+                    icon={item.icon}
+                    isToggle
+                    active={isSelected}
+                    onClick={() => handleProteinToggle(item.value)}
+                    title={isSelected ? `${item.label} (Selected)` : item.label}
+                    ariaLabel={item.label}
+                    aria-pressed={isSelected}
+                    variant="subtle"
+                    iconSize={22}
+                    iconStroke={1.5}
+                    disabled={disabled}
+                  />
+                );
+              })}
             </div>
           </FormField>
         </div>

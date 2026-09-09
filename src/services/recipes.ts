@@ -31,7 +31,8 @@ import type {
     InstructionSection,
     CreateRecipeInput,
     UpdateRecipeInput,
-    RecipeFilters
+    RecipeFilters,
+    ProteinType
 } from '../types/recipe';
 
 const RECIPES_COLLECTION = 'recipes';
@@ -156,11 +157,18 @@ export function normalizeRecipe(id: string, data: DocumentData): Recipe {
     }
 
     const isPublished = data.isPublished !== undefined ? Boolean(data.isPublished) : true;
+    const rawProtein = data.protein;
+    const protein: ProteinType[] = Array.isArray(rawProtein)
+        ? (rawProtein.filter((p) =>
+              ['fish', 'poultry', 'red meat', 'tofu'].includes(p)
+          ) as ProteinType[])
+        : [];
 
     return {
         ...data,
         id,
         isPublished,
+        protein,
         equipment: Array.isArray(data.equipment) ? data.equipment : [],
         tags: Array.isArray(data.tags) ? data.tags : [],
         ingredients,
@@ -191,6 +199,7 @@ export async function createRecipe(
         ...input,
         id: recipeId,
         isPublished: input.isPublished ?? false,
+        protein: input.protein || [],
         imageUrl: imageUrl ?? null,
         imageStoragePath: imageStoragePath ?? null,
         createdAt: serverTimestamp(),

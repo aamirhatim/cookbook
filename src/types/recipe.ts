@@ -1,6 +1,7 @@
 import { Timestamp } from 'firebase/firestore';
 
 export type Difficulty = 'easy' | 'medium' | 'hard';
+export type ProteinType = 'fish' | 'poultry' | 'red meat' | 'tofu';
 
 export interface Ingredient {
     name: string;
@@ -31,6 +32,7 @@ export interface Recipe {
     cuisine: string;
     description: string;
     isVeg: boolean;
+    protein?: ProteinType[];
     prepTimeMinutes: number;
     cookTimeMinutes: number;
     equipment: string[];
@@ -57,6 +59,7 @@ export interface CreateRecipeInput {
     cuisine: string;
     description: string;
     isVeg: boolean;
+    protein?: ProteinType[];
     prepTimeMinutes: number;
     cookTimeMinutes: number;
     equipment?: string[];
