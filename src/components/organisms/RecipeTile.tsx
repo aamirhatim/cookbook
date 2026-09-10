@@ -7,8 +7,9 @@ import {
     IconHexagonLetterH,
     IconCarrot,
 } from '@tabler/icons-react';
-import type { Recipe } from '../../types/recipe';
+import type { Recipe, ProteinType } from '../../types/recipe';
 import { FavoriteButton } from '../molecules/FavoriteButton';
+import { PROTEIN_ICON_MAP, PROTEIN_LABEL_MAP } from '../atoms/proteinIcons';
 
 export interface RecipeTileProps {
     recipe: Recipe;
@@ -43,6 +44,7 @@ export const RecipeTile: React.FC<RecipeTileProps> = ({
     };
 
     const DifficultyIcon = recipe.difficulty ? difficultyIcons[recipe.difficulty] : null;
+    const proteinList = (recipe.protein || []).filter((p): p is ProteinType => Boolean(PROTEIN_ICON_MAP[p]));
 
     return (
         <div
@@ -157,6 +159,26 @@ export const RecipeTile: React.FC<RecipeTileProps> = ({
                             >
                                 <IconCarrot className="w-3.5 h-3.5" stroke={1.5} />
                                 <span className="hidden sm:inline">Veg</span>
+                            </div>
+                        )}
+
+                        {(DifficultyIcon || recipe.isVeg) && proteinList.length > 0 && <span>•</span>}
+
+                        {proteinList.length > 0 && (
+                            <div className="flex items-center gap-1">
+                                {proteinList.map((protein) => {
+                                    const ProteinIcon = PROTEIN_ICON_MAP[protein];
+                                    return (
+                                        <span
+                                            key={protein}
+                                            className="flex items-center"
+                                            title={PROTEIN_LABEL_MAP[protein]}
+                                            aria-label={PROTEIN_LABEL_MAP[protein]}
+                                        >
+                                            <ProteinIcon className="w-3.5 h-3.5" stroke={1.5} />
+                                        </span>
+                                    );
+                                })}
                             </div>
                         )}
                     </div>
