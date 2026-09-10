@@ -15,7 +15,7 @@ export function RecipeManager() {
     return (
         <div className="space-y-6 w-full">
             {/* Top Admin Navbar */}
-            <header className="flex flex-wrap items-center gap-y-3 gap-x-4 sm:gap-x-6 border-b border-border pb-3 pt-1">
+            <header className="flex flex-col items-start sm:flex-row sm:items-center gap-3 sm:gap-6 border-b border-border pb-3 pt-1">
                 <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground truncate">
                     Recipe Manager
                 </h1>
@@ -31,6 +31,7 @@ export function RecipeManager() {
                         variant="subtle"
                         activeClassName="font-semibold"
                         aria-current={isRecipes ? 'page' : undefined}
+                        collapseInactiveOnMobile
                     />
                     <Button
                         text="Inspirations"
@@ -40,6 +41,7 @@ export function RecipeManager() {
                         variant="subtle"
                         activeClassName="font-semibold"
                         aria-current={isInspirations ? 'page' : undefined}
+                        collapseInactiveOnMobile
                     />
                 </nav>
             </header>

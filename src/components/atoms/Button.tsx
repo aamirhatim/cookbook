@@ -29,6 +29,8 @@ export interface ButtonProps
   iconSize?: number;
   /** Custom icon stroke override */
   iconStroke?: number;
+  /** When true, collapses inactive button to icon-only on mobile screens (< 640px) */
+  collapseInactiveOnMobile?: boolean;
 }
 
 export const Button: React.FC<ButtonProps> = ({
@@ -56,6 +58,7 @@ export const Button: React.FC<ButtonProps> = ({
   className = '',
   title,
   ariaLabel,
+  collapseInactiveOnMobile = false,
   onClick,
   ...rest
 }) => {
@@ -82,8 +85,21 @@ export const Button: React.FC<ButtonProps> = ({
     isActive && activeText !== undefined ? activeText : text !== undefined ? text : children;
 
   const normalizedSize = size === 'default' ? 'medium' : size;
+  const isCollapsedOnMobile = Boolean(collapseInactiveOnMobile && !isActive);
 
   const sizeClasses = (() => {
+    if (isCollapsedOnMobile) {
+      switch (normalizedSize) {
+        case 'small':
+          return 'h-9 min-h-[36px] w-9 min-w-[36px] p-0 aspect-square sm:aspect-auto sm:w-auto sm:min-w-0 sm:px-3 sm:py-1.5 rounded-lg text-xs gap-1.5';
+        case 'large':
+          return 'h-14 min-h-[56px] w-14 min-w-[56px] p-0 aspect-square sm:aspect-auto sm:w-auto sm:min-w-0 sm:px-6 sm:py-3 rounded-xl text-base gap-2.5';
+        case 'medium':
+        default:
+          return 'h-11 min-h-[44px] w-11 min-w-[44px] p-0 aspect-square sm:aspect-auto sm:w-auto sm:min-w-0 sm:px-4 sm:py-2 rounded-lg text-sm gap-2';
+      }
+    }
+
     switch (normalizedSize) {
       case 'small':
         return 'h-9 min-h-[36px] px-3 py-1.5 rounded-lg text-xs gap-1.5';
@@ -143,7 +159,9 @@ export const Button: React.FC<ButtonProps> = ({
       )}
 
       {contentText !== undefined && contentText !== null && (
-        <span className="truncate">{contentText}</span>
+        <span className={`truncate ${isCollapsedOnMobile ? 'hidden sm:inline' : ''}`}>
+          {contentText}
+        </span>
       )}
 
       {iconPosition === 'right' && EffectiveIcon && (
