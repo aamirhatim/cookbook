@@ -59,9 +59,8 @@ export const SectionCard: React.FC<SectionCardProps> = ({
                     title={isCollapsed ? 'Expand section' : 'Collapse section'}
                 >
                     <IconChevronDown
-                        className={`w-4 h-4 transition-transform duration-200 ${
-                            isCollapsed ? '-rotate-90' : 'rotate-0'
-                        }`}
+                        className={`w-4 h-4 transition-transform duration-200 ${isCollapsed ? '-rotate-90' : 'rotate-0'
+                            }`}
                         stroke={2}
                     />
                 </button>
@@ -94,7 +93,6 @@ export const SectionCard: React.FC<SectionCardProps> = ({
                             onClick={onRemoveSection}
                             ariaLabel="Remove section"
                             title="Remove section"
-                            variant="destructive"
                         />
                     </div>
                 )}
