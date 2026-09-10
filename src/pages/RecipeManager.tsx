@@ -1,6 +1,7 @@
 import { useLocation, useNavigate, Outlet } from 'react-router-dom';
-import { IconNotebook, IconCrown } from '@tabler/icons-react';
+import { IconNotebook, IconCrown, IconHomeMove } from '@tabler/icons-react';
 import { Button } from '../components/atoms/Button';
+import { IconButton } from '../components/atoms/IconButton';
 
 export function RecipeManager() {
     const location = useLocation();
@@ -23,6 +24,13 @@ export function RecipeManager() {
                     className="flex items-center gap-2"
                     aria-label="Admin Navigation"
                 >
+                    <IconButton
+                        icon={IconHomeMove}
+                        onClick={() => navigate('/')}
+                        title="Home"
+                        ariaLabel="Go to home page"
+                        className="shrink-0"
+                    />
                     <Button
                         text="Recipes"
                         icon={IconNotebook}
