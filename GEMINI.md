@@ -64,6 +64,8 @@ A web-based, mobile-first recipe book application for creating, managing, organi
      - `border`: Dividers, card borders, and list item separators.
      - `input`: Form input and selection borders/backgrounds.
      - `ring`: Focus outlines for keyboard accessibility and active inputs.
+7. **Code Formatting & Indentation**:
+   - **4-Space Indentation**: Always use 4-space indentation across all code files (TypeScript, TSX, CSS, JavaScript, HTML, JSON). Never write or reformat code with 2-space indents.
 
 ---
 
