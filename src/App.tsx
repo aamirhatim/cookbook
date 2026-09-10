@@ -12,6 +12,8 @@ const Home = lazy(() => import('./pages/Home').then((m) => ({ default: m.Home })
 const Login = lazy(() => import('./pages/Login').then((m) => ({ default: m.Login })));
 const SignUp = lazy(() => import('./pages/SignUp').then((m) => ({ default: m.SignUp })));
 const AdminRecipesList = lazy(() => import('./pages/AdminRecipesList').then((m) => ({ default: m.AdminRecipesList })));
+const RecipeManager = lazy(() => import('./pages/RecipeManager').then((m) => ({ default: m.RecipeManager })));
+const AdminInspirations = lazy(() => import('./pages/AdminInspirations').then((m) => ({ default: m.AdminInspirations })));
 const RecipeEditor = lazy(() => import('./pages/RecipeEditor').then((m) => ({ default: m.RecipeEditor })));
 const RecipesList = lazy(() => import('./pages/RecipesList').then((m) => ({ default: m.RecipesList })));
 const RecipeViewer = lazy(() => import('./pages/RecipeViewer').then((m) => ({ default: m.RecipeViewer })));
@@ -50,24 +52,25 @@ export default function App() {
                                     <Route path="/account" element={<Account />} />
                                     <Route
                                         path="/admin"
-                                        element={<Navigate to="/admin/recipes" replace />}
-                                    />
-                                    <Route
-                                        path="/admin/recipes"
                                         element={
                                             <ProtectedRoute requireAdmin>
-                                                <AdminRecipesList />
+                                                <RecipeManager />
+                                            </ProtectedRoute>
+                                        }
+                                    >
+                                        <Route index element={<Navigate to="/admin/recipes" replace />} />
+                                        <Route path="recipes" element={<AdminRecipesList />} />
+                                        <Route path="inspirations" element={<AdminInspirations />} />
+                                        <Route path="inpspirations" element={<Navigate to="/admin/inspirations" replace />} />
+                                    </Route>
+                                    <Route
+                                        path="/admin/recipes/:recipeId"
+                                        element={
+                                            <ProtectedRoute requireAdmin>
+                                                <RecipeEditor />
                                             </ProtectedRoute>
                                         }
                                     />
-                                        <Route
-                                            path="/admin/recipes/:recipeId"
-                                            element={
-                                                <ProtectedRoute requireAdmin>
-                                                    <RecipeEditor />
-                                                </ProtectedRoute>
-                                            }
-                                        />
                                     </Route>
                                 </Routes>
                             </Suspense>

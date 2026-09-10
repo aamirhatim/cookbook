@@ -1,7 +1,5 @@
-import { IconArrowLeft } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
 import { RecipeListContainer } from '../components/organisms/RecipeListContainer';
-import { IconButton } from '../components/atoms/IconButton';
 import type { Recipe } from '../types/recipe';
 
 export function RecipesList() {
@@ -14,14 +12,7 @@ export function RecipesList() {
     return (
         <div className="space-y-6 w-full">
             <header className="pt-2 flex items-center space-x-3">
-                <IconButton
-                    icon={IconArrowLeft}
-                    onClick={() => navigate(-1)}
-                    title="Go back"
-                    ariaLabel="Go back"
-                    className="shrink-0"
-                />
-                <div>
+                <div className="min-w-0">
                     <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
                         Recipes
                     </h1>

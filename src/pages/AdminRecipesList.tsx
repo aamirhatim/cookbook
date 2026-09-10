@@ -1,4 +1,4 @@
-import { IconArrowLeft, IconPlus } from '@tabler/icons-react';
+import { IconPlus } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
 import { RecipeListContainer } from '../components/organisms/RecipeListContainer';
 import { IconButton } from '../components/atoms/IconButton';
@@ -42,19 +42,10 @@ export function AdminRecipesList() {
     return (
         <div className="space-y-6 w-full">
             <header className="pt-2 flex items-center justify-between gap-3">
-                <div className="flex items-center space-x-3 min-w-0">
-                    <IconButton
-                        icon={IconArrowLeft}
-                        onClick={() => navigate(-1)}
-                        title="Go back"
-                        ariaLabel="Go back"
-                        className="shrink-0"
-                    />
-                    <div className="min-w-0">
-                        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground truncate">
-                            Recipes Editor
-                        </h1>
-                    </div>
+                <div className="min-w-0">
+                    <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground truncate">
+                        Recipes Editor
+                    </h1>
                 </div>
 
                 <IconButton
