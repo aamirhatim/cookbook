@@ -15,6 +15,11 @@ export default {
     ],
     theme: {
         extend: {
+            fontFamily: {
+                caacupe: ['"Caacupe One"', 'sans-serif'],
+                bungee: ['"Bungee Tint"', 'sans-serif'],
+                domine: ['"Domine"', 'serif'],
+            },
             colors: {
                 background: withOpacity('--background'),
                 foreground: withOpacity('--foreground'),

@@ -86,7 +86,7 @@ export const RecipeRowItem: React.FC<RecipeRowItemProps> = ({
             {/* Content Details */}
             <div className="p-3.5 sm:p-4 flex-1 flex flex-col justify-center min-w-0 w-full">
                 <div className="flex items-center gap-2 flex-wrap">
-                    <h3 className="text-base font-semibold text-foreground truncate max-w-full group-hover:text-primary transition-colors">
+                    <h3 className="text-3xl caacupe-one-regular text-foreground truncate max-w-full group-hover:text-primary transition-colors">
                         {recipe.title}
                     </h3>
                     {!recipe.isPublished && (

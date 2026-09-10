@@ -75,7 +75,7 @@ export const RecipeViewerHero: React.FC<RecipeViewerHeroProps> = ({
                 )}
 
                 <div className="flex items-center justify-between gap-3">
-                    <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-foreground flex-1 min-w-0">
+                    <h1 className="text-5xl caacupe-one-regular text-foreground flex-1 min-w-0">
                         {recipe.title}
                     </h1>
                     <FavoriteButton
@@ -90,7 +90,7 @@ export const RecipeViewerHero: React.FC<RecipeViewerHeroProps> = ({
                 <RecipeInspiration urls={recipe.urls} className="pt-0.5" />
 
                 {recipe.description && (
-                    <p className="text-sm sm:text-base text-muted-foreground leading-relaxed pt-1">
+                    <p className="text-sm sm:text-base domine text-muted-foreground leading-relaxed pt-1">
                         {recipe.description}
                     </p>
                 )}
@@ -146,9 +146,8 @@ export const RecipeViewerHero: React.FC<RecipeViewerHeroProps> = ({
 
             {/* Quick Metrics Bar */}
             <div
-                className={`grid grid-cols-2 ${
-                    DifficultyIcon ? 'sm:grid-cols-4 lg:grid-cols-2' : 'sm:grid-cols-3'
-                } gap-2.5 p-3 rounded-xl bg-surface border border-border`}
+                className={`grid grid-cols-2 ${DifficultyIcon ? 'sm:grid-cols-4 lg:grid-cols-2' : 'sm:grid-cols-3'
+                    } gap-2.5 p-3 rounded-xl bg-surface border border-border`}
             >
                 {/* Prep Time */}
                 <div
@@ -164,8 +163,8 @@ export const RecipeViewerHero: React.FC<RecipeViewerHeroProps> = ({
                             {prepMinutes > 0
                                 ? `${prepMinutes} min`
                                 : totalTime > 0
-                                ? '0 min'
-                                : 'N/A'}
+                                    ? '0 min'
+                                    : 'N/A'}
                         </p>
                     </div>
                 </div>
@@ -184,8 +183,8 @@ export const RecipeViewerHero: React.FC<RecipeViewerHeroProps> = ({
                             {cookMinutes > 0
                                 ? `${cookMinutes} min`
                                 : totalTime > 0
-                                ? '0 min'
-                                : 'N/A'}
+                                    ? '0 min'
+                                    : 'N/A'}
                         </p>
                     </div>
                 </div>

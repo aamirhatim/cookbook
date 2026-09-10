@@ -126,7 +126,7 @@ export const RecipeTile: React.FC<RecipeTileProps> = ({
             {/* Content Info */}
             <div className="p-4 flex-1 flex flex-col justify-between gap-3 w-full">
                 <div>
-                    <h3 className="text-base font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-1">
+                    <h3 className="text-3xl caacupe-one-regular text-foreground group-hover:text-primary transition-colors line-clamp-1">
                         {recipe.title}
                     </h3>
                     <p className="text-xs text-muted-foreground line-clamp-2 mt-1 min-h-[2rem]">

@@ -95,7 +95,56 @@ body {
     -webkit-tap-highlight-color: transparent;
 }
 
+/* Custom color palettes for Bungee Tint */
+@font-palette-values --bungee-culinary {
+    font-family: "Bungee Tint";
+    override-colors:
+        0 #d97706,
+        1 #fef3c7;
+}
+
+@font-palette-values --bungee-culinary-dark {
+    font-family: "Bungee Tint";
+    override-colors:
+        0 #f59e0b,
+        1 #451a03;
+}
+
 @layer utilities {
+    .bungee-tint-regular {
+        font-family: "Bungee Tint", sans-serif;
+        font-weight: 400;
+        font-style: normal;
+    }
+
+    .palette-bungee-culinary {
+        font-palette: --bungee-culinary;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        .palette-bungee-culinary {
+            font-palette: --bungee-culinary-dark;
+        }
+    }
+
+    .dark .palette-bungee-culinary {
+        font-palette: --bungee-culinary-dark;
+    }
+
+    .light .palette-bungee-culinary {
+        font-palette: --bungee-culinary;
+    }
+
+    .caacupe-one-regular {
+        font-family: "Caacupe One", sans-serif;
+        font-weight: 400;
+        font-style: normal;
+    }
+
+    .domine {
+        font-family: "Domine", serif;
+    }
+
     .no-scrollbar::-webkit-scrollbar {
         display: none;
     }

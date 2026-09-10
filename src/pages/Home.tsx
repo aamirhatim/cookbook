@@ -29,7 +29,7 @@ export function Home() {
         <div className="space-y-6 w-full">
             <header className="pt-2 flex justify-between items-center gap-4">
                 <div className="min-w-0 flex-1">
-                    <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
+                    <h1 className="text-4xl sm:text-5xl bungee-tint-regular palette-bungee-culinary text-foreground">
                         All Recipes
                     </h1>
                 </div>
