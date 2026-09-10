@@ -12,8 +12,9 @@ import {
     IconPlus,
     IconMinus,
 } from '@tabler/icons-react';
-import type { Recipe } from '../../types/recipe';
+import type { Recipe, ProteinType } from '../../types/recipe';
 import { FavoriteButton } from '../molecules/FavoriteButton';
+import { PROTEIN_ICON_MAP, PROTEIN_LABEL_MAP } from '../atoms/proteinIcons';
 
 export interface RecipeViewerHeroProps {
     recipe: Recipe;
@@ -40,6 +41,7 @@ export const RecipeViewerHero: React.FC<RecipeViewerHeroProps> = ({
     const cookMinutes = recipe.cookTimeMinutes ?? 0;
     const totalTime = prepMinutes + cookMinutes;
     const DifficultyIcon = recipe.difficulty ? difficultyIcons[recipe.difficulty] : null;
+    const proteinList = (recipe.protein || []).filter((p): p is ProteinType => Boolean(PROTEIN_ICON_MAP[p]));
 
     return (
         <section className={`space-y-4 ${className}`}>
@@ -88,20 +90,37 @@ export const RecipeViewerHero: React.FC<RecipeViewerHeroProps> = ({
                     </p>
                 )}
 
-                {/* Dietary, Cuisine & Tags under description */}
-                {(recipe.isVeg || recipe.cuisine || (recipe.tags && recipe.tags.length > 0)) && (
+                {/* Cuisine, Dietary (Veg/Proteins) & Tags under description */}
+                {(recipe.cuisine || recipe.isVeg || proteinList.length > 0 || (recipe.tags && recipe.tags.length > 0)) && (
                     <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                        {/* 1. Cuisine */}
+                        {recipe.cuisine && (
+                            <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary border border-primary/20 capitalize">
+                                {recipe.cuisine}
+                            </span>
+                        )}
+
+                        {/* 2. Veg & Proteins */}
                         {recipe.isVeg && (
                             <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary text-secondary-foreground">
                                 <IconCarrot className="w-3.5 h-3.5" stroke={1.5} />
                                 <span>Vegetarian</span>
                             </span>
                         )}
-                        {recipe.cuisine && (
-                            <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary border border-primary/20 capitalize">
-                                {recipe.cuisine}
-                            </span>
-                        )}
+                        {proteinList.map((protein) => {
+                            const ProteinIcon = PROTEIN_ICON_MAP[protein];
+                            return (
+                                <span
+                                    key={protein}
+                                    className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary text-secondary-foreground"
+                                >
+                                    <ProteinIcon className="w-3.5 h-3.5" stroke={1.5} />
+                                    <span>{PROTEIN_LABEL_MAP[protein]}</span>
+                                </span>
+                            );
+                        })}
+
+                        {/* 3. Actual Tags */}
                         {recipe.tags && recipe.tags.map((tag) => (
                             <span
                                 key={tag}
