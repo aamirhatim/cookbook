@@ -46,7 +46,7 @@ A web-based, mobile-first recipe book application for creating, managing, organi
    - **Separation of Concerns**: Extract data fetching, complex form states, and timers into custom hooks (`useRecipes`, `useTimer`, `useRecipeForm`) or dedicated service files. Keep presentation components clean and declarative.
 6. **Design Tokens & Theme Consistency**:
    - **Never Use Generic Tailwind Colors**: Always use semantic design tokens configured in `tailwind.config.js` and `src/index.css` instead of raw Tailwind color utilities (e.g. avoid `bg-white`, `bg-stone-100`, `text-stone-900`, `text-amber-600`).
-   - **Hex-Based CSS Variables**: Theme colors are defined as clean HEX codes in `src/index.css` under `:root` (light mode) and `@media (prefers-color-scheme: dark)` / `.dark` (dark mode), making color palette tweaks simple and human-readable.
+   - **Hex-Based CSS Variables**: Theme colors are defined as clean HEX codes in `src/index.css` under `:root` using `light-dark(#light, #dark)` with `color-scheme: light dark` (and `.dark` / `.light` overrides), making color palette tweaks simple and human-readable in a single place without duplicate definitions.
    - **Opacity Modifiers**: The configuration supports Tailwind opacity syntax seamlessly via `color-mix` (e.g. `bg-primary/90`, `bg-secondary/40`, `focus:ring-ring/20`).
    - **Semantic Token Map**:
      - `background` & `foreground`: App canvas background and default high-contrast body text.
