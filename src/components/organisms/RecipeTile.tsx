@@ -149,23 +149,19 @@ export const RecipeTile: React.FC<RecipeTileProps> = ({
                             </div>
                         )}
 
-                        {DifficultyIcon && recipe.isVeg && <span>•</span>}
+                        {DifficultyIcon && (recipe.isVeg || proteinList.length > 0) && <span>•</span>}
 
-                        {recipe.isVeg && (
-                            <div
-                                className="flex items-center gap-1"
-                                title="Vegetarian"
-                                aria-label="Vegetarian"
-                            >
-                                <IconCarrot className="w-3.5 h-3.5" stroke={1.5} />
-                                <span className="hidden sm:inline">Veg</span>
-                            </div>
-                        )}
-
-                        {(DifficultyIcon || recipe.isVeg) && proteinList.length > 0 && <span>•</span>}
-
-                        {proteinList.length > 0 && (
+                        {(recipe.isVeg || proteinList.length > 0) && (
                             <div className="flex items-center gap-1">
+                                {recipe.isVeg && (
+                                    <span
+                                        className="flex items-center"
+                                        title="Vegetarian"
+                                        aria-label="Vegetarian"
+                                    >
+                                        <IconCarrot className="w-3.5 h-3.5" stroke={1.5} />
+                                    </span>
+                                )}
                                 {proteinList.map((protein) => {
                                     const ProteinIcon = PROTEIN_ICON_MAP[protein];
                                     return (

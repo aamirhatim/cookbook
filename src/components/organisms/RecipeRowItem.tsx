@@ -129,19 +129,18 @@ export const RecipeRowItem: React.FC<RecipeRowItemProps> = ({
                             <DifficultyIcon className="w-3.5 h-3.5" stroke={1} />
                         </span>
                     )}
-                    {(totalTime > 0 || DifficultyIcon) && recipe.isVeg && <span>•</span>}
-                    {recipe.isVeg && (
-                        <span
-                            className="flex items-center text-muted-foreground"
-                            title="Vegetarian"
-                            aria-label="Vegetarian"
-                        >
-                            <IconCarrot className="w-3.5 h-3.5" stroke={1} />
-                        </span>
-                    )}
-                    {(totalTime > 0 || DifficultyIcon || recipe.isVeg) && proteinList.length > 0 && <span>•</span>}
-                    {proteinList.length > 0 && (
+                    {(totalTime > 0 || DifficultyIcon) && (recipe.isVeg || proteinList.length > 0) && <span>•</span>}
+                    {(recipe.isVeg || proteinList.length > 0) && (
                         <span className="flex items-center gap-1 text-muted-foreground">
+                            {recipe.isVeg && (
+                                <span
+                                    className="flex items-center text-muted-foreground"
+                                    title="Vegetarian"
+                                    aria-label="Vegetarian"
+                                >
+                                    <IconCarrot className="w-3.5 h-3.5" stroke={1} />
+                                </span>
+                            )}
                             {proteinList.map((protein) => {
                                 const ProteinIcon = PROTEIN_ICON_MAP[protein];
                                 return (
