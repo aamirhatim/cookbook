@@ -164,11 +164,22 @@ export function normalizeRecipe(id: string, data: DocumentData): Recipe {
           ) as ProteinType[])
         : [];
 
+    const rawUrls = data.urls;
+    const urls =
+        rawUrls && typeof rawUrls === 'object'
+            ? {
+                  label: typeof rawUrls.label === 'string' ? rawUrls.label : '',
+                  video: typeof rawUrls.video === 'string' ? rawUrls.video : '',
+                  website: typeof rawUrls.website === 'string' ? rawUrls.website : '',
+              }
+            : undefined;
+
     return {
         ...data,
         id,
         isPublished,
         protein,
+        urls,
         equipment: Array.isArray(data.equipment) ? data.equipment : [],
         tags: Array.isArray(data.tags) ? data.tags : [],
         ingredients,

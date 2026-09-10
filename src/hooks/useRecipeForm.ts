@@ -26,6 +26,11 @@ const DEFAULT_FORM_DATA: Partial<Recipe> = {
   instructions: [{ title: '', steps: [] }],
   isPublished: false,
   protein: [],
+  urls: {
+    label: '',
+    video: '',
+    website: '',
+  },
 };
 
 export function useRecipeForm(recipeId?: string, initialRecipe?: Recipe | null) {
@@ -92,7 +97,10 @@ export function useRecipeForm(recipeId?: string, initialRecipe?: Recipe | null) 
   // Sync loaded recipe into form state
   useEffect(() => {
     if (recipe) {
-      setFormData(recipe);
+      setFormData({
+        ...recipe,
+        urls: recipe.urls || { label: '', video: '', website: '' },
+      });
     }
   }, [recipe]);
 
@@ -188,6 +196,13 @@ export function useRecipeForm(recipeId?: string, initialRecipe?: Recipe | null) 
           authorName: user.displayName || 'Unknown Author',
           isPublished: formData.isPublished ?? false,
           protein: formData.protein || [],
+          urls: formData.urls
+            ? {
+                label: formData.urls.label?.trim() || '',
+                video: formData.urls.video?.trim() || '',
+                website: formData.urls.website?.trim() || '',
+              }
+            : undefined,
         };
         await createRecipe(newRecipeInput, selectedImageFile || undefined);
       } else {
@@ -206,6 +221,13 @@ export function useRecipeForm(recipeId?: string, initialRecipe?: Recipe | null) 
           instructions: finalInstructions,
           isPublished: formData.isPublished ?? false,
           protein: formData.protein || [],
+          urls: formData.urls
+            ? {
+                label: formData.urls.label?.trim() || '',
+                video: formData.urls.video?.trim() || '',
+                website: formData.urls.website?.trim() || '',
+              }
+            : undefined,
         };
         await updateRecipe(
           recipeId!,

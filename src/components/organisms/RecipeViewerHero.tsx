@@ -14,6 +14,7 @@ import {
 } from '@tabler/icons-react';
 import type { Recipe, ProteinType } from '../../types/recipe';
 import { FavoriteButton } from '../molecules/FavoriteButton';
+import { RecipeInspiration } from '../molecules/RecipeInspiration';
 import { PROTEIN_ICON_MAP, PROTEIN_LABEL_MAP } from '../atoms/proteinIcons';
 
 export interface RecipeViewerHeroProps {
@@ -83,6 +84,8 @@ export const RecipeViewerHero: React.FC<RecipeViewerHeroProps> = ({
                         className="shrink-0"
                     />
                 </div>
+
+                <RecipeInspiration urls={recipe.urls} className="pt-0.5" />
 
                 {recipe.description && (
                     <p className="text-sm sm:text-base text-muted-foreground leading-relaxed pt-1">

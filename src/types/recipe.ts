@@ -26,6 +26,12 @@ export interface InstructionSection {
     steps: InstructionStep[];
 }
 
+export interface RecipeUrls {
+    label?: string;
+    video?: string;
+    website?: string;
+}
+
 export interface Recipe {
     id: string;
     title: string;
@@ -36,6 +42,7 @@ export interface Recipe {
     prepTimeMinutes: number;
     cookTimeMinutes: number;
     equipment: string[];
+    urls?: RecipeUrls;
     servings: number;
     difficulty: Difficulty;
     tags: string[];
@@ -63,6 +70,7 @@ export interface CreateRecipeInput {
     prepTimeMinutes: number;
     cookTimeMinutes: number;
     equipment?: string[];
+    urls?: RecipeUrls;
     servings: number;
     difficulty: Difficulty;
     tags: string[];

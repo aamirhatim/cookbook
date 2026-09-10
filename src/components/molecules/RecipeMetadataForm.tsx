@@ -15,6 +15,7 @@ import { Textarea } from '../atoms/Textarea';
 import { IconButton } from '../atoms/IconButton';
 import { FormField } from './FormField';
 import { RecipeImageUploader } from './RecipeImageUploader';
+import { RecipeUrlsFields } from './RecipeUrlsFields';
 
 export interface RecipeMetadataFormProps {
   formData: Partial<Recipe>;
@@ -61,9 +62,9 @@ export const RecipeMetadataForm: React.FC<RecipeMetadataFormProps> = ({
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-12 gap-6 lg:gap-8 items-start">
+    <div className="grid grid-cols-1 md:grid-cols-12 gap-6 lg:gap-8 items-stretch">
       {/* Left Column: Image, Title, Description */}
-      <div className="md:col-span-5 lg:col-span-5 space-y-4">
+      <div className="md:col-span-5 lg:col-span-5 flex flex-col gap-4">
         <RecipeImageUploader
           currentImageUrl={removeExistingImage ? null : formData.imageUrl}
           selectedFile={selectedImageFile}
@@ -81,18 +82,19 @@ export const RecipeMetadataForm: React.FC<RecipeMetadataFormProps> = ({
           />
         </FormField>
 
-        <FormField label="Description">
+        <FormField label="Description" className="flex-1 flex flex-col min-h-0">
           <Textarea
             placeholder="A brief description of this recipe..."
             value={formData.description || ''}
             onChange={(e) => onChange('description', e.target.value)}
             disabled={disabled}
+            className="flex-1 min-h-[100px] h-full resize-y"
           />
         </FormField>
       </div>
 
       {/* Right Column: Recipe Metadata Form Fields */}
-      <div className="md:col-span-7 lg:col-span-7 space-y-4">
+      <div className="md:col-span-7 lg:col-span-7 flex flex-col gap-4">
         <FormField label="Cuisine">
           <Input
             placeholder="e.g. Italian, Mexican"
@@ -228,6 +230,12 @@ export const RecipeMetadataForm: React.FC<RecipeMetadataFormProps> = ({
             disabled={disabled}
           />
         </FormField>
+
+        <RecipeUrlsFields
+          urls={formData.urls}
+          onChange={(urls) => onChange('urls', urls)}
+          disabled={disabled}
+        />
       </div>
     </div>
   );
