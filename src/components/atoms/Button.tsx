@@ -11,7 +11,7 @@ import {
 export type ButtonWidthOption = ButtonWidth | 'default' | 'expand' | 'min' | 'full-width' | 'min-width';
 
 export interface ButtonProps
-  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'onChange' | 'onToggle'>,
+  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'onChange' | 'onToggle' | 'color'>,
     BaseButtonSharedProps {
   /** Text or content to display inside the button */
   text?: React.ReactNode;
@@ -45,6 +45,7 @@ export const Button: React.FC<ButtonProps> = ({
   iconStroke,
   size = 'medium',
   variant = 'subtle',
+  color,
   active,
   defaultActive = false,
   isToggle = false,
@@ -132,7 +133,7 @@ export const Button: React.FC<ButtonProps> = ({
     iconSize ?? (normalizedSize === 'small' ? 16 : normalizedSize === 'large' ? 24 : 20);
   const effectiveIconStroke = iconStroke ?? 1.5;
 
-  const variantClasses = getButtonVariantClasses(variant, isActive, shouldTrackToggle);
+  const variantClasses = getButtonVariantClasses(variant, isActive, shouldTrackToggle, color);
   const toggleCustomClasses = isActive ? activeClassName : inactiveClassName;
 
   const accessibleTitle =

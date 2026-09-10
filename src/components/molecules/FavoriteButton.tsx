@@ -1,7 +1,7 @@
 import React from 'react';
 import { IconHeart, IconHeartFilled } from '@tabler/icons-react';
 import { IconButton } from '../atoms/IconButton';
-import type { ButtonSize, ButtonVariant } from '../atoms/buttonStyles';
+import type { ButtonColor, ButtonSize, ButtonVariant } from '../atoms/buttonStyles';
 import { useFavorites } from '../../hooks/useFavorites';
 
 export interface FavoriteButtonProps {
@@ -9,6 +9,7 @@ export interface FavoriteButtonProps {
     recipeTitle?: string;
     size?: ButtonSize | 'default';
     variant?: ButtonVariant;
+    color?: ButtonColor;
     className?: string;
 }
 
@@ -17,6 +18,7 @@ export const FavoriteButton: React.FC<FavoriteButtonProps> = ({
     recipeTitle,
     size = 'small',
     variant = 'subtle',
+    color = 'favorite',
     className = '',
 }) => {
     const { isFavorite, toggleFavorite } = useFavorites();
@@ -48,11 +50,10 @@ export const FavoriteButton: React.FC<FavoriteButtonProps> = ({
             onClick={handleClick}
             onKeyDown={handleKeyDown}
             variant={variant}
+            color={color}
             size={size}
             title={actionText}
             ariaLabel={ariaLabel}
-            activeClassName="text-destructive border-destructive/40 focus:ring-destructive/30"
-            inactiveClassName="text-muted-foreground hover:text-destructive hover:border-destructive/20 focus:ring-destructive/20"
             className={`transition-transform duration-150 active:scale-90 ${className}`}
         />
     );

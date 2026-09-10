@@ -8,7 +8,7 @@ import {
 } from './buttonStyles';
 
 export interface IconButtonProps
-  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'onChange' | 'onToggle'>,
+  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'onChange' | 'onToggle' | 'color'>,
     BaseButtonSharedProps {
   /** Icon to render */
   icon: React.ComponentType<IconProps> | Icon;
@@ -33,6 +33,7 @@ export const IconButton: React.FC<IconButtonProps> = ({
   iconStroke,
   size = 'medium',
   variant = 'subtle',
+  color,
   active,
   defaultActive = false,
   isToggle = false,
@@ -84,7 +85,7 @@ export const IconButton: React.FC<IconButtonProps> = ({
     iconSize ?? (normalizedSize === 'small' ? 16 : normalizedSize === 'large' ? 24 : 20);
   const effectiveIconStroke = iconStroke ?? 1.5;
 
-  const variantClasses = getButtonVariantClasses(variant, isActive, shouldTrackToggle);
+  const variantClasses = getButtonVariantClasses(variant, isActive, shouldTrackToggle, color);
   const toggleCustomClasses = isActive ? activeClassName : inactiveClassName;
 
   const accessibleTitle = title || ariaLabel;

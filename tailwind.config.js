@@ -47,6 +47,14 @@ export default {
                     DEFAULT: withOpacity('--destructive'),
                     foreground: withOpacity('--destructive-foreground'),
                 },
+                favorite: {
+                    DEFAULT: withOpacity('--favorite'),
+                    foreground: withOpacity('--favorite-foreground'),
+                },
+                favorites: {
+                    DEFAULT: withOpacity('--favorite'),
+                    foreground: withOpacity('--favorite-foreground'),
+                },
                 border: withOpacity('--border'),
                 input: withOpacity('--input'),
                 ring: withOpacity('--ring'),

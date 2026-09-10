@@ -57,6 +57,7 @@ A web-based, mobile-first recipe book application for creating, managing, organi
      - `muted`, `muted-foreground`: Disabled states, placeholder text, captions, and secondary descriptions.
      - `accent`, `accent-foreground`: Active navigation items, special alerts, or star ratings.
      - `destructive`, `destructive-foreground`: Delete buttons, error alerts, and destructive actions.
+     - `favorite`, `favorite-foreground`: Saved and favorited recipe heart toggles.
      - `border`: Dividers, card borders, and list item separators.
      - `input`: Form input and selection borders/backgrounds.
      - `ring`: Focus outlines for keyboard accessibility and active inputs.

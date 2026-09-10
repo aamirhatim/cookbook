@@ -2,10 +2,10 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { IconCheck, type Icon, type IconProps } from '@tabler/icons-react';
 import { IconButton } from './IconButton';
 import { Button, type ButtonWidthOption } from './Button';
-import { type ButtonVariant, type ButtonSize } from './buttonStyles';
+import { type ButtonVariant, type ButtonSize, type ButtonColor } from './buttonStyles';
 
 export interface ConfirmationButtonProps
-  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'onConfirm' | 'onChange' | 'onToggle'> {
+  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'onConfirm' | 'onChange' | 'onToggle' | 'color'> {
   /** Callback triggered when the confirmation step is successfully completed (second click) */
   onConfirm: (e: React.MouseEvent<HTMLButtonElement>) => void;
   /** Optional callback invoked on the first click when entering confirmation mode */
@@ -20,6 +20,10 @@ export interface ConfirmationButtonProps
   variant?: ButtonVariant;
   /** Variant to apply during confirmation state. Defaults to 'destructive' if base variant is destructive, otherwise 'primary' */
   confirmVariant?: ButtonVariant;
+  /** Semantic color theme for initial state */
+  color?: ButtonColor;
+  /** Semantic color theme for confirmation state */
+  confirmColor?: ButtonColor;
   /** Sizing tier */
   size?: ButtonSize | 'default';
   /** Width mode (when text is present) */
@@ -55,6 +59,8 @@ export const ConfirmationButton: React.FC<ConfirmationButtonProps> = ({
   confirmIcon = IconCheck,
   variant = 'subtle',
   confirmVariant,
+  color,
+  confirmColor,
   size = 'medium',
   width = 'auto',
   title,
@@ -106,8 +112,9 @@ export const ConfirmationButton: React.FC<ConfirmationButtonProps> = ({
     }
   }, [disabled, loading, cancelConfirmation]);
 
-  const isDestructive = variant === 'destructive' || variant === 'destructive-subtle';
+  const isDestructive = variant === 'destructive' || variant === 'destructive-subtle' || color === 'destructive';
   const effectiveConfirmVariant = confirmVariant ?? (isDestructive ? 'destructive' : 'primary');
+  const activeColor = isConfirming ? (confirmColor ?? (confirmVariant === 'destructive' ? 'destructive' : color)) : color;
   const effectiveConfirmClassName =
     confirmClassName ??
     (isDestructive ? 'animate-pulse ring-2 ring-destructive/40' : 'animate-pulse ring-2 ring-primary/40');
@@ -163,6 +170,7 @@ export const ConfirmationButton: React.FC<ConfirmationButtonProps> = ({
       <Button
         icon={activeIcon}
         variant={activeVariant}
+        color={activeColor}
         title={activeTitle}
         ariaLabel={activeAriaLabel}
         text={activeText}
@@ -183,6 +191,7 @@ export const ConfirmationButton: React.FC<ConfirmationButtonProps> = ({
     <IconButton
       icon={activeIcon || IconCheck}
       variant={activeVariant}
+      color={activeColor}
       title={activeTitle || ''}
       ariaLabel={activeAriaLabel}
       size={size}

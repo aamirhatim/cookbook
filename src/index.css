@@ -37,6 +37,12 @@
     --destructive: light-dark(#ef4444, #dc2626);
     --destructive-foreground: light-dark(#ffffff, #fee2e2);
 
+    /* Favorites */
+    --favorite: light-dark(#e11d48, #fb7185);
+    --favorite-foreground: light-dark(#ffffff, #1c1917);
+    --favorites: var(--favorite);
+    --favorites-foreground: var(--favorite-foreground);
+
     /* Borders, Inputs, Focus Rings */
     --border: light-dark(#e7e5e4, #292524);
     --input: light-dark(#e7e5e4, #292524);
