@@ -22,6 +22,7 @@ export interface RecipeFilterProps {
     position?: 'top' | 'bottom';
     className?: string;
     showFavoritesFilter?: boolean;
+    leftAction?: React.ReactNode;
 }
 
 /**
@@ -36,6 +37,7 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
     position = 'bottom',
     className = '',
     showFavoritesFilter = true,
+    leftAction,
 }) => {
     const isStickyActive = isSticky !== undefined ? isSticky : sticky;
     const isBottom = position === 'bottom';
@@ -99,76 +101,80 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
         >
             {isMobile ? (
                 /* Mobile: Toggle view between Search Mode and Filters Mode */
-                toolbarMode === 'search' ? (
-                    <div className="flex items-center gap-2 w-full">
-                        <Searchbar
-                            value={searchInput}
-                            onChange={setSearchInput}
-                            placeholder="Search recipes, ingredients, tags..."
-                            className="flex-1 min-w-0"
-                            autoFocus={shouldAutoFocusSearch}
-                            onFocus={() => setShouldAutoFocusSearch(false)}
-                        />
+                <div className="flex items-center gap-2 w-full">
+                    {leftAction && <div className="shrink-0 flex items-center">{leftAction}</div>}
+                    {toolbarMode === 'search' ? (
+                        <div className="flex items-center gap-2 flex-1 min-w-0">
+                            <Searchbar
+                                value={searchInput}
+                                onChange={setSearchInput}
+                                placeholder="Search recipes, ingredients, tags..."
+                                className="flex-1 min-w-0"
+                                autoFocus={shouldAutoFocusSearch}
+                                onFocus={() => setShouldAutoFocusSearch(false)}
+                            />
 
-                        <IconButton
-                            icon={IconAdjustmentsHorizontal}
-                            onClick={handleOpenFilters}
-                            active={hasActiveFilters}
-                            title={hasActiveFilters ? 'Filters applied (Tap to edit)' : 'Filter recipes'}
-                            ariaLabel={hasActiveFilters ? 'Filters applied (Tap to edit)' : 'Filter recipes'}
-                            className="shrink-0"
-                        />
-                    </div>
-                ) : (
-                    <div className="w-full overflow-x-auto no-scrollbar py-0.5">
-                        <div className="flex items-center gap-1.5 w-max mx-auto px-1">
-                            {/* Collapsed Search Button */}
                             <IconButton
-                                icon={IconSearch}
-                                onClick={handleCollapseToSearch}
-                                active={Boolean(debouncedSearch || searchInput)}
-                                title={
-                                    searchInput
-                                        ? `Search: "${searchInput}" (Tap to expand)`
-                                        : 'Search recipes (Tap to expand)'
-                                }
-                                ariaLabel={
-                                    searchInput
-                                        ? `Search: "${searchInput}" (Tap to expand)`
-                                        : 'Search recipes (Tap to expand)'
-                                }
+                                icon={IconAdjustmentsHorizontal}
+                                onClick={handleOpenFilters}
+                                active={hasActiveFilters}
+                                title={hasActiveFilters ? 'Filters applied (Tap to edit)' : 'Filter recipes'}
+                                ariaLabel={hasActiveFilters ? 'Filters applied (Tap to edit)' : 'Filter recipes'}
                                 className="shrink-0"
                             />
-
-                            {/* Divider line between search button and filter buttons */}
-                            <div className="h-6 w-px bg-border shrink-0 mx-0.5" aria-hidden="true" />
-
-                            {/* Centered Filter Buttons & Reset */}
-                            <FilterButtonGroup
-                                timeFilter={timeFilter}
-                                onTimeSelect={handleTimeSelect}
-                                difficulties={difficulties}
-                                onDifficultyToggle={handleDifficultyToggle}
-                                cuisineOptions={cuisineOptions}
-                                cuisines={cuisines}
-                                onCuisineToggle={handleCuisineToggle}
-                                proteins={proteins}
-                                onProteinToggle={handleProteinToggle}
-                                onlyFavorites={onlyFavorites}
-                                onFavoritesToggle={handleToggleFavorites}
-                                hasActiveFilters={hasActiveFilters}
-                                onResetFilters={handleResetFilters}
-                                activeDropdown={activeDropdown}
-                                onActiveDropdownChange={setActiveDropdown}
-                                position={position}
-                                showFavorites={showFavoritesFilter}
-                            />
                         </div>
-                    </div>
-                )
+                    ) : (
+                        <div className="flex-1 min-w-0 overflow-x-auto no-scrollbar py-0.5">
+                            <div className="flex items-center gap-1.5 w-max mx-auto px-1">
+                                {/* Collapsed Search Button */}
+                                <IconButton
+                                    icon={IconSearch}
+                                    onClick={handleCollapseToSearch}
+                                    active={Boolean(debouncedSearch || searchInput)}
+                                    title={
+                                        searchInput
+                                            ? `Search: "${searchInput}" (Tap to expand)`
+                                            : 'Search recipes (Tap to expand)'
+                                    }
+                                    ariaLabel={
+                                        searchInput
+                                            ? `Search: "${searchInput}" (Tap to expand)`
+                                            : 'Search recipes (Tap to expand)'
+                                    }
+                                    className="shrink-0"
+                                />
+
+                                {/* Divider line between search button and filter buttons */}
+                                <div className="h-6 w-px bg-border shrink-0 mx-0.5" aria-hidden="true" />
+
+                                {/* Centered Filter Buttons & Reset */}
+                                <FilterButtonGroup
+                                    timeFilter={timeFilter}
+                                    onTimeSelect={handleTimeSelect}
+                                    difficulties={difficulties}
+                                    onDifficultyToggle={handleDifficultyToggle}
+                                    cuisineOptions={cuisineOptions}
+                                    cuisines={cuisines}
+                                    onCuisineToggle={handleCuisineToggle}
+                                    proteins={proteins}
+                                    onProteinToggle={handleProteinToggle}
+                                    onlyFavorites={onlyFavorites}
+                                    onFavoritesToggle={handleToggleFavorites}
+                                    hasActiveFilters={hasActiveFilters}
+                                    onResetFilters={handleResetFilters}
+                                    activeDropdown={activeDropdown}
+                                    onActiveDropdownChange={setActiveDropdown}
+                                    position={position}
+                                    showFavorites={showFavoritesFilter}
+                                />
+                            </div>
+                        </div>
+                    )}
+                </div>
             ) : (
                 /* Desktop / Tablet: Always show full Search bar and all filter buttons */
                 <div className="flex items-center gap-2 w-full">
+                    {leftAction && <div className="shrink-0 flex items-center">{leftAction}</div>}
                     <Searchbar
                         value={searchInput}
                         onChange={setSearchInput}

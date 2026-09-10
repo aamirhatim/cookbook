@@ -18,6 +18,7 @@ export interface RecipeListContainerProps {
   viewMode?: 'responsive' | 'list' | 'tile' | 'admin';
   filterPosition?: 'top' | 'bottom';
   showFavoritesFilter?: boolean;
+  leftAction?: React.ReactNode;
 }
 
 export const RecipeListContainer: React.FC<RecipeListContainerProps> = ({
@@ -30,8 +31,9 @@ export const RecipeListContainer: React.FC<RecipeListContainerProps> = ({
   isStickyFilter,
   className = '',
   viewMode = 'responsive',
-  filterPosition = 'bottom',
+  filterPosition,
   showFavoritesFilter,
+  leftAction,
 }) => {
   const { isFavorite } = useFavorites();
   const [recipes, setRecipes] = useState<Recipe[]>([]);
@@ -156,21 +158,28 @@ export const RecipeListContainer: React.FC<RecipeListContainerProps> = ({
     });
   }, [recipes, filters, isFavorite]);
 
+  const effectiveFilterPosition =
+    filterPosition !== undefined
+      ? filterPosition
+      : viewMode === 'admin'
+        ? 'top'
+        : 'bottom';
+
   const isStickyActive =
     isStickyFilter !== undefined
       ? isStickyFilter
       : stickyFilter !== undefined
         ? stickyFilter
-        : filterPosition === 'bottom';
+        : effectiveFilterPosition === 'bottom';
 
   const listBottomPadding =
-    filterPosition === 'bottom' && isStickyActive ? 'pb-28 sm:pb-32' : 'pb-4';
+    effectiveFilterPosition === 'bottom' && isStickyActive ? 'pb-28 sm:pb-32' : 'pb-4';
 
   const effectiveShowFavorites =
     showFavoritesFilter !== undefined ? showFavoritesFilter : viewMode !== 'admin';
 
   const filterToolbar =
-    isStickyActive && filterPosition === 'bottom' ? (
+    isStickyActive && effectiveFilterPosition === 'bottom' ? (
       <div
         data-recipe-filter-bar="true"
         className="fixed bottom-0 left-0 right-0 z-30 bg-background/95 backdrop-blur-md border-t border-border/40 py-3 shadow-lg"
@@ -182,6 +191,7 @@ export const RecipeListContainer: React.FC<RecipeListContainerProps> = ({
             position="bottom"
             sticky={false}
             showFavoritesFilter={effectiveShowFavorites}
+            leftAction={leftAction}
           />
         </div>
       </div>
@@ -189,7 +199,7 @@ export const RecipeListContainer: React.FC<RecipeListContainerProps> = ({
       <div
         data-recipe-filter-bar="true"
         className={
-          filterPosition === 'top'
+          effectiveFilterPosition === 'top'
             ? isStickyActive
               ? 'sticky top-0 z-20 bg-background/95 backdrop-blur-md pb-4 pt-1 border-b border-border/40 mb-4'
               : 'w-full pb-4'
@@ -199,16 +209,17 @@ export const RecipeListContainer: React.FC<RecipeListContainerProps> = ({
         <RecipeFilter
           onFilterChange={setFilters}
           availableCuisines={availableCuisines}
-          position={filterPosition}
+          position={effectiveFilterPosition}
           sticky={false}
           showFavoritesFilter={effectiveShowFavorites}
+          leftAction={leftAction}
         />
       </div>
     );
 
   return (
     <div className={`flex flex-col w-full ${className}`}>
-      {filterPosition === 'top' && filterToolbar}
+      {effectiveFilterPosition === 'top' && filterToolbar}
 
       {/* Recipe List Area with bottom padding to ensure content is not obscured when filter is fixed at bottom */}
       <div className={listBottomPadding}>
@@ -238,7 +249,7 @@ export const RecipeListContainer: React.FC<RecipeListContainerProps> = ({
         )}
       </div>
 
-      {filterPosition === 'bottom' && filterToolbar}
+      {effectiveFilterPosition === 'bottom' && filterToolbar}
     </div>
   );
 };

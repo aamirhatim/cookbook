@@ -40,33 +40,26 @@ export function AdminRecipesList() {
     };
 
     return (
-        <div className="space-y-6 w-full">
-            <header className="pt-2 flex items-center justify-between gap-3">
-                <div className="min-w-0">
-                    <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground truncate">
-                        Recipes Editor
-                    </h1>
-                </div>
-
-                <IconButton
-                    icon={IconPlus}
-                    onClick={() => navigate('/admin/recipes/new')}
-                    title="Add new recipe"
-                    ariaLabel="Add new recipe"
-                    className="shrink-0"
-                />
-            </header>
-
-            <main className="w-full">
-                <RecipeListContainer
-                    viewMode="admin"
-                    onRecipeClick={handleEditRecipe}
-                    onEditRecipe={handleEditRecipe}
-                    onDeleteRecipe={handleDeleteRecipe}
-                    onTogglePublishRecipe={handleTogglePublish}
-                />
-            </main>
-        </div>
+        <main className="w-full">
+            <RecipeListContainer
+                viewMode="admin"
+                filterPosition="top"
+                stickyFilter={false}
+                leftAction={
+                    <IconButton
+                        icon={IconPlus}
+                        onClick={() => navigate('/admin/recipes/new')}
+                        title="Add new recipe"
+                        ariaLabel="Add new recipe"
+                        className="shrink-0"
+                    />
+                }
+                onRecipeClick={handleEditRecipe}
+                onEditRecipe={handleEditRecipe}
+                onDeleteRecipe={handleDeleteRecipe}
+                onTogglePublishRecipe={handleTogglePublish}
+            />
+        </main>
     );
 }
 
