@@ -27,7 +27,7 @@ export interface RecipeMetadataFormProps {
 }
 
 const PROTEIN_OPTIONS: { value: ProteinType; label: string; icon: typeof IconFish }[] = [
-  { value: 'fish', label: 'Fish', icon: IconFish },
+  { value: 'fish', label: 'Seafood', icon: IconFish },
   { value: 'poultry', label: 'Poultry', icon: IconCanary },
   { value: 'red meat', label: 'Red Meat', icon: IconMeat },
   { value: 'tofu', label: 'Tofu', icon: IconCube },

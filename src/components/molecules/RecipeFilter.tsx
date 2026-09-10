@@ -51,8 +51,7 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
         timeFilter,
         difficulties,
         cuisines,
-        isVeg,
-        setIsVeg,
+        proteins,
         onlyFavorites,
         activeDropdown,
         setActiveDropdown,
@@ -60,6 +59,7 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
         handleTimeSelect,
         handleDifficultyToggle,
         handleCuisineToggle,
+        handleProteinToggle,
         handleResetFilters,
         handleToggleFavorites,
     } = useRecipeFilterState({ onFilterChange });
@@ -152,8 +152,8 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
                                 cuisineOptions={cuisineOptions}
                                 cuisines={cuisines}
                                 onCuisineToggle={handleCuisineToggle}
-                                isVeg={isVeg}
-                                onVegToggle={setIsVeg}
+                                proteins={proteins}
+                                onProteinToggle={handleProteinToggle}
                                 onlyFavorites={onlyFavorites}
                                 onFavoritesToggle={handleToggleFavorites}
                                 hasActiveFilters={hasActiveFilters}
@@ -185,8 +185,8 @@ export const RecipeFilter: React.FC<RecipeFilterProps> = ({
                             cuisineOptions={cuisineOptions}
                             cuisines={cuisines}
                             onCuisineToggle={handleCuisineToggle}
-                            isVeg={isVeg}
-                            onVegToggle={setIsVeg}
+                            proteins={proteins}
+                            onProteinToggle={handleProteinToggle}
                             onlyFavorites={onlyFavorites}
                             onFavoritesToggle={handleToggleFavorites}
                             hasActiveFilters={hasActiveFilters}

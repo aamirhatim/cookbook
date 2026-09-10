@@ -1,5 +1,5 @@
 import React from 'react';
-import type { Difficulty } from '../../types/recipe';
+import type { Difficulty, ProteinType } from '../../types/recipe';
 import type { Icon, IconProps } from '@tabler/icons-react';
 import {
     IconTimeDuration5,
@@ -9,6 +9,11 @@ import {
     IconHexagonLetterE,
     IconHexagonLetterM,
     IconHexagonLetterH,
+    IconCarrot,
+    IconCanary,
+    IconMeat,
+    IconFish,
+    IconCube,
 } from '@tabler/icons-react';
 
 export const TIME_OPTIONS = [
@@ -36,3 +41,66 @@ export const DIFFICULTY_ICON_MAP: Record<Difficulty, React.ComponentType<IconPro
     medium: IconHexagonLetterM,
     hard: IconHexagonLetterH,
 };
+
+export type ProteinFilterValue = ProteinType | 'veg';
+
+export interface ProteinFilterOption {
+    id: string;
+    value: ProteinFilterValue;
+    label: string;
+    shortLabel?: string;
+    icon: React.ComponentType<IconProps> | Icon;
+    description: string;
+}
+
+export const PROTEIN_FILTER_OPTIONS: ProteinFilterOption[] = [
+    {
+        id: 'protein-veg',
+        value: 'veg',
+        label: 'Vegetarian',
+        shortLabel: 'Veg',
+        icon: IconCarrot,
+        description: 'Vegetarian',
+    },
+    {
+        id: 'protein-poultry',
+        value: 'poultry',
+        label: 'Poultry',
+        shortLabel: 'Poultry',
+        icon: IconCanary,
+        description: 'Poultry',
+    },
+    {
+        id: 'protein-meat',
+        value: 'red meat',
+        label: 'Red Meat',
+        shortLabel: 'Meat',
+        icon: IconMeat,
+        description: 'Red meat',
+    },
+    {
+        id: 'protein-fish',
+        value: 'fish',
+        label: 'Seafood',
+        shortLabel: 'Seafood',
+        icon: IconFish,
+        description: 'Seafood',
+    },
+    {
+        id: 'protein-tofu',
+        value: 'tofu',
+        label: 'Tofu',
+        shortLabel: 'Tofu',
+        icon: IconCube,
+        description: 'Tofu',
+    },
+];
+
+export const PROTEIN_FILTER_ICON_MAP: Record<ProteinFilterValue, React.ComponentType<IconProps> | Icon> = {
+    veg: IconCarrot,
+    poultry: IconCanary,
+    'red meat': IconMeat,
+    fish: IconFish,
+    tofu: IconCube,
+};
+

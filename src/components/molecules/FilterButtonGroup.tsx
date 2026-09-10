@@ -4,12 +4,13 @@ import { DropdownMenu } from './DropdownMenu';
 import { TimeFilterMobileTray } from './TimeFilterMobileTray';
 import { DifficultyFilterMobileTray } from './DifficultyFilterMobileTray';
 import { CuisineFilterMobileTray } from './CuisineFilterMobileTray';
+import { ProteinFilterMobileTray } from './ProteinFilterMobileTray';
 import type { Difficulty } from '../../types/recipe';
 import {
     IconStopwatch,
     IconHexagonAsterisk,
     IconWorldMap,
-    IconCarrot,
+    IconCube,
     IconHeart,
     IconHeartFilled,
     IconWashDrycleanOff,
@@ -19,6 +20,9 @@ import {
     TIME_ICON_MAP,
     DIFFICULTY_OPTIONS,
     DIFFICULTY_ICON_MAP,
+    PROTEIN_FILTER_OPTIONS,
+    PROTEIN_FILTER_ICON_MAP,
+    type ProteinFilterValue,
 } from './recipeFilterConstants';
 
 export interface CuisineOption {
@@ -35,8 +39,10 @@ export interface FilterButtonGroupProps {
     cuisineOptions?: CuisineOption[];
     cuisines: string[];
     onCuisineToggle: (cuisine: string) => void;
-    isVeg: boolean;
-    onVegToggle: (active: boolean) => void;
+    proteins: ProteinFilterValue[];
+    onProteinToggle: (protein: ProteinFilterValue) => void;
+    isVeg?: boolean;
+    onVegToggle?: (active: boolean) => void;
     onlyFavorites: boolean;
     onFavoritesToggle: (active: boolean) => void;
     hasActiveFilters: boolean;
@@ -49,7 +55,7 @@ export interface FilterButtonGroupProps {
 
 /**
  * FilterButtonGroup molecule rendering the complete set of cooking filter controls:
- * Time, Difficulty, Cuisine, Vegetarian, Favorites, and Reset.
+ * Time, Difficulty, Cuisine, Protein & Veg, Favorites, and Reset.
  */
 export const FilterButtonGroup: React.FC<FilterButtonGroupProps> = ({
     timeFilter,
@@ -59,8 +65,8 @@ export const FilterButtonGroup: React.FC<FilterButtonGroupProps> = ({
     cuisineOptions = [],
     cuisines,
     onCuisineToggle,
-    isVeg,
-    onVegToggle,
+    proteins,
+    onProteinToggle,
     onlyFavorites,
     onFavoritesToggle,
     hasActiveFilters,
@@ -82,6 +88,11 @@ export const FilterButtonGroup: React.FC<FilterButtonGroupProps> = ({
             ? DIFFICULTY_ICON_MAP[difficulties[0]]
             : IconHexagonAsterisk;
 
+    const proteinIcon =
+        proteins.length === 1 && PROTEIN_FILTER_ICON_MAP[proteins[0]]
+            ? PROTEIN_FILTER_ICON_MAP[proteins[0]]
+            : IconCube;
+
     const timeButtonTitle =
         timeFilter !== 'all'
             ? `Max cooking time: < ${timeFilter === '60' ? '1 hr' : `${timeFilter} min`}`
@@ -93,6 +104,13 @@ export const FilterButtonGroup: React.FC<FilterButtonGroupProps> = ({
             : difficulties.length > 1
                 ? `Difficulty (${difficulties.length} selected)`
                 : 'Difficulty';
+
+    const proteinButtonTitle =
+        proteins.length === 1
+            ? `Protein: ${PROTEIN_FILTER_OPTIONS.find((o) => o.value === proteins[0])?.label || proteins[0]}`
+            : proteins.length > 1
+                ? `Protein (${proteins.length} selected)`
+                : 'Filter by protein and vegetarian';
 
     return (
         <>
@@ -163,13 +181,26 @@ export const FilterButtonGroup: React.FC<FilterButtonGroupProps> = ({
                 />
             )}
 
-            <IconButton
-                icon={IconCarrot}
-                isToggle
-                active={isVeg}
-                onToggle={onVegToggle}
-                title={isVeg ? 'Vegetarian only (Active)' : 'Filter by Vegetarian'}
-                ariaLabel="Filter by Vegetarian"
+            <DropdownMenu
+                icon={proteinIcon}
+                title="Protein & Veg"
+                buttonTitle={proteinButtonTitle}
+                ariaLabel={proteinButtonTitle}
+                type="multi"
+                items={PROTEIN_FILTER_OPTIONS}
+                selectedValues={proteins}
+                onSelect={(val) => onProteinToggle(val as ProteinFilterValue)}
+                hasActiveFilters={proteins.length > 0}
+                placement={isBottom ? 'top' : 'bottom'}
+                open={activeDropdown === 'protein'}
+                onOpenChange={(open) => onActiveDropdownChange(open ? 'protein' : null)}
+                mobileLayout={({ close }) => (
+                    <ProteinFilterMobileTray
+                        selectedValues={proteins}
+                        onSelect={(val) => onProteinToggle(val as ProteinFilterValue)}
+                        onClose={close}
+                    />
+                )}
             />
 
             {showFavorites && (

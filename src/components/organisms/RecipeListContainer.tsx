@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { subscribeToRecipes } from '../../services/recipes';
 import { RecipeFilter, RecipeFilterCriteria } from '../molecules/RecipeFilter';
 import { RecipeList } from './RecipeList';
-import type { Recipe } from '../../types/recipe';
+import type { Recipe, ProteinType } from '../../types/recipe';
 import { IconLoader2 } from '@tabler/icons-react';
 import { useFavorites } from '../../hooks/useFavorites';
 
@@ -43,6 +43,7 @@ export const RecipeListContainer: React.FC<RecipeListContainerProps> = ({
     maxTimeMinutes: null,
     difficulties: [],
     cuisines: [],
+    proteins: [],
     isVeg: false,
     onlyFavorites: false,
   });
@@ -131,8 +132,18 @@ export const RecipeListContainer: React.FC<RecipeListContainerProps> = ({
         }
       }
 
-      // 5. Vegetarian filter
-      if (filters.isVeg && !recipe.isVeg) {
+      // 5. Protein & Vegetarian filter
+      if (filters.proteins && filters.proteins.length > 0) {
+        const matches = filters.proteins.some((p) => {
+          if (p === 'veg') {
+            return Boolean(recipe.isVeg);
+          }
+          return recipe.protein?.includes(p as ProteinType);
+        });
+        if (!matches) {
+          return false;
+        }
+      } else if (filters.isVeg && !recipe.isVeg) {
         return false;
       }
 

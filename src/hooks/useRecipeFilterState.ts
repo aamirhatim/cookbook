@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import type { Difficulty } from '../types/recipe';
+import type { ProteinFilterValue } from '../components/molecules/recipeFilterConstants';
 import { useAuth } from '../contexts/AuthContext';
 import { useAuthModal } from '../contexts/AuthModalContext';
 
@@ -8,6 +9,7 @@ export interface RecipeFilterCriteria {
     maxTimeMinutes: number | null;
     difficulties: Difficulty[];
     cuisines: string[];
+    proteins: ProteinFilterValue[];
     isVeg: boolean;
     onlyFavorites: boolean;
 }
@@ -28,7 +30,7 @@ export function useRecipeFilterState({ onFilterChange }: UseRecipeFilterStateOpt
     const [timeFilter, setTimeFilter] = useState<string>('all');
     const [difficulties, setDifficulties] = useState<Difficulty[]>([]);
     const [cuisines, setCuisines] = useState<string[]>([]);
-    const [isVeg, setIsVeg] = useState<boolean>(false);
+    const [proteins, setProteins] = useState<ProteinFilterValue[]>([]);
     const [onlyFavorites, setOnlyFavorites] = useState<boolean>(false);
     const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
 
@@ -42,7 +44,7 @@ export function useRecipeFilterState({ onFilterChange }: UseRecipeFilterStateOpt
         timeFilter !== 'all' ||
         difficulties.length > 0 ||
         cuisines.length > 0 ||
-        isVeg ||
+        proteins.length > 0 ||
         onlyFavorites;
 
     // Reset favorites filter if user signs out
@@ -68,10 +70,11 @@ export function useRecipeFilterState({ onFilterChange }: UseRecipeFilterStateOpt
             maxTimeMinutes: isNaN(maxTime as number) ? null : maxTime,
             difficulties,
             cuisines,
-            isVeg,
+            proteins,
+            isVeg: proteins.includes('veg'),
             onlyFavorites,
         });
-    }, [debouncedSearch, timeFilter, difficulties, cuisines, isVeg, onlyFavorites]);
+    }, [debouncedSearch, timeFilter, difficulties, cuisines, proteins, onlyFavorites]);
 
     const handleTimeSelect = (val: string) => {
         setTimeFilter((prev) => (prev === val || val === 'all' ? 'all' : val));
@@ -90,11 +93,18 @@ export function useRecipeFilterState({ onFilterChange }: UseRecipeFilterStateOpt
         );
     };
 
+    const handleProteinToggle = (val: string) => {
+        const item = val as ProteinFilterValue;
+        setProteins((prev) =>
+            prev.includes(item) ? prev.filter((p) => p !== item) : [...prev, item]
+        );
+    };
+
     const handleResetFilters = () => {
         setTimeFilter('all');
         setDifficulties([]);
         setCuisines([]);
-        setIsVeg(false);
+        setProteins([]);
         setOnlyFavorites(false);
         setActiveDropdown(null);
     };
@@ -117,8 +127,17 @@ export function useRecipeFilterState({ onFilterChange }: UseRecipeFilterStateOpt
         timeFilter,
         difficulties,
         cuisines,
-        isVeg,
-        setIsVeg,
+        proteins,
+        setProteins,
+        handleProteinToggle,
+        isVeg: proteins.includes('veg'),
+        setIsVeg: (val: boolean) => {
+            setProteins((prev) =>
+                val
+                    ? prev.includes('veg') ? prev : [...prev, 'veg']
+                    : prev.filter((p) => p !== 'veg')
+            );
+        },
         onlyFavorites,
         activeDropdown,
         setActiveDropdown,
