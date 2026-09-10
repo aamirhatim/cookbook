@@ -74,7 +74,7 @@ export const RecipeTile: React.FC<RecipeTileProps> = ({
                 )}
 
                 {/* Floating Top Badges */}
-                <div className="absolute top-2.5 left-2.5 right-2.5 flex items-center justify-between pointer-events-none gap-2">
+                <div className="absolute top-2.5 left-2.5 right-2.5 flex items-start justify-between pointer-events-none gap-2">
                     <div className="flex items-center gap-1.5">
                         {recipe.cuisine && (
                             <Chip
