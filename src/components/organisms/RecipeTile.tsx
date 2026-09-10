@@ -6,8 +6,10 @@ import {
     IconHexagonLetterM,
     IconHexagonLetterH,
     IconCarrot,
+    IconWorldMap,
 } from '@tabler/icons-react';
 import type { Recipe, ProteinType } from '../../types/recipe';
+import { Chip } from '../atoms/Chip';
 import { FavoriteButton } from '../molecules/FavoriteButton';
 import { PROTEIN_ICON_MAP, PROTEIN_LABEL_MAP } from '../atoms/proteinIcons';
 
@@ -75,9 +77,14 @@ export const RecipeTile: React.FC<RecipeTileProps> = ({
                 <div className="absolute top-2.5 left-2.5 right-2.5 flex items-center justify-between pointer-events-none gap-2">
                     <div className="flex items-center gap-1.5">
                         {recipe.cuisine && (
-                            <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-background/85 backdrop-blur-md text-foreground border border-border/50 shadow-sm capitalize">
-                                {recipe.cuisine}
-                            </span>
+                            <Chip
+                                icon={IconWorldMap}
+                                text={recipe.cuisine}
+                                color="purple"
+                                bgColor="purple-bg"
+                                capitalize
+                                className="backdrop-blur-md shadow-xs"
+                            />
                         )}
                         {!recipe.isPublished && (
                             <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-secondary text-secondary-foreground shadow-sm">

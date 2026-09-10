@@ -6,8 +6,10 @@ import {
     IconHexagonLetterM,
     IconHexagonLetterH,
     IconCarrot,
+    IconGlobe,
 } from '@tabler/icons-react';
 import type { Recipe, ProteinType } from '../../types/recipe';
+import { Chip } from '../atoms/Chip';
 import { FavoriteButton } from '../molecules/FavoriteButton';
 import { PROTEIN_ICON_MAP, PROTEIN_LABEL_MAP } from '../atoms/proteinIcons';
 
@@ -97,9 +99,14 @@ export const RecipeRowItem: React.FC<RecipeRowItemProps> = ({
                 {(recipe.cuisine || (recipe.tags && recipe.tags.length > 0)) && (
                     <div className="flex items-center gap-1.5 mt-1.5 flex-nowrap overflow-hidden">
                         {recipe.cuisine && (
-                            <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-background border border-border/70 text-foreground capitalize shrink-0">
-                                {recipe.cuisine}
-                            </span>
+                            <Chip
+                                icon={IconGlobe}
+                                text={recipe.cuisine}
+                                color="purple"
+                                bgColor="purple-bg"
+                                capitalize
+                                className="shrink-0"
+                            />
                         )}
                         {recipe.tags?.filter(Boolean).map((tag) => (
                             <span

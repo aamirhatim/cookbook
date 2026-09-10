@@ -11,8 +11,10 @@ import {
     IconTool,
     IconPlus,
     IconMinus,
+    IconGlobe,
 } from '@tabler/icons-react';
 import type { Recipe, ProteinType } from '../../types/recipe';
+import { Chip } from '../atoms/Chip';
 import { FavoriteButton } from '../molecules/FavoriteButton';
 import { RecipeInspiration } from '../molecules/RecipeInspiration';
 import { PROTEIN_ICON_MAP, PROTEIN_LABEL_MAP } from '../atoms/proteinIcons';
@@ -98,28 +100,34 @@ export const RecipeViewerHero: React.FC<RecipeViewerHeroProps> = ({
                     <div className="flex flex-wrap items-center gap-1.5 pt-1">
                         {/* 1. Cuisine */}
                         {recipe.cuisine && (
-                            <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary border border-primary/20 capitalize">
-                                {recipe.cuisine}
-                            </span>
+                            <Chip
+                                icon={IconGlobe}
+                                text={recipe.cuisine}
+                                color="purple"
+                                bgColor="purple-bg"
+                                capitalize
+                            />
                         )}
 
                         {/* 2. Veg & Proteins */}
                         {recipe.isVeg && (
-                            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary text-secondary-foreground">
-                                <IconCarrot className="w-3.5 h-3.5" stroke={1.5} />
-                                <span>Vegetarian</span>
-                            </span>
+                            <Chip
+                                icon={IconCarrot}
+                                text="Vegetarian"
+                                color="green-fg"
+                                bgColor="green-bg"
+                            />
                         )}
                         {proteinList.map((protein) => {
                             const ProteinIcon = PROTEIN_ICON_MAP[protein];
                             return (
-                                <span
+                                <Chip
                                     key={protein}
-                                    className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary text-secondary-foreground"
-                                >
-                                    <ProteinIcon className="w-3.5 h-3.5" stroke={1.5} />
-                                    <span>{PROTEIN_LABEL_MAP[protein]}</span>
-                                </span>
+                                    icon={ProteinIcon}
+                                    text={PROTEIN_LABEL_MAP[protein]}
+                                    color="blue-fg"
+                                    bgColor="blue-bg"
+                                />
                             );
                         })}
 

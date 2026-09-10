@@ -55,6 +55,21 @@ export default {
                     DEFAULT: withOpacity('--favorite'),
                     foreground: withOpacity('--favorite-foreground'),
                 },
+                purple: {
+                    DEFAULT: withOpacity('--purple'),
+                    foreground: withOpacity('--purple-foreground'),
+                    bg: withOpacity('--purple-bg'),
+                },
+                green: {
+                    DEFAULT: withOpacity('--green'),
+                    foreground: withOpacity('--green-foreground'),
+                    bg: withOpacity('--green-bg'),
+                },
+                blue: {
+                    DEFAULT: withOpacity('--blue'),
+                    foreground: withOpacity('--blue-foreground'),
+                    bg: withOpacity('--blue-bg'),
+                },
                 border: withOpacity('--border'),
                 input: withOpacity('--input'),
                 ring: withOpacity('--ring'),
