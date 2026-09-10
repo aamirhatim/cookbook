@@ -129,9 +129,6 @@ export const RecipeTile: React.FC<RecipeTileProps> = ({
                     <h3 className="text-3xl caacupe-one-regular text-foreground group-hover:text-primary transition-colors line-clamp-1">
                         {recipe.title}
                     </h3>
-                    <p className="text-xs text-muted-foreground line-clamp-2 mt-1 min-h-[2rem]">
-                        {recipe.description || 'No description provided.'}
-                    </p>
                 </div>
 
                 {/* Metrics Footer */}
