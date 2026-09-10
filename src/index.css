@@ -145,6 +145,11 @@ body {
         font-family: "Domine", serif;
     }
 
+    .writing-vertical-upright {
+        writing-mode: vertical-rl;
+        text-orientation: upright;
+    }
+
     .no-scrollbar::-webkit-scrollbar {
         display: none;
     }
