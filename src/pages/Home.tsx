@@ -33,7 +33,7 @@ export function Home() {
             >
                 <div className="min-w-0 flex-1 lg:flex-none lg:w-full lg:flex lg:flex-col lg:items-center">
                     <h1 className="text-4xl sm:text-5xl bungee-tint-regular palette-bungee-culinary text-foreground lg:writing-vertical-upright lg:text-5xl xl:text-6xl lg:tracking-tight lg:uppercase select-none text-left lg:text-center">
-                        All Recipes
+                        The Cookbook
                     </h1>
                 </div>
                 <div className="shrink-0 lg:mt-auto lg:w-full lg:flex lg:items-center lg:justify-center">
