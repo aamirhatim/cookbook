@@ -72,11 +72,10 @@ export const AccountDetailsCard: React.FC<AccountDetailsCardProps> = ({
                     <div className="pt-3">
                         <Link
                             to="/admin/recipes"
-                            className={`inline-flex items-center text-sm font-medium text-primary hover:underline transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded ${
-                                isLoggingOut || isDeletingAccount ? 'pointer-events-none opacity-50' : ''
-                            }`}
+                            className={`inline-flex items-center text-sm font-medium text-primary hover:underline transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded ${isLoggingOut || isDeletingAccount ? 'pointer-events-none opacity-50' : ''
+                                }`}
                         >
-                            Go to recipe list
+                            Go to Recipe Manager
                         </Link>
                     </div>
                 )}
