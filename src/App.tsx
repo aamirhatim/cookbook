@@ -52,28 +52,14 @@ export default function App() {
                                         </Route>
 
                                         {/* Protected admin routes */}
-                                        <Route element={<ProtectedRoute />}>
-                                            <Route
-                                                path="/admin"
-                                                element={
-                                                    <ProtectedRoute requireAdmin>
-                                                        <RecipeManager />
-                                                    </ProtectedRoute>
-                                                }
-                                            >
+                                        <Route element={<ProtectedRoute requireAdmin />}>
+                                            <Route path="/admin" element={<RecipeManager />}>
                                                 <Route index element={<Navigate to="/admin/recipes" replace />} />
                                                 <Route path="recipes" element={<AdminRecipesList />} />
                                                 <Route path="inspirations" element={<AdminInspirations />} />
                                                 <Route path="inpspirations" element={<Navigate to="/admin/inspirations" replace />} />
                                             </Route>
-                                            <Route
-                                                path="/admin/recipes/:recipeId"
-                                                element={
-                                                    <ProtectedRoute requireAdmin>
-                                                        <RecipeEditor />
-                                                    </ProtectedRoute>
-                                                }
-                                            />
+                                            <Route path="/admin/recipes/:recipeId" element={<RecipeEditor />} />
                                         </Route>
                                     </Routes>
                                 </Suspense>

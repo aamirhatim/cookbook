@@ -2,9 +2,6 @@ import React from 'react';
 import {
     IconStopwatch,
     IconChefHat,
-    IconHexagonLetterE,
-    IconHexagonLetterM,
-    IconHexagonLetterH,
     IconCarrot,
     IconWorldMap,
 } from '@tabler/icons-react';
@@ -12,6 +9,7 @@ import type { Recipe, ProteinType } from '../../types/recipe';
 import { Chip } from '../atoms/Chip';
 import { FavoriteButton } from '../molecules/FavoriteButton';
 import { PROTEIN_ICON_MAP, PROTEIN_LABEL_MAP } from '../atoms/proteinIcons';
+import { DIFFICULTY_ICON_MAP } from '../atoms/difficultyIcons';
 
 export interface RecipeTileProps {
     recipe: Recipe;
@@ -26,12 +24,6 @@ export interface RecipeTileProps {
     /** Whether to show favorite heart button. Defaults to true. */
     showFavorite?: boolean;
 }
-
-const difficultyIcons = {
-    easy: IconHexagonLetterE,
-    medium: IconHexagonLetterM,
-    hard: IconHexagonLetterH,
-} as const;
 
 export const RecipeTile: React.FC<RecipeTileProps> = ({
     recipe,
@@ -57,7 +49,7 @@ export const RecipeTile: React.FC<RecipeTileProps> = ({
         }
     };
 
-    const DifficultyIcon = recipe.difficulty ? difficultyIcons[recipe.difficulty] : null;
+    const DifficultyIcon = recipe.difficulty ? DIFFICULTY_ICON_MAP[recipe.difficulty] : null;
     const proteinList = (recipe.protein || []).filter((p): p is ProteinType => Boolean(PROTEIN_ICON_MAP[p]));
     const hasVeg = showProteinVeg && Boolean(recipe.isVeg);
     const hasProtein = showProteinVeg && proteinList.length > 0;

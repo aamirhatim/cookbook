@@ -1,22 +1,13 @@
-import React, { useState, useEffect, useRef } from 'react';
-import {
-    IconHexagonLetterE,
-    IconHexagonLetterM,
-    IconHexagonLetterH,
-    IconCarrot,
-    IconFish,
-    IconCanary,
-    IconMeat,
-    IconCube,
-} from '@tabler/icons-react';
-import type { Recipe, Difficulty, ProteinType } from '../../types/recipe';
+import React from 'react';
+import type { Recipe } from '../../types/recipe';
 import { Input } from '../atoms/Input';
 import { Textarea } from '../atoms/Textarea';
-import { IconButton } from '../atoms/IconButton';
 import { FormField } from './FormField';
 import { RecipeImageUploader } from './RecipeImageUploader';
 import { RecipeUrlsFields } from './RecipeUrlsFields';
 import { StepperInput } from './StepperInput';
+import { RecipeDietarySelectors } from './RecipeDietarySelectors';
+import { CommaDelimitedInput } from './CommaDelimitedInput';
 
 export interface RecipeMetadataFormProps {
     formData: Partial<Recipe>;
@@ -28,13 +19,6 @@ export interface RecipeMetadataFormProps {
     disabled?: boolean;
 }
 
-const PROTEIN_OPTIONS: { value: ProteinType; label: string; icon: typeof IconFish }[] = [
-    { value: 'fish', label: 'Seafood', icon: IconFish },
-    { value: 'poultry', label: 'Poultry', icon: IconCanary },
-    { value: 'red meat', label: 'Red Meat', icon: IconMeat },
-    { value: 'tofu', label: 'Tofu', icon: IconCube },
-];
-
 export const RecipeMetadataForm: React.FC<RecipeMetadataFormProps> = ({
     formData,
     onChange,
@@ -44,60 +28,6 @@ export const RecipeMetadataForm: React.FC<RecipeMetadataFormProps> = ({
     onRemoveImage,
     disabled = false,
 }) => {
-    const [tagsInput, setTagsInput] = useState(() => (formData.tags || []).join(', '));
-    const [equipmentInput, setEquipmentInput] = useState(() => (formData.equipment || []).join(', '));
-
-    const lastTagsEmittedRef = useRef<string>(JSON.stringify(formData.tags || []));
-    const lastEquipmentEmittedRef = useRef<string>(JSON.stringify(formData.equipment || []));
-
-    useEffect(() => {
-        const currentSerialized = JSON.stringify(formData.tags || []);
-        if (currentSerialized !== lastTagsEmittedRef.current) {
-            lastTagsEmittedRef.current = currentSerialized;
-            setTagsInput((formData.tags || []).join(', '));
-        }
-    }, [formData.tags]);
-
-    useEffect(() => {
-        const currentSerialized = JSON.stringify(formData.equipment || []);
-        if (currentSerialized !== lastEquipmentEmittedRef.current) {
-            lastEquipmentEmittedRef.current = currentSerialized;
-            setEquipmentInput((formData.equipment || []).join(', '));
-        }
-    }, [formData.equipment]);
-
-    const handleTagsChange = (val: string) => {
-        setTagsInput(val);
-        const tagsArray = val.split(',').map((t) => t.trim()).filter(Boolean);
-        lastTagsEmittedRef.current = JSON.stringify(tagsArray);
-        onChange('tags', tagsArray);
-    };
-
-    const handleTagsBlur = () => {
-        const formatted = (formData.tags || []).join(', ');
-        setTagsInput(formatted);
-    };
-
-    const handleEquipmentChange = (val: string) => {
-        setEquipmentInput(val);
-        const equipArray = val.split(',').map((e) => e.trim()).filter(Boolean);
-        lastEquipmentEmittedRef.current = JSON.stringify(equipArray);
-        onChange('equipment', equipArray);
-    };
-
-    const handleEquipmentBlur = () => {
-        const formatted = (formData.equipment || []).join(', ');
-        setEquipmentInput(formatted);
-    };
-
-    const handleProteinToggle = (proteinItem: ProteinType) => {
-        const current = formData.protein || [];
-        const next = current.includes(proteinItem)
-            ? current.filter((p) => p !== proteinItem)
-            : [...current, proteinItem];
-        onChange('protein', next);
-    };
-
     return (
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6 lg:gap-8 items-stretch">
             {/* Left Column: Image, Title, Description */}
@@ -130,7 +60,7 @@ export const RecipeMetadataForm: React.FC<RecipeMetadataFormProps> = ({
                 </FormField>
             </div>
 
-            {/* Right Column: Recipe Metadata Form Fields */}
+            {/* Right Column: Metadata, Timing, Dietary & Tags */}
             <div className="md:col-span-7 lg:col-span-7 flex flex-col gap-4">
                 <FormField label="Cuisine">
                     <Input
@@ -169,115 +99,35 @@ export const RecipeMetadataForm: React.FC<RecipeMetadataFormProps> = ({
                     </FormField>
                 </div>
 
-                <div className="flex items-start gap-3 sm:gap-4 flex-wrap">
-                    <FormField label="Servings" className="shrink-0">
-                        <StepperInput
-                            value={formData.servings}
-                            onChange={(val) => onChange('servings', val)}
-                            min={1}
-                            step={1}
-                            fieldSize="compact"
-                            placeholder="1"
-                            ariaLabel="Servings"
-                            disabled={disabled}
-                        />
-                    </FormField>
+                <RecipeDietarySelectors
+                    servings={formData.servings}
+                    onServingsChange={(servings) => onChange('servings', servings)}
+                    difficulty={formData.difficulty}
+                    onDifficultyChange={(difficulty) => onChange('difficulty', difficulty)}
+                    isVeg={formData.isVeg}
+                    onVegChange={(isVeg) => onChange('isVeg', isVeg)}
+                    protein={formData.protein}
+                    onProteinChange={(protein) => onChange('protein', protein)}
+                    disabled={disabled}
+                />
 
-                    <FormField label="Difficulty" className="shrink-0">
-                        <div className="flex items-center gap-1.5 sm:gap-2 h-11" role="radiogroup" aria-label="Difficulty">
-                            {(['easy', 'medium', 'hard'] as Difficulty[]).map((diff) => {
-                                const icon =
-                                    diff === 'easy'
-                                        ? IconHexagonLetterE
-                                        : diff === 'medium'
-                                            ? IconHexagonLetterM
-                                            : IconHexagonLetterH;
-                                const label = diff.charAt(0).toUpperCase() + diff.slice(1);
-                                return (
-                                    <IconButton
-                                        key={diff}
-                                        type="button"
-                                        role="radio"
-                                        icon={icon}
-                                        active={formData.difficulty === diff}
-                                        onClick={() => onChange('difficulty', diff)}
-                                        title={label}
-                                        ariaLabel={`${label} difficulty`}
-                                        aria-checked={formData.difficulty === diff}
-                                        aria-pressed={formData.difficulty === diff}
-                                        variant="subtle"
-                                        iconSize={22}
-                                        iconStroke={1.5}
-                                        disabled={disabled}
-                                    />
-                                );
-                            })}
-                        </div>
-                    </FormField>
+                <CommaDelimitedInput
+                    label="Tags"
+                    helperText="Comma separated (e.g. healthy, quick, dinner)"
+                    placeholder="healthy, quick"
+                    values={formData.tags}
+                    onChange={(tags) => onChange('tags', tags)}
+                    disabled={disabled}
+                />
 
-                    <FormField label="Veg?" className="shrink-0">
-                        <div className="flex items-center h-11">
-                            <IconButton
-                                type="button"
-                                icon={IconCarrot}
-                                isToggle
-                                active={formData.isVeg || false}
-                                onClick={() => onChange('isVeg', !formData.isVeg)}
-                                title={formData.isVeg ? 'Vegetarian (Active)' : 'Mark as Vegetarian'}
-                                ariaLabel="Veg?"
-                                variant="subtle"
-                                iconSize={22}
-                                iconStroke={1.5}
-                                disabled={disabled}
-                            />
-                        </div>
-                    </FormField>
-
-                    <FormField label="Proteins" className="shrink-0">
-                        <div className="flex items-center gap-1.5 sm:gap-2 h-11" role="group" aria-label="Protein selection">
-                            {PROTEIN_OPTIONS.map((item) => {
-                                const isSelected = formData.protein?.includes(item.value) ?? false;
-                                return (
-                                    <IconButton
-                                        key={item.value}
-                                        type="button"
-                                        icon={item.icon}
-                                        isToggle
-                                        active={isSelected}
-                                        onClick={() => handleProteinToggle(item.value)}
-                                        title={isSelected ? `${item.label} (Selected)` : item.label}
-                                        ariaLabel={item.label}
-                                        aria-pressed={isSelected}
-                                        variant="subtle"
-                                        iconSize={22}
-                                        iconStroke={1.5}
-                                        disabled={disabled}
-                                    />
-                                );
-                            })}
-                        </div>
-                    </FormField>
-                </div>
-
-                <FormField label="Tags" helperText="Comma separated (e.g. healthy, quick, dinner)">
-                    <Input
-                        placeholder="healthy, quick"
-                        value={tagsInput}
-                        onChange={(e) => handleTagsChange(e.target.value)}
-                        onBlur={handleTagsBlur}
-                        disabled={disabled}
-                    />
-                </FormField>
-
-                <FormField label="Equipment" helperText="Comma separated (e.g. Dutch oven, Stand mixer, Skillet)">
-                    <Input
-                        placeholder="Dutch oven, Skillet"
-                        value={equipmentInput}
-                        onChange={(e) => handleEquipmentChange(e.target.value)}
-                        onBlur={handleEquipmentBlur}
-                        disabled={disabled}
-                    />
-                </FormField>
+                <CommaDelimitedInput
+                    label="Equipment"
+                    helperText="Comma separated (e.g. Dutch oven, Stand mixer, Skillet)"
+                    placeholder="Dutch oven, Skillet"
+                    values={formData.equipment}
+                    onChange={(equipment) => onChange('equipment', equipment)}
+                    disabled={disabled}
+                />
 
                 <RecipeUrlsFields
                     urls={formData.urls}

@@ -45,6 +45,14 @@ export async function uploadRecipeImage(
     recipeId: string,
     file: File
 ): Promise<{ imageUrl: string; storagePath: string }> {
+    const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB limit
+    if (!file.type.startsWith('image/')) {
+        throw new Error('Selected file must be an image (JPEG, PNG, WebP, etc.).');
+    }
+    if (file.size > MAX_FILE_SIZE) {
+        throw new Error('Image size must be less than 5MB.');
+    }
+
     const sanitizedName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
     const storagePath = `recipes/${recipeId}/${Date.now()}_${sanitizedName}`;
     const storageRef = ref(storage, storagePath);

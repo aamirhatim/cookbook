@@ -1,12 +1,6 @@
-import React from 'react';
 import type { Icon, IconProps } from '@tabler/icons-react';
-import {
-    IconTimeDuration5,
-    IconTimeDuration15,
-    IconTimeDuration30,
-    IconTimeDuration60,
-} from '@tabler/icons-react';
 import { IconButton } from '../atoms/IconButton';
+import { TIME_OPTIONS, TIME_ICON_MAP } from './recipeFilterConstants';
 
 export interface TimeDurationOption {
     id: string;
@@ -16,36 +10,13 @@ export interface TimeDurationOption {
     description: string;
 }
 
-export const TIME_DURATION_OPTIONS: TimeDurationOption[] = [
-    {
-        id: 'time-5',
-        value: '5',
-        label: '5 min',
-        icon: IconTimeDuration5,
-        description: 'Under 5 minutes',
-    },
-    {
-        id: 'time-15',
-        value: '15',
-        label: '15 min',
-        icon: IconTimeDuration15,
-        description: 'Under 15 minutes',
-    },
-    {
-        id: 'time-30',
-        value: '30',
-        label: '30 min',
-        icon: IconTimeDuration30,
-        description: 'Under 30 minutes',
-    },
-    {
-        id: 'time-60',
-        value: '60',
-        label: '1 hr',
-        icon: IconTimeDuration60,
-        description: 'Under 1 hour',
-    },
-];
+export const TIME_DURATION_OPTIONS: TimeDurationOption[] = TIME_OPTIONS.map((opt) => ({
+    id: opt.id,
+    value: opt.value,
+    label: opt.value === '60' ? '1 hr' : `${opt.value} min`,
+    icon: TIME_ICON_MAP[opt.value],
+    description: opt.value === '60' ? 'Under 1 hour' : `Under ${opt.value} minutes`,
+}));
 
 export interface TimeFilterMobileTrayProps {
     selectedValue: string;

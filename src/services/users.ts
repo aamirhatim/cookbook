@@ -136,10 +136,24 @@ export async function rollbackUserCreation(user: User): Promise<void> {
  * 2. Deletes the user from Firebase Auth.
  */
 export async function deleteUserAccount(user: User): Promise<void> {
-    // Delete Firestore profile first while user is still authenticated
-    await deleteUserProfile(user.uid);
-    // Delete user from Firebase Auth
-    await deleteUser(user);
+    const profile = await getUserProfile(user.uid);
+    try {
+        // Delete Firestore profile first while user is still authenticated
+        await deleteUserProfile(user.uid);
+        // Delete user from Firebase Auth
+        await deleteUser(user);
+    } catch (error) {
+        // If deleting from Auth failed (e.g. auth/requires-recent-login), restore the profile
+        if (profile) {
+            try {
+                const userDocRef = doc(db, 'users', user.uid);
+                await setDoc(userDocRef, profile);
+            } catch (restoreErr) {
+                console.error('Failed to restore user profile after failed auth deletion:', restoreErr);
+            }
+        }
+        throw error;
+    }
 }
 
 /**

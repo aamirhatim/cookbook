@@ -1,14 +1,11 @@
 import React from 'react';
-import type { Difficulty, ProteinType } from '../../types/recipe';
+import type { ProteinType } from '../../types/recipe';
 import type { Icon, IconProps } from '@tabler/icons-react';
 import {
     IconTimeDuration5,
     IconTimeDuration15,
     IconTimeDuration30,
     IconTimeDuration60,
-    IconHexagonLetterE,
-    IconHexagonLetterM,
-    IconHexagonLetterH,
     IconCarrot,
     IconCanary,
     IconMeat,
@@ -30,17 +27,14 @@ export const TIME_ICON_MAP: Record<string, React.ComponentType<IconProps> | Icon
     '60': IconTimeDuration60,
 };
 
-export const DIFFICULTY_OPTIONS: { id: string; label: string; value: Difficulty }[] = [
-    { id: 'diff-easy', label: 'Easy', value: 'easy' },
-    { id: 'diff-med', label: 'Medium', value: 'medium' },
-    { id: 'diff-hard', label: 'Hard', value: 'hard' },
-];
+import {
+    DIFFICULTY_OPTIONS,
+    DIFFICULTY_ICON_MAP,
+    type DifficultyOption,
+} from '../atoms/difficultyIcons';
 
-export const DIFFICULTY_ICON_MAP: Record<Difficulty, React.ComponentType<IconProps> | Icon> = {
-    easy: IconHexagonLetterE,
-    medium: IconHexagonLetterM,
-    hard: IconHexagonLetterH,
-};
+export { DIFFICULTY_OPTIONS, DIFFICULTY_ICON_MAP };
+export type { DifficultyOption };
 
 export type ProteinFilterValue = ProteinType | 'veg';
 

@@ -1,44 +1,9 @@
-import React from 'react';
-import type { Icon, IconProps } from '@tabler/icons-react';
-import {
-    IconHexagonLetterE,
-    IconHexagonLetterM,
-    IconHexagonLetterH,
-} from '@tabler/icons-react';
 import { IconButton } from '../atoms/IconButton';
 import type { Difficulty } from '../../types/recipe';
+import { DIFFICULTY_OPTIONS, type DifficultyOption } from '../atoms/difficultyIcons';
 
-export interface DifficultyOption {
-    id: string;
-    value: Difficulty;
-    label: string;
-    icon: React.ComponentType<IconProps> | Icon;
-    description: string;
-}
-
-export const DIFFICULTY_OPTIONS: DifficultyOption[] = [
-    {
-        id: 'diff-easy',
-        value: 'easy',
-        label: 'Easy',
-        icon: IconHexagonLetterE,
-        description: 'Easy difficulty',
-    },
-    {
-        id: 'diff-med',
-        value: 'medium',
-        label: 'Medium',
-        icon: IconHexagonLetterM,
-        description: 'Medium difficulty',
-    },
-    {
-        id: 'diff-hard',
-        value: 'hard',
-        label: 'Hard',
-        icon: IconHexagonLetterH,
-        description: 'Hard difficulty',
-    },
-];
+export type { DifficultyOption };
+export { DIFFICULTY_OPTIONS };
 
 export interface DifficultyFilterMobileTrayProps {
     selectedValues: Difficulty[] | string[];

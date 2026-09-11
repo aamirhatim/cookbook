@@ -2,9 +2,6 @@ import React from 'react';
 import {
     IconStopwatch,
     IconChefHat,
-    IconHexagonLetterE,
-    IconHexagonLetterM,
-    IconHexagonLetterH,
     IconCarrot,
     IconGlobe,
 } from '@tabler/icons-react';
@@ -12,18 +9,13 @@ import type { Recipe, ProteinType } from '../../types/recipe';
 import { Chip } from '../atoms/Chip';
 import { FavoriteButton } from '../molecules/FavoriteButton';
 import { PROTEIN_ICON_MAP, PROTEIN_LABEL_MAP } from '../atoms/proteinIcons';
+import { DIFFICULTY_ICON_MAP } from '../atoms/difficultyIcons';
 
 export interface RecipeRowItemProps {
     recipe: Recipe;
     onClick?: (recipe: Recipe) => void;
     className?: string;
 }
-
-const difficultyIcons = {
-    easy: IconHexagonLetterE,
-    medium: IconHexagonLetterM,
-    hard: IconHexagonLetterH,
-} as const;
 
 export const RecipeRowItem: React.FC<RecipeRowItemProps> = ({
     recipe,
@@ -45,7 +37,7 @@ export const RecipeRowItem: React.FC<RecipeRowItemProps> = ({
         }
     };
 
-    const DifficultyIcon = recipe.difficulty ? difficultyIcons[recipe.difficulty] : null;
+    const DifficultyIcon = recipe.difficulty ? DIFFICULTY_ICON_MAP[recipe.difficulty] : null;
     const proteinList = (recipe.protein || []).filter((p): p is ProteinType => Boolean(PROTEIN_ICON_MAP[p]));
 
     return (
