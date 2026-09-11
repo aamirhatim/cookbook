@@ -1,8 +1,9 @@
 import { useNavigate } from 'react-router-dom';
-import { IconUser } from '@tabler/icons-react';
+import { IconCarrot, IconUser } from '@tabler/icons-react';
 import { IconButton } from '../components/atoms/IconButton';
 import { useAuthModal } from '../hooks/useAuthModal';
 import { RecipeListContainer } from '../components/organisms/RecipeListContainer';
+import { RecipeScrollSection } from '../components/organisms/RecipeScrollSection';
 import type { Recipe } from '../types/recipe';
 
 export function Home() {
@@ -46,7 +47,14 @@ export function Home() {
                 </div>
             </header>
 
-            <main className="w-full lg:flex-1 lg:min-w-0">
+            <main className="w-full lg:flex-1 lg:min-w-0 space-y-8">
+                <RecipeScrollSection
+                    title="Veg life"
+                    icon={IconCarrot}
+                    filter={{ isVeg: true }}
+                    onRecipeClick={handleRecipeClick}
+                />
+
                 <RecipeListContainer
                     filterPosition="top"
                     onRecipeClick={handleRecipeClick}
