@@ -3,8 +3,6 @@ import { useParams, useLocation } from 'react-router-dom';
 import {
   IconLoader2,
   IconAlertCircle,
-  IconX,
-  IconDeviceFloppy,
 } from '@tabler/icons-react';
 import type { Recipe } from '../types/recipe';
 import { RecipeEditorHeader } from '../components/molecules/RecipeEditorHeader';
@@ -36,7 +34,6 @@ export function RecipeEditor() {
     handleImageRemove,
     handleSave,
     handleCancel,
-    goBack,
   } = useRecipeForm(recipeId, initialRecipe);
 
   const [publishing, setPublishing] = useState(false);
@@ -83,9 +80,8 @@ export function RecipeEditor() {
 
   return (
     <div className="space-y-6 w-full pb-20">
-      {/* Header with Back Button and Actions */}
+      {/* Header with Actions */}
       <RecipeEditorHeader
-        onBack={goBack}
         onSave={handleSave}
         onCancel={handleCancel}
         onTogglePublish={handleTogglePublish}
@@ -164,32 +160,6 @@ export function RecipeEditor() {
                   onChange={(instructions) => handleChange('instructions', instructions)}
                 />
               </CollapsibleSection>
-            </div>
-
-            {/* Action Buttons */}
-            <div className="flex gap-3 pt-6 pb-2 border-t border-border">
-              <button
-                type="button"
-                onClick={handleCancel}
-                disabled={saving}
-                className="flex-1 min-h-[44px] flex items-center justify-center gap-2 py-3 rounded-xl bg-surface hover:bg-surface-hover border border-border text-foreground text-sm font-medium transition-colors disabled:opacity-50"
-              >
-                <IconX className="w-5 h-5" stroke={1} />
-                Cancel
-              </button>
-              <button
-                type="button"
-                onClick={handleSave}
-                disabled={saving}
-                className="flex-1 min-h-[44px] flex items-center justify-center gap-2 py-3 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-medium shadow-sm transition-colors disabled:opacity-50"
-              >
-                {saving ? (
-                  <IconLoader2 className="w-5 h-5 animate-spin" stroke={1} />
-                ) : (
-                  <IconDeviceFloppy className="w-5 h-5" stroke={1} />
-                )}
-                Save Recipe
-              </button>
             </div>
           </div>
         )}

@@ -1,13 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
-  IconHexagonLetterE,
-  IconHexagonLetterM,
-  IconHexagonLetterH,
-  IconCarrot,
-  IconFish,
-  IconCanary,
-  IconMeat,
-  IconCube,
+    IconHexagonLetterE,
+    IconHexagonLetterM,
+    IconHexagonLetterH,
+    IconCarrot,
+    IconFish,
+    IconCanary,
+    IconMeat,
+    IconCube,
+    IconMinus,
+    IconPlus,
 } from '@tabler/icons-react';
 import type { Recipe, Difficulty, ProteinType } from '../../types/recipe';
 import { Input } from '../atoms/Input';
@@ -18,30 +20,30 @@ import { RecipeImageUploader } from './RecipeImageUploader';
 import { RecipeUrlsFields } from './RecipeUrlsFields';
 
 export interface RecipeMetadataFormProps {
-  formData: Partial<Recipe>;
-  onChange: <K extends keyof Recipe>(field: K, value: Recipe[K]) => void;
-  selectedImageFile: File | null;
-  removeExistingImage: boolean;
-  onSelectImage: (file: File) => void;
-  onRemoveImage: () => void;
-  disabled?: boolean;
+    formData: Partial<Recipe>;
+    onChange: <K extends keyof Recipe>(field: K, value: Recipe[K]) => void;
+    selectedImageFile: File | null;
+    removeExistingImage: boolean;
+    onSelectImage: (file: File) => void;
+    onRemoveImage: () => void;
+    disabled?: boolean;
 }
 
 const PROTEIN_OPTIONS: { value: ProteinType; label: string; icon: typeof IconFish }[] = [
-  { value: 'fish', label: 'Seafood', icon: IconFish },
-  { value: 'poultry', label: 'Poultry', icon: IconCanary },
-  { value: 'red meat', label: 'Red Meat', icon: IconMeat },
-  { value: 'tofu', label: 'Tofu', icon: IconCube },
+    { value: 'fish', label: 'Seafood', icon: IconFish },
+    { value: 'poultry', label: 'Poultry', icon: IconCanary },
+    { value: 'red meat', label: 'Red Meat', icon: IconMeat },
+    { value: 'tofu', label: 'Tofu', icon: IconCube },
 ];
 
 export const RecipeMetadataForm: React.FC<RecipeMetadataFormProps> = ({
-  formData,
-  onChange,
-  selectedImageFile,
-  removeExistingImage,
-  onSelectImage,
-  onRemoveImage,
-  disabled = false,
+    formData,
+    onChange,
+    selectedImageFile,
+    removeExistingImage,
+    onSelectImage,
+    onRemoveImage,
+    disabled = false,
 }) => {
     const [tagsInput, setTagsInput] = useState(() => (formData.tags || []).join(', '));
     const [equipmentInput, setEquipmentInput] = useState(() => (formData.equipment || []).join(', '));
@@ -89,192 +91,296 @@ export const RecipeMetadataForm: React.FC<RecipeMetadataFormProps> = ({
         setEquipmentInput(formatted);
     };
 
-  const handleProteinToggle = (proteinItem: ProteinType) => {
-    const current = formData.protein || [];
-    const next = current.includes(proteinItem)
-      ? current.filter((p) => p !== proteinItem)
-      : [...current, proteinItem];
-    onChange('protein', next);
-  };
+    const handleProteinToggle = (proteinItem: ProteinType) => {
+        const current = formData.protein || [];
+        const next = current.includes(proteinItem)
+            ? current.filter((p) => p !== proteinItem)
+            : [...current, proteinItem];
+        onChange('protein', next);
+    };
 
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-12 gap-6 lg:gap-8 items-stretch">
-      {/* Left Column: Image, Title, Description */}
-      <div className="md:col-span-5 lg:col-span-5 flex flex-col gap-4">
-        <RecipeImageUploader
-          currentImageUrl={removeExistingImage ? null : formData.imageUrl}
-          selectedFile={selectedImageFile}
-          onSelectImage={onSelectImage}
-          onRemoveImage={onRemoveImage}
-          disabled={disabled}
-        />
+    const handleTimeStep = (field: 'prepTimeMinutes' | 'cookTimeMinutes', delta: number, isFine: boolean = false) => {
+        const current = formData[field] || 0;
+        if (isFine) {
+            onChange(field, Math.max(0, current + delta));
+            return;
+        }
+        const step = 5;
+        if (delta > 0) {
+            onChange(field, Math.floor(current / step) * step + step);
+        } else {
+            const next = Math.ceil(current / step) * step - step;
+            onChange(field, Math.max(0, next));
+        }
+    };
 
-        <FormField label="Recipe Title">
-          <Input
-            placeholder="e.g. Grandma's Apple Pie"
-            value={formData.title || ''}
-            onChange={(e) => onChange('title', e.target.value)}
-            disabled={disabled}
-          />
-        </FormField>
-
-        <FormField label="Description" className="flex-1 flex flex-col min-h-0">
-          <Textarea
-            placeholder="A brief description of this recipe..."
-            value={formData.description || ''}
-            onChange={(e) => onChange('description', e.target.value)}
-            disabled={disabled}
-            className="flex-1 min-h-[100px] h-full resize-y"
-          />
-        </FormField>
-      </div>
-
-      {/* Right Column: Recipe Metadata Form Fields */}
-      <div className="md:col-span-7 lg:col-span-7 flex flex-col gap-4">
-        <FormField label="Cuisine">
-          <Input
-            placeholder="e.g. Italian, Mexican"
-            value={formData.cuisine || ''}
-            onChange={(e) => onChange('cuisine', e.target.value)}
-            disabled={disabled}
-          />
-        </FormField>
-
-        <div className="grid grid-cols-2 gap-4">
-          <FormField label="Prep Time (min)">
-            <Input
-              type="number"
-              placeholder="0"
-              value={formData.prepTimeMinutes || ''}
-              onChange={(e) => onChange('prepTimeMinutes', parseInt(e.target.value, 10) || 0)}
-              disabled={disabled}
-            />
-          </FormField>
-          <FormField label="Cook Time (min)">
-            <Input
-              type="number"
-              placeholder="0"
-              value={formData.cookTimeMinutes || ''}
-              onChange={(e) => onChange('cookTimeMinutes', parseInt(e.target.value, 10) || 0)}
-              disabled={disabled}
-            />
-          </FormField>
-        </div>
-
-        <div className="flex items-start gap-3 sm:gap-4 flex-wrap">
-          <FormField label="Servings" className="w-20 sm:w-24 shrink-0">
-            <Input
-              type="number"
-              min={1}
-              placeholder="1"
-              value={formData.servings || ''}
-              onChange={(e) => onChange('servings', parseInt(e.target.value, 10) || 1)}
-              disabled={disabled}
-            />
-          </FormField>
-
-          <FormField label="Difficulty" className="shrink-0">
-            <div className="flex items-center gap-1.5 sm:gap-2 h-11" role="radiogroup" aria-label="Difficulty">
-              {(['easy', 'medium', 'hard'] as Difficulty[]).map((diff) => {
-                const icon =
-                  diff === 'easy'
-                    ? IconHexagonLetterE
-                    : diff === 'medium'
-                    ? IconHexagonLetterM
-                    : IconHexagonLetterH;
-                const label = diff.charAt(0).toUpperCase() + diff.slice(1);
-                return (
-                  <IconButton
-                    key={diff}
-                    type="button"
-                    role="radio"
-                    icon={icon}
-                    active={formData.difficulty === diff}
-                    onClick={() => onChange('difficulty', diff)}
-                    title={label}
-                    ariaLabel={`${label} difficulty`}
-                    aria-checked={formData.difficulty === diff}
-                    aria-pressed={formData.difficulty === diff}
-                    variant="subtle"
-                    iconSize={22}
-                    iconStroke={1.5}
+    return (
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 lg:gap-8 items-stretch">
+            {/* Left Column: Image, Title, Description */}
+            <div className="md:col-span-5 lg:col-span-5 flex flex-col gap-4">
+                <RecipeImageUploader
+                    currentImageUrl={removeExistingImage ? null : formData.imageUrl}
+                    selectedFile={selectedImageFile}
+                    onSelectImage={onSelectImage}
+                    onRemoveImage={onRemoveImage}
                     disabled={disabled}
-                  />
-                );
-              })}
-            </div>
-          </FormField>
+                />
 
-          <FormField label="Vegetarian" className="shrink-0">
-            <div className="flex items-center h-11">
-              <IconButton
-                type="button"
-                icon={IconCarrot}
-                isToggle
-                active={formData.isVeg || false}
-                onClick={() => onChange('isVeg', !formData.isVeg)}
-                title={formData.isVeg ? 'Vegetarian (Active)' : 'Mark as Vegetarian'}
-                ariaLabel="Vegetarian"
-                variant="subtle"
-                iconSize={22}
-                iconStroke={1.5}
-                disabled={disabled}
-              />
-            </div>
-          </FormField>
+                <FormField label="Recipe Title">
+                    <Input
+                        placeholder="e.g. Grandma's Apple Pie"
+                        value={formData.title || ''}
+                        onChange={(e) => onChange('title', e.target.value)}
+                        disabled={disabled}
+                    />
+                </FormField>
 
-          <FormField label="Protein" className="shrink-0">
-            <div className="flex items-center gap-1.5 sm:gap-2 h-11" role="group" aria-label="Protein selection">
-              {PROTEIN_OPTIONS.map((item) => {
-                const isSelected = formData.protein?.includes(item.value) ?? false;
-                return (
-                  <IconButton
-                    key={item.value}
-                    type="button"
-                    icon={item.icon}
-                    isToggle
-                    active={isSelected}
-                    onClick={() => handleProteinToggle(item.value)}
-                    title={isSelected ? `${item.label} (Selected)` : item.label}
-                    ariaLabel={item.label}
-                    aria-pressed={isSelected}
-                    variant="subtle"
-                    iconSize={22}
-                    iconStroke={1.5}
+                <FormField label="Description" className="flex-1 flex flex-col min-h-0">
+                    <Textarea
+                        placeholder="A brief description of this recipe..."
+                        value={formData.description || ''}
+                        onChange={(e) => onChange('description', e.target.value)}
+                        disabled={disabled}
+                        className="flex-1 min-h-[100px] h-full resize-y"
+                    />
+                </FormField>
+            </div>
+
+            {/* Right Column: Recipe Metadata Form Fields */}
+            <div className="md:col-span-7 lg:col-span-7 flex flex-col gap-4">
+                <FormField label="Cuisine">
+                    <Input
+                        placeholder="e.g. Italian, Mexican"
+                        value={formData.cuisine || ''}
+                        onChange={(e) => onChange('cuisine', e.target.value)}
+                        disabled={disabled}
+                    />
+                </FormField>
+
+                <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                    <FormField label="Prep Time (min)">
+                        <div className="flex items-center gap-1 sm:gap-1.5 h-11">
+                            <IconButton
+                                type="button"
+                                icon={IconMinus}
+                                onClick={(e) => handleTimeStep('prepTimeMinutes', -1, e.shiftKey)}
+                                disabled={disabled || (formData.prepTimeMinutes || 0) <= 0}
+                                title="Decrease prep time (Shift+click for 1 min)"
+                                ariaLabel="Decrease prep time"
+                                variant="subtle"
+                                iconSize={18}
+                                iconStroke={2}
+                                className="shrink-0"
+                            />
+                            <Input
+                                type="number"
+                                min={0}
+                                placeholder="0"
+                                value={formData.prepTimeMinutes || ''}
+                                onChange={(e) => {
+                                    const val = parseInt(e.target.value, 10);
+                                    onChange('prepTimeMinutes', isNaN(val) ? 0 : Math.max(0, val));
+                                }}
+                                disabled={disabled}
+                                className="flex-1 min-w-0 text-center px-1 font-semibold [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                            />
+                            <IconButton
+                                type="button"
+                                icon={IconPlus}
+                                onClick={(e) => handleTimeStep('prepTimeMinutes', 1, e.shiftKey)}
+                                disabled={disabled}
+                                title="Increase prep time (Shift+click for 1 min)"
+                                ariaLabel="Increase prep time"
+                                variant="subtle"
+                                iconSize={18}
+                                iconStroke={2}
+                                className="shrink-0"
+                            />
+                        </div>
+                    </FormField>
+
+                    <FormField label="Cook Time (min)">
+                        <div className="flex items-center gap-1 sm:gap-1.5 h-11">
+                            <IconButton
+                                type="button"
+                                icon={IconMinus}
+                                onClick={(e) => handleTimeStep('cookTimeMinutes', -1, e.shiftKey)}
+                                disabled={disabled || (formData.cookTimeMinutes || 0) <= 0}
+                                title="Decrease cook time (Shift+click for 1 min)"
+                                ariaLabel="Decrease cook time"
+                                variant="subtle"
+                                iconSize={18}
+                                iconStroke={2}
+                                className="shrink-0"
+                            />
+                            <Input
+                                type="number"
+                                min={0}
+                                placeholder="0"
+                                value={formData.cookTimeMinutes || ''}
+                                onChange={(e) => {
+                                    const val = parseInt(e.target.value, 10);
+                                    onChange('cookTimeMinutes', isNaN(val) ? 0 : Math.max(0, val));
+                                }}
+                                disabled={disabled}
+                                className="flex-1 min-w-0 text-center px-1 font-semibold [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                            />
+                            <IconButton
+                                type="button"
+                                icon={IconPlus}
+                                onClick={(e) => handleTimeStep('cookTimeMinutes', 1, e.shiftKey)}
+                                disabled={disabled}
+                                title="Increase cook time (Shift+click for 1 min)"
+                                ariaLabel="Increase cook time"
+                                variant="subtle"
+                                iconSize={18}
+                                iconStroke={2}
+                                className="shrink-0"
+                            />
+                        </div>
+                    </FormField>
+                </div>
+
+                <div className="flex items-start gap-3 sm:gap-4 flex-wrap">
+                    <FormField label="Servings" className="shrink-0">
+                        <div className="flex items-center gap-1.5 h-11">
+                            <IconButton
+                                type="button"
+                                icon={IconMinus}
+                                onClick={() => onChange('servings', Math.max(1, (formData.servings || 1) - 1))}
+                                disabled={disabled || (formData.servings || 1) <= 1}
+                                title="Decrease servings"
+                                ariaLabel="Decrease servings"
+                                variant="subtle"
+                                iconSize={18}
+                                iconStroke={2}
+                                className="shrink-0"
+                            />
+                            <Input
+                                type="number"
+                                min={1}
+                                placeholder="1"
+                                value={formData.servings || ''}
+                                onChange={(e) => {
+                                    const val = parseInt(e.target.value, 10);
+                                    onChange('servings', isNaN(val) ? 1 : Math.max(1, val));
+                                }}
+                                disabled={disabled}
+                                className="w-14 sm:w-16 text-center px-1 font-semibold [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                            />
+                            <IconButton
+                                type="button"
+                                icon={IconPlus}
+                                onClick={() => onChange('servings', (formData.servings || 1) + 1)}
+                                disabled={disabled}
+                                title="Increase servings"
+                                ariaLabel="Increase servings"
+                                variant="subtle"
+                                iconSize={18}
+                                iconStroke={2}
+                                className="shrink-0"
+                            />
+                        </div>
+                    </FormField>
+
+                    <FormField label="Difficulty" className="shrink-0">
+                        <div className="flex items-center gap-1.5 sm:gap-2 h-11" role="radiogroup" aria-label="Difficulty">
+                            {(['easy', 'medium', 'hard'] as Difficulty[]).map((diff) => {
+                                const icon =
+                                    diff === 'easy'
+                                        ? IconHexagonLetterE
+                                        : diff === 'medium'
+                                        ? IconHexagonLetterM
+                                        : IconHexagonLetterH;
+                                const label = diff.charAt(0).toUpperCase() + diff.slice(1);
+                                return (
+                                    <IconButton
+                                        key={diff}
+                                        type="button"
+                                        role="radio"
+                                        icon={icon}
+                                        active={formData.difficulty === diff}
+                                        onClick={() => onChange('difficulty', diff)}
+                                        title={label}
+                                        ariaLabel={`${label} difficulty`}
+                                        aria-checked={formData.difficulty === diff}
+                                        aria-pressed={formData.difficulty === diff}
+                                        variant="subtle"
+                                        iconSize={22}
+                                        iconStroke={1.5}
+                                        disabled={disabled}
+                                    />
+                                );
+                            })}
+                        </div>
+                    </FormField>
+
+                    <FormField label="Protein & Veg" className="shrink-0">
+                        <div className="flex items-center gap-1.5 sm:gap-2 h-11" role="group" aria-label="Protein and vegetarian selection">
+                            <IconButton
+                                type="button"
+                                icon={IconCarrot}
+                                isToggle
+                                active={formData.isVeg || false}
+                                onClick={() => onChange('isVeg', !formData.isVeg)}
+                                title={formData.isVeg ? 'Vegetarian (Active)' : 'Mark as Vegetarian'}
+                                ariaLabel="Vegetarian"
+                                variant="subtle"
+                                iconSize={22}
+                                iconStroke={1.5}
+                                disabled={disabled}
+                            />
+                            <div className="w-px h-6 bg-border/60 mx-0.5" />
+                            {PROTEIN_OPTIONS.map((item) => {
+                                const isSelected = formData.protein?.includes(item.value) ?? false;
+                                return (
+                                    <IconButton
+                                        key={item.value}
+                                        type="button"
+                                        icon={item.icon}
+                                        isToggle
+                                        active={isSelected}
+                                        onClick={() => handleProteinToggle(item.value)}
+                                        title={isSelected ? `${item.label} (Selected)` : item.label}
+                                        ariaLabel={item.label}
+                                        aria-pressed={isSelected}
+                                        variant="subtle"
+                                        iconSize={22}
+                                        iconStroke={1.5}
+                                        disabled={disabled}
+                                    />
+                                );
+                            })}
+                        </div>
+                    </FormField>
+                </div>
+
+                <FormField label="Tags" helperText="Comma separated (e.g. healthy, quick, dinner)">
+                    <Input
+                        placeholder="healthy, quick"
+                        value={tagsInput}
+                        onChange={(e) => handleTagsChange(e.target.value)}
+                        onBlur={handleTagsBlur}
+                        disabled={disabled}
+                    />
+                </FormField>
+
+                <FormField label="Equipment" helperText="Comma separated (e.g. Dutch oven, Stand mixer, Skillet)">
+                    <Input
+                        placeholder="Dutch oven, Skillet"
+                        value={equipmentInput}
+                        onChange={(e) => handleEquipmentChange(e.target.value)}
+                        onBlur={handleEquipmentBlur}
+                        disabled={disabled}
+                    />
+                </FormField>
+
+                <RecipeUrlsFields
+                    urls={formData.urls}
+                    onChange={(urls) => onChange('urls', urls)}
                     disabled={disabled}
-                  />
-                );
-              })}
+                />
             </div>
-          </FormField>
         </div>
-
-        <FormField label="Tags" helperText="Comma separated (e.g. healthy, quick, dinner)">
-            <Input
-                placeholder="healthy, quick"
-                value={tagsInput}
-                onChange={(e) => handleTagsChange(e.target.value)}
-                onBlur={handleTagsBlur}
-                disabled={disabled}
-            />
-        </FormField>
-
-        <FormField label="Equipment" helperText="Comma separated (e.g. Dutch oven, Stand mixer, Skillet)">
-            <Input
-                placeholder="Dutch oven, Skillet"
-                value={equipmentInput}
-                onChange={(e) => handleEquipmentChange(e.target.value)}
-                onBlur={handleEquipmentBlur}
-                disabled={disabled}
-            />
-        </FormField>
-
-        <RecipeUrlsFields
-          urls={formData.urls}
-          onChange={(urls) => onChange('urls', urls)}
-          disabled={disabled}
-        />
-      </div>
-    </div>
-  );
+    );
 };

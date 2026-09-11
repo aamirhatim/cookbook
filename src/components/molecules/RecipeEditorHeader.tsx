@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-    IconArrowLeft,
     IconBookUpload,
     IconBookDownload,
     IconTrash,
@@ -14,7 +13,6 @@ import { useToast } from '../../hooks/useToast';
 import { deleteRecipe } from '../../services/recipes';
 
 export interface RecipeEditorHeaderProps {
-    onBack: () => void;
     onSave?: () => void;
     onCancel?: () => void;
     onTogglePublish?: () => void | Promise<void>;
@@ -25,10 +23,10 @@ export interface RecipeEditorHeaderProps {
     recipeTitle?: string;
     isPublished?: boolean;
     disabled?: boolean;
+    className?: string;
 }
 
 export const RecipeEditorHeader: React.FC<RecipeEditorHeaderProps> = ({
-    onBack,
     onSave,
     onCancel,
     onTogglePublish,
@@ -39,6 +37,7 @@ export const RecipeEditorHeader: React.FC<RecipeEditorHeaderProps> = ({
     recipeTitle,
     isPublished = false,
     disabled = false,
+    className = '',
 }) => {
     const navigate = useNavigate();
     const { showToast } = useToast();
@@ -62,17 +61,9 @@ export const RecipeEditorHeader: React.FC<RecipeEditorHeaderProps> = ({
     const isBusy = disabled || saving || isDeleting || publishing;
 
     return (
-        <header className="pt-2 flex items-center justify-between gap-2 sm:gap-3">
-            {/* Back Button */}
-            <IconButton
-                icon={IconArrowLeft}
-                onClick={onBack}
-                disabled={isBusy}
-                title="Go back"
-                ariaLabel="Go back"
-                className="shrink-0"
-            />
-
+        <header
+            className={`sticky top-0 z-30 bg-background/95 backdrop-blur-md -mt-4 pt-4 pb-3 flex items-center justify-end gap-1.5 sm:gap-2 border-b border-border/40 ${className}`.trim()}
+        >
             {/* Top Right Action Buttons */}
             <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
                 {/* 1. Cancel Button */}
