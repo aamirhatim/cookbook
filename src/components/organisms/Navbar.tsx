@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { IconUser } from '@tabler/icons-react';
+import { IconHome2, IconUser } from '@tabler/icons-react';
 import { IconButton } from '../atoms/IconButton';
 import { useAuthModal } from '../../hooks/useAuthModal';
 
@@ -10,6 +10,14 @@ export function Navbar({ className = '' }: { className?: string } = {}) {
 
     const isHome = location.pathname === '/';
     const isAccount = location.pathname === '/account';
+
+    const handleHomeClick = () => {
+        if (isHome) {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return;
+        }
+        navigate('/');
+    };
 
     const handleAccountClick = () => {
         if (isAccount) return;
@@ -28,7 +36,7 @@ export function Navbar({ className = '' }: { className?: string } = {}) {
     return (
         <header
             aria-label="Page Header"
-            className={`pt-2 flex justify-between items-center gap-4 lg:pt-0 lg:sticky lg:top-4 lg:h-[calc(100vh-2rem)] lg:flex-col lg:justify-between lg:items-center lg:w-16 xl:w-20 lg:shrink-0 lg:py-2 lg:px-2 ${className}`.trim()}
+            className={`pt-2 flex justify-between items-end lg:items-center gap-4 lg:pt-0 lg:sticky lg:top-4 lg:h-[calc(100vh-2rem)] lg:flex-col lg:justify-between lg:w-16 xl:w-20 lg:shrink-0 lg:py-2 lg:px-2 ${className}`.trim()}
         >
             <div className="min-w-0 flex-1 lg:flex-none lg:w-full lg:flex lg:flex-col lg:items-center">
                 <Link
@@ -48,7 +56,14 @@ export function Navbar({ className = '' }: { className?: string } = {}) {
                 </Link>
             </div>
 
-            <div className="shrink-0 lg:mt-auto lg:w-full lg:flex lg:items-center lg:justify-center">
+            <div className="shrink-0 flex items-center gap-2 self-end lg:self-auto lg:mt-auto lg:w-full lg:flex-col lg:gap-2 lg:items-center lg:justify-center">
+                <IconButton
+                    icon={IconHome2}
+                    onClick={handleHomeClick}
+                    title="Home"
+                    ariaLabel="Home"
+                    active={isHome}
+                />
                 <IconButton
                     icon={IconUser}
                     onClick={handleAccountClick}
