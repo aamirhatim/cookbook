@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { IconCarrot, IconHeart, IconNotebook, IconUser } from '@tabler/icons-react';
+import { IconCarrot, IconHeart, IconMilk, IconNotebook, IconUser } from '@tabler/icons-react';
 import { IconButton } from '../components/atoms/IconButton';
 import { useAuth } from '../contexts/AuthContext';
 import { useAuthModal } from '../hooks/useAuthModal';
@@ -53,7 +53,7 @@ export function Home() {
             <main className="w-full lg:flex-1 lg:min-w-0 space-y-8">
                 {user && (
                     <RecipeScrollSection
-                        title="Favorites"
+                        title="Your favorites"
                         icon={IconHeart}
                         filter={{ onlyFavorites: true }}
                         showFavorite={false}
@@ -69,6 +69,16 @@ export function Home() {
                         excludeTags: ['condiments', 'essentials'],
                     }}
                     showProteinVeg={false}
+                    onRecipeClick={handleRecipeClick}
+                />
+
+                <RecipeScrollSection
+                    title="For the pantry"
+                    icon={IconMilk}
+                    showTags={false}
+                    filter={{
+                        includeTags: ['condiments', 'pantry'],
+                    }}
                     onRecipeClick={handleRecipeClick}
                 />
 
