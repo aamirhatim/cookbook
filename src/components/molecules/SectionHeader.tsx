@@ -24,14 +24,14 @@ export const SectionHeader: React.FC<SectionHeaderProps> = ({
             return icon;
         }
         const IconComponent = icon as React.ComponentType<IconProps>;
-        return <IconComponent className="w-8 h-8 sm:w-10 sm:h-10 text-foreground shrink-0" stroke={1} />;
+        return <IconComponent className="w-8 h-8 text-foreground shrink-0" stroke={1} />;
     };
 
     return (
         <div className={`flex items-center justify-between mb-3 px-1 gap-4 ${className}`.trim()}>
             <div className="flex items-center gap-3 min-w-0">
                 {renderIcon()}
-                <h2 className="text-5xl caacupe-one-regular text-foreground truncate">
+                <h2 className="text-4xl caacupe-one-regular text-foreground truncate">
                     {title}
                 </h2>
             </div>

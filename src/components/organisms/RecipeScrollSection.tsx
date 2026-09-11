@@ -13,8 +13,10 @@ export interface RecipeScrollSectionFilter {
     isVeg?: boolean;
     cuisine?: string;
     tag?: string;
+    excludeTags?: string[];
     authorId?: string;
     onlyFavorites?: boolean;
+    predicate?: (recipe: Recipe) => boolean;
 }
 
 export interface RecipeScrollSectionProps {
@@ -76,6 +78,15 @@ export const RecipeScrollSection: React.FC<RecipeScrollSectionProps> = ({
                 return false;
             }
             if (filter.tag && !recipe.tags?.some((t) => t.toLowerCase() === filter.tag?.toLowerCase())) {
+                return false;
+            }
+            if (filter.excludeTags && filter.excludeTags.length > 0) {
+                const lowerExcluded = filter.excludeTags.map((t) => t.toLowerCase());
+                if (recipe.tags?.some((t) => lowerExcluded.includes(t.toLowerCase()))) {
+                    return false;
+                }
+            }
+            if (filter.predicate && !filter.predicate(recipe)) {
                 return false;
             }
             return true;
