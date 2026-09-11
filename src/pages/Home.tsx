@@ -63,7 +63,10 @@ export function Home() {
                 <RecipeScrollSection
                     title="Veg life"
                     icon={IconCarrot}
-                    filter={{ isVeg: true }}
+                    filter={{
+                        isVeg: true,
+                        excludeTags: ['condiments', 'essentials'],
+                    }}
                     onRecipeClick={handleRecipeClick}
                 />
 
