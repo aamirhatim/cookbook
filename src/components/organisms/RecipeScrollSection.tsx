@@ -6,6 +6,7 @@ import { RecipeTile } from './RecipeTile';
 import { subscribeToRecipes } from '../../services/recipes';
 import { useHorizontalScroll } from '../../hooks/useHorizontalScroll';
 import { useIsMobile } from '../../hooks/useIsMobile';
+import { useFavorites } from '../../hooks/useFavorites';
 import type { Recipe } from '../../types/recipe';
 
 export interface RecipeScrollSectionFilter {
@@ -13,6 +14,7 @@ export interface RecipeScrollSectionFilter {
     cuisine?: string;
     tag?: string;
     authorId?: string;
+    onlyFavorites?: boolean;
 }
 
 export interface RecipeScrollSectionProps {
@@ -33,6 +35,7 @@ export const RecipeScrollSection: React.FC<RecipeScrollSectionProps> = ({
     className = '',
 }) => {
     const isMobile = useIsMobile();
+    const { isFavorite, favorites, loading: favoritesLoading } = useFavorites();
     const [internalRecipes, setInternalRecipes] = useState<Recipe[]>([]);
     const [loading, setLoading] = useState<boolean>(!propRecipes);
 
@@ -63,6 +66,9 @@ export const RecipeScrollSection: React.FC<RecipeScrollSectionProps> = ({
     const displayedRecipes = React.useMemo(() => {
         if (!filter) return allRecipes;
         return allRecipes.filter((recipe) => {
+            if (filter.onlyFavorites && !isFavorite(recipe.id)) {
+                return false;
+            }
             if (filter.isVeg !== undefined && Boolean(recipe.isVeg) !== filter.isVeg) {
                 return false;
             }
@@ -74,7 +80,7 @@ export const RecipeScrollSection: React.FC<RecipeScrollSectionProps> = ({
             }
             return true;
         });
-    }, [allRecipes, filter]);
+    }, [allRecipes, filter, isFavorite]);
 
     const {
         containerRef,
@@ -86,6 +92,12 @@ export const RecipeScrollSection: React.FC<RecipeScrollSectionProps> = ({
         itemsToScroll: isMobile ? 1 : 2,
         dependencies: [displayedRecipes, isMobile],
     });
+
+    const isFavoritesEmpty = Boolean(filter?.onlyFavorites && !favoritesLoading && favorites.length === 0);
+
+    if (isFavoritesEmpty) {
+        return null;
+    }
 
     if (!loading && displayedRecipes.length === 0) {
         return null;

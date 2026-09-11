@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
-import { IconCarrot, IconNotebook, IconUser } from '@tabler/icons-react';
+import { IconCarrot, IconHeart, IconNotebook, IconUser } from '@tabler/icons-react';
 import { IconButton } from '../components/atoms/IconButton';
+import { useAuth } from '../contexts/AuthContext';
 import { useAuthModal } from '../hooks/useAuthModal';
 import { RecipeListContainer } from '../components/organisms/RecipeListContainer';
 import { RecipeScrollSection } from '../components/organisms/RecipeScrollSection';
@@ -9,6 +10,7 @@ import type { Recipe } from '../types/recipe';
 
 export function Home() {
     const navigate = useNavigate();
+    const { user } = useAuth();
     const { requireAuth } = useAuthModal();
 
     const handleAccountClick = () => {
@@ -49,6 +51,15 @@ export function Home() {
             </header>
 
             <main className="w-full lg:flex-1 lg:min-w-0 space-y-8">
+                {user && (
+                    <RecipeScrollSection
+                        title="Favorites"
+                        icon={IconHeart}
+                        filter={{ onlyFavorites: true }}
+                        onRecipeClick={handleRecipeClick}
+                    />
+                )}
+
                 <RecipeScrollSection
                     title="Veg life"
                     icon={IconCarrot}
