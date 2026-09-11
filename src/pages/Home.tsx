@@ -1,9 +1,10 @@
 import { useNavigate } from 'react-router-dom';
-import { IconCarrot, IconUser } from '@tabler/icons-react';
+import { IconCarrot, IconNotebook, IconUser } from '@tabler/icons-react';
 import { IconButton } from '../components/atoms/IconButton';
 import { useAuthModal } from '../hooks/useAuthModal';
 import { RecipeListContainer } from '../components/organisms/RecipeListContainer';
 import { RecipeScrollSection } from '../components/organisms/RecipeScrollSection';
+import { SectionHeader } from '../components/molecules/SectionHeader';
 import type { Recipe } from '../types/recipe';
 
 export function Home() {
@@ -55,10 +56,17 @@ export function Home() {
                     onRecipeClick={handleRecipeClick}
                 />
 
-                <RecipeListContainer
-                    filterPosition="top"
-                    onRecipeClick={handleRecipeClick}
-                />
+                <section aria-label="All Recipes">
+                    <SectionHeader
+                        title="All Recipes"
+                        icon={IconNotebook}
+                    />
+
+                    <RecipeListContainer
+                        filterPosition="top"
+                        onRecipeClick={handleRecipeClick}
+                    />
+                </section>
             </main>
         </div>
     );
