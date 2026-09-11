@@ -11,7 +11,7 @@ import {
     IconTool,
     IconPlus,
     IconMinus,
-    IconGlobe,
+    IconWorldMap,
     IconPencil,
 } from '@tabler/icons-react';
 import type { Recipe, ProteinType } from '../../types/recipe';
@@ -117,7 +117,7 @@ export const RecipeViewerHero: React.FC<RecipeViewerHeroProps> = ({
                         {/* 1. Cuisine */}
                         {recipe.cuisine && (
                             <Chip
-                                icon={IconGlobe}
+                                icon={IconWorldMap}
                                 text={recipe.cuisine}
                                 color="purple"
                                 bgColor="purple-bg"
