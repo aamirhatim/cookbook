@@ -90,6 +90,10 @@
 }
 
 /* Mobile touch responsiveness and base styling */
+html {
+    scrollbar-gutter: stable;
+}
+
 html,
 body {
     -webkit-tap-highlight-color: transparent;
