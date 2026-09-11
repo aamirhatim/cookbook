@@ -21,9 +21,9 @@ export function Account() {
     const handleSignOut = async () => {
         setIsLoggingOut(true);
         try {
+            navigate('/', { replace: true });
             await signOut(auth);
             showToast('Signed out successfully.', 'info');
-            navigate('/login', { replace: true, state: { from: { pathname: '/' } } });
         } catch (error) {
             console.error('Error signing out:', error);
             showToast('Failed to sign out. Please try again.', 'error');
@@ -37,7 +37,7 @@ export function Account() {
         try {
             await deleteUserAccount(user);
             showToast('Account successfully deleted.', 'info');
-            navigate('/login', { replace: true, state: { from: { pathname: '/' } } });
+            navigate('/', { replace: true });
         } catch (error: any) {
             console.error('Error deleting account:', error);
             if (error?.code === 'auth/requires-recent-login') {

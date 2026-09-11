@@ -1,12 +1,14 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { IconHome2, IconUser } from '@tabler/icons-react';
 import { IconButton } from '../atoms/IconButton';
+import { useAuth } from '../../contexts/AuthContext';
 import { useAuthModal } from '../../hooks/useAuthModal';
 
 export function Navbar({ className = '' }: { className?: string } = {}) {
     const location = useLocation();
     const navigate = useNavigate();
-    const { requireAuth } = useAuthModal();
+    const { user } = useAuth();
+    const { openLoginModal } = useAuthModal();
 
     const isHome = location.pathname === '/';
     const isAccount = location.pathname === '/account';
@@ -22,15 +24,11 @@ export function Navbar({ className = '' }: { className?: string } = {}) {
     const handleAccountClick = () => {
         if (isAccount) return;
 
-        requireAuth(
-            () => {
-                navigate('/account');
-            },
-            {
-                title: 'Account',
-                description: 'Sign in or create an account to view and manage your profile.',
-            }
-        );
+        if (user) {
+            navigate('/account');
+        } else {
+            openLoginModal();
+        }
     };
 
     return (

@@ -10,8 +10,6 @@ import { ScrollToTop } from './components/layout/ScrollToTop';
 import { IconLoader2 } from '@tabler/icons-react';
 
 const Home = lazy(() => import('./pages/Home').then((m) => ({ default: m.Home })));
-const Login = lazy(() => import('./pages/Login').then((m) => ({ default: m.Login })));
-const SignUp = lazy(() => import('./pages/SignUp').then((m) => ({ default: m.SignUp })));
 const AdminRecipesList = lazy(() => import('./pages/AdminRecipesList').then((m) => ({ default: m.AdminRecipesList })));
 const RecipeManager = lazy(() => import('./pages/RecipeManager').then((m) => ({ default: m.RecipeManager })));
 const AdminInspirations = lazy(() => import('./pages/AdminInspirations').then((m) => ({ default: m.AdminInspirations })));
@@ -40,8 +38,6 @@ export default function App() {
                             <main className="flex-1 min-w-0 w-full">
                                 <Suspense fallback={<RouteLoadingFallback />}>
                                     <Routes>
-                                        <Route path="/login" element={<Login />} />
-                                        <Route path="/signup" element={<SignUp />} />
 
                                         {/* Persistent MainLayout routes */}
                                         <Route element={<MainLayout />}>

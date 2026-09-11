@@ -5,9 +5,14 @@ import { useAuth } from '../../contexts/AuthContext';
 interface ProtectedRouteProps {
     children?: React.ReactNode;
     requireAdmin?: boolean;
+    redirectTo?: string;
 }
 
-export const ProtectedRoute = ({ children, requireAdmin = false }: ProtectedRouteProps) => {
+export const ProtectedRoute = ({
+    children,
+    requireAdmin = false,
+    redirectTo = '/',
+}: ProtectedRouteProps) => {
     const { user, isAdmin, loading } = useAuth();
     const location = useLocation();
 
@@ -20,8 +25,8 @@ export const ProtectedRoute = ({ children, requireAdmin = false }: ProtectedRout
     }
 
     if (!user) {
-        // Redirect them to the /login page, saving current location
-        return <Navigate to="/login" state={{ from: location }} replace />;
+        // Redirect them to the fallback route (defaults to '/'), saving current location
+        return <Navigate to={redirectTo} state={{ from: location }} replace />;
     }
 
     if (requireAdmin && !isAdmin) {

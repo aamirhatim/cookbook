@@ -33,12 +33,18 @@ export const AuthModalProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     const [modalOptions, setModalOptions] = useState<AuthModalOptions>({});
 
     const openSignUpModal = useCallback((options?: AuthModalOptions) => {
-        setModalOptions({ ...options, initialMode: 'signup' });
+        setModalOptions({
+            ...options,
+            initialMode: options?.initialMode || 'signup',
+        });
         setIsOpen(true);
     }, []);
 
     const openLoginModal = useCallback((options?: AuthModalOptions) => {
-        setModalOptions({ ...options, initialMode: 'login' });
+        setModalOptions({
+            ...options,
+            initialMode: options?.initialMode || 'login',
+        });
         setIsOpen(true);
     }, []);
 
@@ -52,7 +58,8 @@ export const AuthModalProvider: React.FC<{ children: React.ReactNode }> = ({ chi
             if (user) {
                 action();
             } else {
-                openSignUpModal({
+                const openModal = options?.initialMode === 'signup' ? openSignUpModal : openLoginModal;
+                openModal({
                     ...options,
                     onSuccess: () => {
                         options?.onSuccess?.();
@@ -61,7 +68,7 @@ export const AuthModalProvider: React.FC<{ children: React.ReactNode }> = ({ chi
                 });
             }
         },
-        [user, openSignUpModal]
+        [user, openLoginModal, openSignUpModal]
     );
 
     return (
