@@ -4,6 +4,7 @@ import { AuthProvider } from './contexts/AuthContext';
 import { ToastProvider } from './contexts/ToastContext';
 import { AuthModalProvider } from './contexts/AuthModalContext';
 import { FavoritesProvider } from './contexts/FavoritesContext';
+import { MainLayout } from './components/layout/MainLayout';
 import { ProtectedRoute } from './components/layout/ProtectedRoute';
 import { ScrollToTop } from './components/layout/ScrollToTop';
 import { IconLoader2 } from '@tabler/icons-react';
@@ -35,47 +36,53 @@ export default function App() {
                 <AuthModalProvider>
                     <FavoritesProvider>
                         <ScrollToTop />
-                    <div className="max-w-lg md:max-w-4xl lg:max-w-6xl xl:max-w-7xl mx-auto min-h-screen flex flex-col justify-between px-4 py-4">
-                    <main className="flex-1 min-w-0 w-full">
-                        <Suspense fallback={<RouteLoadingFallback />}>
-                            <Routes>
-                                <Route path="/login" element={<Login />} />
-                                <Route path="/signup" element={<SignUp />} />
+                        <div className="max-w-lg md:max-w-4xl lg:max-w-6xl xl:max-w-7xl mx-auto min-h-screen flex flex-col justify-between px-4 py-4">
+                            <main className="flex-1 min-w-0 w-full">
+                                <Suspense fallback={<RouteLoadingFallback />}>
+                                    <Routes>
+                                        <Route path="/login" element={<Login />} />
+                                        <Route path="/signup" element={<SignUp />} />
 
-                                {/* Public routes */}
-                                <Route path="/" element={<Home />} />
-                                <Route path="/recipes" element={<RecipesList />} />
-                                <Route path="/recipes/:recipeId" element={<RecipeViewer />} />
+                                        {/* Persistent MainLayout routes */}
+                                        <Route element={<MainLayout />}>
+                                            <Route path="/" element={<Home />} />
+                                            <Route path="/recipes" element={<RecipesList />} />
+                                            <Route path="/recipes/:recipeId" element={<RecipeViewer />} />
 
-                                {/* Protected member routes */}
-                                <Route element={<ProtectedRoute />}>
-                                    <Route path="/account" element={<Account />} />
-                                    <Route
-                                        path="/admin"
-                                        element={
-                                            <ProtectedRoute requireAdmin>
-                                                <RecipeManager />
-                                            </ProtectedRoute>
-                                        }
-                                    >
-                                        <Route index element={<Navigate to="/admin/recipes" replace />} />
-                                        <Route path="recipes" element={<AdminRecipesList />} />
-                                        <Route path="inspirations" element={<AdminInspirations />} />
-                                        <Route path="inpspirations" element={<Navigate to="/admin/inspirations" replace />} />
-                                    </Route>
-                                    <Route
-                                        path="/admin/recipes/:recipeId"
-                                        element={
-                                            <ProtectedRoute requireAdmin>
-                                                <RecipeEditor />
-                                            </ProtectedRoute>
-                                        }
-                                    />
-                                    </Route>
-                                </Routes>
-                            </Suspense>
-                        </main>
-                    </div>
+                                            {/* Protected member routes within MainLayout */}
+                                            <Route element={<ProtectedRoute />}>
+                                                <Route path="/account" element={<Account />} />
+                                            </Route>
+                                        </Route>
+
+                                        {/* Protected admin routes */}
+                                        <Route element={<ProtectedRoute />}>
+                                            <Route
+                                                path="/admin"
+                                                element={
+                                                    <ProtectedRoute requireAdmin>
+                                                        <RecipeManager />
+                                                    </ProtectedRoute>
+                                                }
+                                            >
+                                                <Route index element={<Navigate to="/admin/recipes" replace />} />
+                                                <Route path="recipes" element={<AdminRecipesList />} />
+                                                <Route path="inspirations" element={<AdminInspirations />} />
+                                                <Route path="inpspirations" element={<Navigate to="/admin/inspirations" replace />} />
+                                            </Route>
+                                            <Route
+                                                path="/admin/recipes/:recipeId"
+                                                element={
+                                                    <ProtectedRoute requireAdmin>
+                                                        <RecipeEditor />
+                                                    </ProtectedRoute>
+                                                }
+                                            />
+                                        </Route>
+                                    </Routes>
+                                </Suspense>
+                            </main>
+                        </div>
                     </FavoritesProvider>
                 </AuthModalProvider>
             </ToastProvider>

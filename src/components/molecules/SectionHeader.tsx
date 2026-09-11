@@ -31,7 +31,7 @@ export const SectionHeader: React.FC<SectionHeaderProps> = ({
         <div className={`flex items-center justify-between mb-3 px-1 gap-4 ${className}`.trim()}>
             <div className="flex items-center gap-3 min-w-0">
                 {renderIcon()}
-                <h2 className="text-4xl caacupe-one-regular text-foreground truncate">
+                <h2 className="text-2xl bungee-regular text-foreground truncate">
                     {title}
                 </h2>
             </div>

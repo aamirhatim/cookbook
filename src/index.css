@@ -111,6 +111,12 @@ body {
 }
 
 @layer utilities {
+    .bungee-regular {
+        font-family: "Bungee", sans-serif;
+        font-weight: 400;
+        font-style: normal;
+    }
+
     .bungee-tint-regular {
         font-family: "Bungee Tint", sans-serif;
         font-weight: 400;
