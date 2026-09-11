@@ -56,6 +56,7 @@ export function Home() {
                         title="Favorites"
                         icon={IconHeart}
                         filter={{ onlyFavorites: true }}
+                        showFavorite={false}
                         onRecipeClick={handleRecipeClick}
                     />
                 )}
@@ -67,6 +68,7 @@ export function Home() {
                         isVeg: true,
                         excludeTags: ['condiments', 'essentials'],
                     }}
+                    showProteinVeg={false}
                     onRecipeClick={handleRecipeClick}
                 />
 

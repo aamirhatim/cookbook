@@ -26,6 +26,10 @@ export interface RecipeScrollSectionProps {
     filter?: RecipeScrollSectionFilter;
     onRecipeClick?: (recipe: Recipe) => void;
     className?: string;
+    showTags?: boolean;
+    showCuisine?: boolean;
+    showProteinVeg?: boolean;
+    showFavorite?: boolean;
 }
 
 export const RecipeScrollSection: React.FC<RecipeScrollSectionProps> = ({
@@ -35,6 +39,10 @@ export const RecipeScrollSection: React.FC<RecipeScrollSectionProps> = ({
     filter,
     onRecipeClick,
     className = '',
+    showTags,
+    showCuisine,
+    showProteinVeg,
+    showFavorite,
 }) => {
     const isMobile = useIsMobile();
     const { isFavorite, favorites, loading: favoritesLoading } = useFavorites();
@@ -181,6 +189,10 @@ export const RecipeScrollSection: React.FC<RecipeScrollSectionProps> = ({
                             <RecipeTile
                                 recipe={recipe}
                                 onClick={onRecipeClick}
+                                showTags={showTags}
+                                showCuisine={showCuisine}
+                                showProteinVeg={showProteinVeg}
+                                showFavorite={showFavorite}
                             />
                         </div>
                     ))
