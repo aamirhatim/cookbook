@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
+import { IconUser } from '@tabler/icons-react';
 import { auth } from '../lib/firebase';
 import { useAuth } from '../contexts/AuthContext';
 import { useUserProfile } from '../hooks/useUserProfile';
 import { useToast } from '../hooks/useToast';
 import { deleteUserAccount } from '../services/users';
 import { AccountDetailsCard } from '../components/molecules/AccountDetailsCard';
+import { SectionHeader } from '../components/molecules/SectionHeader';
 
 export function Account() {
     const navigate = useNavigate();
@@ -49,12 +51,10 @@ export function Account() {
 
     return (
         <div className="space-y-6 w-full">
-            {/* Page Header */}
-            <header className="pt-2 flex items-center justify-between gap-4">
-                <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
-                    Account
-                </h1>
-            </header>
+            <SectionHeader
+                title="Account"
+                icon={IconUser}
+            />
 
             {/* Main Account Details Card */}
             <main className="w-full space-y-6">
