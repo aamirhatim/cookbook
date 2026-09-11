@@ -17,6 +17,14 @@ export interface RecipeTileProps {
     recipe: Recipe;
     onClick?: (recipe: Recipe) => void;
     className?: string;
+    /** Whether to show tags. Defaults to true. */
+    showTags?: boolean;
+    /** Whether to show cuisine badge. Defaults to true. */
+    showCuisine?: boolean;
+    /** Whether to show protein and vegetarian indicator icons. Defaults to true. */
+    showProteinVeg?: boolean;
+    /** Whether to show favorite heart button. Defaults to true. */
+    showFavorite?: boolean;
 }
 
 const difficultyIcons = {
@@ -29,6 +37,10 @@ export const RecipeTile: React.FC<RecipeTileProps> = ({
     recipe,
     onClick,
     className = '',
+    showTags = true,
+    showCuisine = true,
+    showProteinVeg = true,
+    showFavorite = true,
 }) => {
     const totalTime = (recipe.prepTimeMinutes || 0) + (recipe.cookTimeMinutes || 0);
 
@@ -47,6 +59,9 @@ export const RecipeTile: React.FC<RecipeTileProps> = ({
 
     const DifficultyIcon = recipe.difficulty ? difficultyIcons[recipe.difficulty] : null;
     const proteinList = (recipe.protein || []).filter((p): p is ProteinType => Boolean(PROTEIN_ICON_MAP[p]));
+    const hasVeg = showProteinVeg && Boolean(recipe.isVeg);
+    const hasProtein = showProteinVeg && proteinList.length > 0;
+    const hasDietary = hasVeg || hasProtein;
 
     return (
         <div
@@ -76,7 +91,7 @@ export const RecipeTile: React.FC<RecipeTileProps> = ({
                 {/* Floating Top Badges */}
                 <div className="absolute top-2.5 left-2.5 right-2.5 flex items-start justify-between pointer-events-none gap-2">
                     <div className="flex items-center gap-1.5">
-                        {recipe.cuisine && (
+                        {showCuisine && recipe.cuisine && (
                             <Chip
                                 icon={IconWorldMap}
                                 text={recipe.cuisine}
@@ -93,18 +108,20 @@ export const RecipeTile: React.FC<RecipeTileProps> = ({
                         )}
                     </div>
 
-                    <div className="pointer-events-auto">
-                        <FavoriteButton
-                            recipeId={recipe.id}
-                            recipeTitle={recipe.title}
-                            size="small"
-                            className="bg-background/85 backdrop-blur-md shadow-sm border border-border/50 hover:bg-background"
-                        />
-                    </div>
+                    {showFavorite && (
+                        <div className="pointer-events-auto">
+                            <FavoriteButton
+                                recipeId={recipe.id}
+                                recipeTitle={recipe.title}
+                                size="small"
+                                className="bg-background/85 backdrop-blur-md shadow-sm border border-border/50 hover:bg-background"
+                            />
+                        </div>
+                    )}
                 </div>
 
                 {/* Floating Bottom Tags */}
-                {recipe.tags && recipe.tags.length > 0 && (
+                {showTags && recipe.tags && recipe.tags.length > 0 && (
                     <div className="absolute bottom-2.5 right-2.5 flex items-center gap-1.5 pointer-events-none flex-wrap justify-end max-w-[85%]">
                         {(recipe.tags.length <= 3 ? recipe.tags : recipe.tags.slice(0, 2)).map((tag) => (
                             <span
@@ -153,11 +170,11 @@ export const RecipeTile: React.FC<RecipeTileProps> = ({
                             </div>
                         )}
 
-                        {DifficultyIcon && (recipe.isVeg || proteinList.length > 0) && <span>•</span>}
+                        {DifficultyIcon && hasDietary && <span>•</span>}
 
-                        {(recipe.isVeg || proteinList.length > 0) && (
+                        {hasDietary && (
                             <div className="flex items-center gap-1">
-                                {recipe.isVeg && (
+                                {hasVeg && (
                                     <span
                                         className="flex items-center"
                                         title="Vegetarian"
@@ -166,7 +183,7 @@ export const RecipeTile: React.FC<RecipeTileProps> = ({
                                         <IconCarrot className="w-3.5 h-3.5" stroke={1.5} />
                                     </span>
                                 )}
-                                {proteinList.map((protein) => {
+                                {hasProtein && proteinList.map((protein) => {
                                     const ProteinIcon = PROTEIN_ICON_MAP[protein];
                                     return (
                                         <span
