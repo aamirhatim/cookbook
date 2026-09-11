@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { IconCarrot, IconHeart, IconMilk, IconNotebook, IconUser } from '@tabler/icons-react';
+import { IconCarrot, IconHeart, IconMilk, IconNotebook, IconPlant2, IconUser } from '@tabler/icons-react';
 import { IconButton } from '../components/atoms/IconButton';
 import { useAuth } from '../contexts/AuthContext';
 import { useAuthModal } from '../hooks/useAuthModal';
@@ -78,6 +78,16 @@ export function Home() {
                     showTags={false}
                     filter={{
                         includeTags: ['condiments', 'pantry'],
+                    }}
+                    onRecipeClick={handleRecipeClick}
+                />
+
+                <RecipeScrollSection
+                    title="Desi foods"
+                    icon={IconPlant2}
+                    showCuisine={false}
+                    filter={{
+                        cuisine: ['india', 'pakistan', 'southeast asia', 'sri lanka'],
                     }}
                     onRecipeClick={handleRecipeClick}
                 />
