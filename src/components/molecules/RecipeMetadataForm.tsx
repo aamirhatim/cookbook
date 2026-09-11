@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   IconHexagonLetterE,
   IconHexagonLetterM,
@@ -43,15 +43,51 @@ export const RecipeMetadataForm: React.FC<RecipeMetadataFormProps> = ({
   onRemoveImage,
   disabled = false,
 }) => {
-  const handleTagsChange = (val: string) => {
-    const tagsArray = val.split(',').map((t) => t.trim()).filter(Boolean);
-    onChange('tags', tagsArray);
-  };
+    const [tagsInput, setTagsInput] = useState(() => (formData.tags || []).join(', '));
+    const [equipmentInput, setEquipmentInput] = useState(() => (formData.equipment || []).join(', '));
 
-  const handleEquipmentChange = (val: string) => {
-    const equipArray = val.split(',').map((e) => e.trim()).filter(Boolean);
-    onChange('equipment', equipArray);
-  };
+    const lastTagsEmittedRef = useRef<string>(JSON.stringify(formData.tags || []));
+    const lastEquipmentEmittedRef = useRef<string>(JSON.stringify(formData.equipment || []));
+
+    useEffect(() => {
+        const currentSerialized = JSON.stringify(formData.tags || []);
+        if (currentSerialized !== lastTagsEmittedRef.current) {
+            lastTagsEmittedRef.current = currentSerialized;
+            setTagsInput((formData.tags || []).join(', '));
+        }
+    }, [formData.tags]);
+
+    useEffect(() => {
+        const currentSerialized = JSON.stringify(formData.equipment || []);
+        if (currentSerialized !== lastEquipmentEmittedRef.current) {
+            lastEquipmentEmittedRef.current = currentSerialized;
+            setEquipmentInput((formData.equipment || []).join(', '));
+        }
+    }, [formData.equipment]);
+
+    const handleTagsChange = (val: string) => {
+        setTagsInput(val);
+        const tagsArray = val.split(',').map((t) => t.trim()).filter(Boolean);
+        lastTagsEmittedRef.current = JSON.stringify(tagsArray);
+        onChange('tags', tagsArray);
+    };
+
+    const handleTagsBlur = () => {
+        const formatted = (formData.tags || []).join(', ');
+        setTagsInput(formatted);
+    };
+
+    const handleEquipmentChange = (val: string) => {
+        setEquipmentInput(val);
+        const equipArray = val.split(',').map((e) => e.trim()).filter(Boolean);
+        lastEquipmentEmittedRef.current = JSON.stringify(equipArray);
+        onChange('equipment', equipArray);
+    };
+
+    const handleEquipmentBlur = () => {
+        const formatted = (formData.equipment || []).join(', ');
+        setEquipmentInput(formatted);
+    };
 
   const handleProteinToggle = (proteinItem: ProteinType) => {
     const current = formData.protein || [];
@@ -214,21 +250,23 @@ export const RecipeMetadataForm: React.FC<RecipeMetadataFormProps> = ({
         </div>
 
         <FormField label="Tags" helperText="Comma separated (e.g. healthy, quick, dinner)">
-          <Input
-            placeholder="healthy, quick"
-            value={formData.tags?.join(', ') || ''}
-            onChange={(e) => handleTagsChange(e.target.value)}
-            disabled={disabled}
-          />
+            <Input
+                placeholder="healthy, quick"
+                value={tagsInput}
+                onChange={(e) => handleTagsChange(e.target.value)}
+                onBlur={handleTagsBlur}
+                disabled={disabled}
+            />
         </FormField>
 
         <FormField label="Equipment" helperText="Comma separated (e.g. Dutch oven, Stand mixer, Skillet)">
-          <Input
-            placeholder="Dutch oven, Skillet"
-            value={formData.equipment?.join(', ') || ''}
-            onChange={(e) => handleEquipmentChange(e.target.value)}
-            disabled={disabled}
-          />
+            <Input
+                placeholder="Dutch oven, Skillet"
+                value={equipmentInput}
+                onChange={(e) => handleEquipmentChange(e.target.value)}
+                onBlur={handleEquipmentBlur}
+                disabled={disabled}
+            />
         </FormField>
 
         <RecipeUrlsFields
