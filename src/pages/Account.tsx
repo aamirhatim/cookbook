@@ -1,14 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
-import { IconArrowLeft } from '@tabler/icons-react';
 import { auth } from '../lib/firebase';
 import { useAuth } from '../contexts/AuthContext';
 import { useUserProfile } from '../hooks/useUserProfile';
 import { useToast } from '../hooks/useToast';
 import { deleteUserAccount } from '../services/users';
 import { AccountDetailsCard } from '../components/molecules/AccountDetailsCard';
-import { IconButton } from '../components/atoms/IconButton';
 
 export function Account() {
     const navigate = useNavigate();
@@ -49,32 +47,13 @@ export function Account() {
         }
     };
 
-    const handleBack = () => {
-        if (window.history.length > 2) {
-            navigate(-1);
-        } else {
-            navigate('/', { replace: true });
-        }
-    };
-
     return (
         <div className="space-y-6 w-full">
-            {/* Top Navigation Header */}
+            {/* Page Header */}
             <header className="pt-2 flex items-center justify-between gap-4">
-                <div className="flex items-center space-x-3">
-                    <IconButton
-                        icon={IconArrowLeft}
-                        onClick={handleBack}
-                        title="Go back"
-                        ariaLabel="Go back"
-                        className="shrink-0"
-                    />
-                    <div>
-                        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
-                            Account
-                        </h1>
-                    </div>
-                </div>
+                <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
+                    Account
+                </h1>
             </header>
 
             {/* Main Account Details Card */}

@@ -12,9 +12,11 @@ import {
     IconPlus,
     IconMinus,
     IconGlobe,
+    IconPencil,
 } from '@tabler/icons-react';
 import type { Recipe, ProteinType } from '../../types/recipe';
 import { Chip } from '../atoms/Chip';
+import { IconButton } from '../atoms/IconButton';
 import { FavoriteButton } from '../molecules/FavoriteButton';
 import { RecipeInspiration } from '../molecules/RecipeInspiration';
 import { PROTEIN_ICON_MAP, PROTEIN_LABEL_MAP } from '../atoms/proteinIcons';
@@ -24,6 +26,7 @@ export interface RecipeViewerHeroProps {
     className?: string;
     servings?: number;
     onServingsChange?: (servings: number) => void;
+    onEdit?: () => void;
 }
 
 const difficultyIcons = {
@@ -37,6 +40,7 @@ export const RecipeViewerHero: React.FC<RecipeViewerHeroProps> = ({
     className = '',
     servings: controlledServings,
     onServingsChange,
+    onEdit,
 }) => {
     const baseServings = recipe.servings && recipe.servings > 0 ? recipe.servings : 1;
     const currentServings = controlledServings !== undefined ? controlledServings : baseServings;
@@ -78,13 +82,25 @@ export const RecipeViewerHero: React.FC<RecipeViewerHeroProps> = ({
                     <h1 className="text-5xl caacupe-one-regular text-foreground flex-1 min-w-0">
                         {recipe.title}
                     </h1>
-                    <FavoriteButton
-                        recipeId={recipe.id}
-                        recipeTitle={recipe.title}
-                        size="default"
-                        variant="subtle"
-                        className="shrink-0"
-                    />
+                    <div className="flex items-center gap-2 shrink-0">
+                        {onEdit && (
+                            <IconButton
+                                icon={IconPencil}
+                                onClick={onEdit}
+                                title="Edit recipe in admin editor"
+                                ariaLabel="Edit recipe"
+                                size="default"
+                                variant="subtle"
+                            />
+                        )}
+                        <FavoriteButton
+                            recipeId={recipe.id}
+                            recipeTitle={recipe.title}
+                            size="default"
+                            variant="subtle"
+                            className="shrink-0"
+                        />
+                    </div>
                 </div>
 
                 <RecipeInspiration urls={recipe.urls} className="pt-0.5" />

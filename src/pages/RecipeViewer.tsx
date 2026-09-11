@@ -1,10 +1,9 @@
 import { useEffect, useState, useRef, useMemo } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { IconArrowLeft, IconPencil, IconLoader2, IconAlertCircle } from '@tabler/icons-react';
+import { IconLoader2, IconAlertCircle } from '@tabler/icons-react';
 import { getRecipe } from '../services/recipes';
 import type { Recipe } from '../types/recipe';
 import { useAuth } from '../contexts/AuthContext';
-import { IconButton } from '../components/atoms/IconButton';
 import { RecipeViewerHero } from '../components/organisms/RecipeViewerHero';
 import { RecipeViewerIngredients, type RecipeViewerIngredientsHandle } from '../components/organisms/RecipeViewerIngredients';
 import { RecipeViewerInstructions, type RecipeViewerInstructionsHandle } from '../components/organisms/RecipeViewerInstructions';
@@ -84,13 +83,6 @@ export function RecipeViewer() {
         }));
     }, [recipe?.ingredients, scaleRatio]);
 
-    const handleBack = () => {
-        if (window.history.length > 1) {
-            navigate(-1);
-        } else {
-            navigate('/recipes');
-        }
-    };
 
     const handleScrollToTop = () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -120,28 +112,14 @@ export function RecipeViewer() {
         }
     };
 
+    const handleEdit = () => {
+        if (recipe) {
+            navigate(`/admin/recipes/${recipe.id}`, { state: { recipe } });
+        }
+    };
+
     return (
         <div className="space-y-6 w-full pb-16">
-            {/* Navigation Header */}
-            <header className="pt-2 flex items-center justify-between gap-3">
-                <IconButton
-                    icon={IconArrowLeft}
-                    onClick={handleBack}
-                    title="Back to Recipes"
-                    ariaLabel="Back to Recipes"
-                    className="shrink-0"
-                />
-
-                {isAdmin && recipe && (
-                    <IconButton
-                        icon={IconPencil}
-                        onClick={() => navigate(`/admin/recipes/${recipe.id}`, { state: { recipe } })}
-                        title="Edit recipe in admin editor"
-                        ariaLabel="Edit recipe"
-                        className="shrink-0"
-                    />
-                )}
-            </header>
 
             {/* Content Area */}
             <main className="w-full">
@@ -176,6 +154,7 @@ export function RecipeViewer() {
                                 recipe={recipe}
                                 servings={currentServings}
                                 onServingsChange={setServings}
+                                onEdit={isAdmin ? handleEdit : undefined}
                             />
                             <RecipeViewerIngredients
                                 ref={ingredientsRef}
