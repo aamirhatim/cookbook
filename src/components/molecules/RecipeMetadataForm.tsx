@@ -190,8 +190,8 @@ export const RecipeMetadataForm: React.FC<RecipeMetadataFormProps> = ({
                                     diff === 'easy'
                                         ? IconHexagonLetterE
                                         : diff === 'medium'
-                                        ? IconHexagonLetterM
-                                        : IconHexagonLetterH;
+                                            ? IconHexagonLetterM
+                                            : IconHexagonLetterH;
                                 const label = diff.charAt(0).toUpperCase() + diff.slice(1);
                                 return (
                                     <IconButton
@@ -215,8 +215,8 @@ export const RecipeMetadataForm: React.FC<RecipeMetadataFormProps> = ({
                         </div>
                     </FormField>
 
-                    <FormField label="Protein & Veg" className="shrink-0">
-                        <div className="flex items-center gap-1.5 sm:gap-2 h-11" role="group" aria-label="Protein and vegetarian selection">
+                    <FormField label="Veg?" className="shrink-0">
+                        <div className="flex items-center h-11">
                             <IconButton
                                 type="button"
                                 icon={IconCarrot}
@@ -224,13 +224,17 @@ export const RecipeMetadataForm: React.FC<RecipeMetadataFormProps> = ({
                                 active={formData.isVeg || false}
                                 onClick={() => onChange('isVeg', !formData.isVeg)}
                                 title={formData.isVeg ? 'Vegetarian (Active)' : 'Mark as Vegetarian'}
-                                ariaLabel="Vegetarian"
+                                ariaLabel="Veg?"
                                 variant="subtle"
                                 iconSize={22}
                                 iconStroke={1.5}
                                 disabled={disabled}
                             />
-                            <div className="w-px h-6 bg-border/60 mx-0.5" />
+                        </div>
+                    </FormField>
+
+                    <FormField label="Proteins" className="shrink-0">
+                        <div className="flex items-center gap-1.5 sm:gap-2 h-11" role="group" aria-label="Protein selection">
                             {PROTEIN_OPTIONS.map((item) => {
                                 const isSelected = formData.protein?.includes(item.value) ?? false;
                                 return (
