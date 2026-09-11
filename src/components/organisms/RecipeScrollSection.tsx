@@ -133,7 +133,7 @@ export const RecipeScrollSection: React.FC<RecipeScrollSectionProps> = ({
         return null;
     }
 
-    const buttonSize = isMobile ? 'medium' : 'small';
+    const buttonSize = 'small';
 
     const scrollActions = (
         <>
