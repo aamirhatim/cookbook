@@ -8,8 +8,6 @@ import {
     IconCanary,
     IconMeat,
     IconCube,
-    IconMinus,
-    IconPlus,
 } from '@tabler/icons-react';
 import type { Recipe, Difficulty, ProteinType } from '../../types/recipe';
 import { Input } from '../atoms/Input';
@@ -18,6 +16,7 @@ import { IconButton } from '../atoms/IconButton';
 import { FormField } from './FormField';
 import { RecipeImageUploader } from './RecipeImageUploader';
 import { RecipeUrlsFields } from './RecipeUrlsFields';
+import { StepperInput } from './StepperInput';
 
 export interface RecipeMetadataFormProps {
     formData: Partial<Recipe>;
@@ -99,21 +98,6 @@ export const RecipeMetadataForm: React.FC<RecipeMetadataFormProps> = ({
         onChange('protein', next);
     };
 
-    const handleTimeStep = (field: 'prepTimeMinutes' | 'cookTimeMinutes', delta: number, isFine: boolean = false) => {
-        const current = formData[field] || 0;
-        if (isFine) {
-            onChange(field, Math.max(0, current + delta));
-            return;
-        }
-        const step = 5;
-        if (delta > 0) {
-            onChange(field, Math.floor(current / step) * step + step);
-        } else {
-            const next = Math.ceil(current / step) * step - step;
-            onChange(field, Math.max(0, next));
-        }
-    };
-
     return (
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6 lg:gap-8 items-stretch">
             {/* Left Column: Image, Title, Description */}
@@ -159,128 +143,44 @@ export const RecipeMetadataForm: React.FC<RecipeMetadataFormProps> = ({
 
                 <div className="grid grid-cols-2 gap-3 sm:gap-4">
                     <FormField label="Prep Time (min)">
-                        <div className="flex items-center gap-1 sm:gap-1.5 h-11">
-                            <IconButton
-                                type="button"
-                                icon={IconMinus}
-                                onClick={(e) => handleTimeStep('prepTimeMinutes', -1, e.shiftKey)}
-                                disabled={disabled || (formData.prepTimeMinutes || 0) <= 0}
-                                title="Decrease prep time (Shift+click for 1 min)"
-                                ariaLabel="Decrease prep time"
-                                variant="subtle"
-                                iconSize={18}
-                                iconStroke={2}
-                                className="shrink-0"
-                            />
-                            <Input
-                                type="number"
-                                min={0}
-                                placeholder="0"
-                                value={formData.prepTimeMinutes || ''}
-                                onChange={(e) => {
-                                    const val = parseInt(e.target.value, 10);
-                                    onChange('prepTimeMinutes', isNaN(val) ? 0 : Math.max(0, val));
-                                }}
-                                disabled={disabled}
-                                className="flex-1 min-w-0 text-center px-1 font-semibold [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                            />
-                            <IconButton
-                                type="button"
-                                icon={IconPlus}
-                                onClick={(e) => handleTimeStep('prepTimeMinutes', 1, e.shiftKey)}
-                                disabled={disabled}
-                                title="Increase prep time (Shift+click for 1 min)"
-                                ariaLabel="Increase prep time"
-                                variant="subtle"
-                                iconSize={18}
-                                iconStroke={2}
-                                className="shrink-0"
-                            />
-                        </div>
+                        <StepperInput
+                            value={formData.prepTimeMinutes}
+                            onChange={(val) => onChange('prepTimeMinutes', val)}
+                            min={0}
+                            step={5}
+                            fieldSize="full"
+                            placeholder="0"
+                            ariaLabel="Prep Time"
+                            disabled={disabled}
+                        />
                     </FormField>
 
                     <FormField label="Cook Time (min)">
-                        <div className="flex items-center gap-1 sm:gap-1.5 h-11">
-                            <IconButton
-                                type="button"
-                                icon={IconMinus}
-                                onClick={(e) => handleTimeStep('cookTimeMinutes', -1, e.shiftKey)}
-                                disabled={disabled || (formData.cookTimeMinutes || 0) <= 0}
-                                title="Decrease cook time (Shift+click for 1 min)"
-                                ariaLabel="Decrease cook time"
-                                variant="subtle"
-                                iconSize={18}
-                                iconStroke={2}
-                                className="shrink-0"
-                            />
-                            <Input
-                                type="number"
-                                min={0}
-                                placeholder="0"
-                                value={formData.cookTimeMinutes || ''}
-                                onChange={(e) => {
-                                    const val = parseInt(e.target.value, 10);
-                                    onChange('cookTimeMinutes', isNaN(val) ? 0 : Math.max(0, val));
-                                }}
-                                disabled={disabled}
-                                className="flex-1 min-w-0 text-center px-1 font-semibold [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                            />
-                            <IconButton
-                                type="button"
-                                icon={IconPlus}
-                                onClick={(e) => handleTimeStep('cookTimeMinutes', 1, e.shiftKey)}
-                                disabled={disabled}
-                                title="Increase cook time (Shift+click for 1 min)"
-                                ariaLabel="Increase cook time"
-                                variant="subtle"
-                                iconSize={18}
-                                iconStroke={2}
-                                className="shrink-0"
-                            />
-                        </div>
+                        <StepperInput
+                            value={formData.cookTimeMinutes}
+                            onChange={(val) => onChange('cookTimeMinutes', val)}
+                            min={0}
+                            step={5}
+                            fieldSize="full"
+                            placeholder="0"
+                            ariaLabel="Cook Time"
+                            disabled={disabled}
+                        />
                     </FormField>
                 </div>
 
                 <div className="flex items-start gap-3 sm:gap-4 flex-wrap">
                     <FormField label="Servings" className="shrink-0">
-                        <div className="flex items-center gap-1.5 h-11">
-                            <IconButton
-                                type="button"
-                                icon={IconMinus}
-                                onClick={() => onChange('servings', Math.max(1, (formData.servings || 1) - 1))}
-                                disabled={disabled || (formData.servings || 1) <= 1}
-                                title="Decrease servings"
-                                ariaLabel="Decrease servings"
-                                variant="subtle"
-                                iconSize={18}
-                                iconStroke={2}
-                                className="shrink-0"
-                            />
-                            <Input
-                                type="number"
-                                min={1}
-                                placeholder="1"
-                                value={formData.servings || ''}
-                                onChange={(e) => {
-                                    const val = parseInt(e.target.value, 10);
-                                    onChange('servings', isNaN(val) ? 1 : Math.max(1, val));
-                                }}
-                                disabled={disabled}
-                                className="w-14 sm:w-16 text-center px-1 font-semibold [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                            />
-                            <IconButton
-                                type="button"
-                                icon={IconPlus}
-                                onClick={() => onChange('servings', (formData.servings || 1) + 1)}
-                                disabled={disabled}
-                                title="Increase servings"
-                                ariaLabel="Increase servings"
-                                variant="subtle"
-                                iconSize={18}
-                                iconStroke={2}
-                                className="shrink-0"
-                            />
-                        </div>
+                        <StepperInput
+                            value={formData.servings}
+                            onChange={(val) => onChange('servings', val)}
+                            min={1}
+                            step={1}
+                            fieldSize="compact"
+                            placeholder="1"
+                            ariaLabel="Servings"
+                            disabled={disabled}
+                        />
                     </FormField>
 
                     <FormField label="Difficulty" className="shrink-0">
