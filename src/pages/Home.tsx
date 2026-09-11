@@ -18,7 +18,7 @@ export function Home() {
         <div className="w-full space-y-8">
             {user && (
                 <RecipeScrollSection
-                    title="Your favorites"
+                    title="Favorites"
                     icon={IconHeart}
                     filter={{ onlyFavorites: true }}
                     showFavorite={false}
