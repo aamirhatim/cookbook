@@ -84,7 +84,6 @@ export const RecipeTile: React.FC<RecipeTileProps> = ({
                 ) : (
                     <div className="w-full h-full flex flex-col items-center justify-center text-muted-foreground gap-1">
                         <IconChefHat className="w-10 h-10" stroke={1} />
-                        <span className="text-[11px] font-medium tracking-wide uppercase">No Image</span>
                     </div>
                 )}
 
