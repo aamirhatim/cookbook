@@ -16,6 +16,8 @@ ui-debug.log*
 .runtimecache
 emulator-data/
 firebase-export-*
+*service-account*.json
+serviceAccountKey*.json
 
 # User notes and documentation
 .agents/TASKS.md
