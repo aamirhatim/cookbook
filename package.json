@@ -12,7 +12,8 @@
         "emulators": "JAVA_HOME=/Library/Java/JavaVirtualMachines/temurin-25.jdk/Contents/Home firebase emulators:start --import=./emulator-data --export-on-exit=./emulator-data",
         "emulators:export": "firebase emulators:export ./emulator-data -f",
         "set-admin": "node scripts/set-admin.mjs",
-        "set-admin:prod": "node scripts/set-admin.mjs --prod"
+        "set-admin:prod": "node scripts/set-admin.mjs --prod",
+        "migrate:prod": "node scripts/migrate-to-prod.mjs"
     },
     "dependencies": {
         "@tabler/icons-react": "^3.46.0",
