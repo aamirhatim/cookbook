@@ -34,7 +34,7 @@ export default function App() {
                 <AuthModalProvider>
                     <FavoritesProvider>
                         <ScrollToTop />
-                        <div className="max-w-lg md:max-w-4xl lg:max-w-6xl xl:max-w-7xl mx-auto min-h-screen flex flex-col justify-between px-4 py-4">
+                        <div className="max-w-lg md:max-w-4xl lg:max-w-6xl xl:max-w-7xl mx-auto min-h-screen flex flex-col justify-between px-4 pt-safe pb-safe">
                             <main className="flex-1 min-w-0 w-full">
                                 <Suspense fallback={<RouteLoadingFallback />}>
                                     <Routes>
