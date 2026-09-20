@@ -170,7 +170,7 @@ export const RecipeScrollSection: React.FC<RecipeScrollSectionProps> = ({
             <div
                 ref={containerRef}
                 onScroll={updateScrollBounds}
-                className="flex gap-4 overflow-x-auto no-scrollbar scroll-smooth snap-x snap-mandatory -mx-4 px-4 scroll-px-4 lg:mx-0 lg:px-1 lg:scroll-px-1 py-1 focus:outline-none"
+                className="flex gap-4 overflow-x-auto no-scrollbar scroll-smooth snap-x snap-mandatory -mx-4 px-4 scroll-px-4 lg:-mx-2 lg:px-2 lg:scroll-px-2 py-3.5 -my-2.5 focus:outline-none"
                 tabIndex={0}
                 role="region"
                 aria-label={`${title} recipes`}
