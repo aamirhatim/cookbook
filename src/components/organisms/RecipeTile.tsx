@@ -86,8 +86,8 @@ export const RecipeTile: React.FC<RecipeTileProps> = ({
                             <Chip
                                 icon={IconWorldMap}
                                 text={recipe.cuisine}
-                                color="purple"
-                                bgColor="purple-bg"
+                                color="yellow"
+                                bgColor="yellow-bg"
                                 capitalize
                                 className="backdrop-blur-md shadow-xs"
                             />

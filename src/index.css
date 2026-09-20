@@ -7,67 +7,74 @@
         color-scheme: light dark;
 
         /* Base Canvas & Surfaces */
-        --background: light-dark(#fafaf9, #141210);
-        --foreground: light-dark(#1c1917, #f5f5f4);
-        --surface: light-dark(#ffffff, #1c1917);
-        --surface-hover: light-dark(#f5f5f4, #292524);
-        --surface-foreground: light-dark(#1c1917, #f5f5f4);
+        --background: light-dark(#F0EEE9, #151413);
+        --foreground: light-dark(#1E1C1A, #F0EEE9);
+        --surface: light-dark(#FDFCFA, #201E1C);
+        --surface-hover: light-dark(#E7E3DB, #2B2926);
+        --surface-foreground: light-dark(#1E1C1A, #EDE9E3);
 
         /* Brand / Primary (Culinary warm amber) */
-        --primary: light-dark(#d97706, #f59e0b);
-        --primary-foreground: light-dark(#ffffff, #1c1917);
+        --primary: light-dark(#FF8D00, #FFA02E);
+        --primary-foreground: light-dark(#1E1C1A, #F0EEE9);
 
         /* Secondary */
-        --secondary: light-dark(#fef3c7, #292524);
-        --secondary-foreground: light-dark(#92400e, #fde68a);
+        --secondary: light-dark(#D5D5D8, #2C2B2E);
+        --secondary-foreground: light-dark(#1E1C1A, #D5D5D8);
 
         /* Tertiary */
-        --tertiary: light-dark(#f3f4f6, #262626);
-        --tertiary-foreground: light-dark(#374151, #d4d4d4);
+        --tertiary: light-dark(#E2E1E4, #232225);
+        --tertiary-foreground: light-dark(#343230, #B5B4B8);
 
         /* Muted & Subdued Elements */
-        --muted: light-dark(#f5f5f4, #292524);
-        --muted-foreground: light-dark(#78716c, #a8a29e);
+        --muted: light-dark(#E5E4E2, #1E1D20);
+        --muted-foreground: light-dark(#6F6D6B, #8C8A8F);
 
         /* Accents */
-        --accent: light-dark(#f59e0b, #d97706);
-        --accent-foreground: light-dark(#ffffff, #ffffff);
+        --accent: var(--primary);
+        --accent-foreground: var(--primary-foreground);
 
         /* Feedback & Destructive */
-        --destructive: light-dark(#ef4444, #dc2626);
-        --destructive-foreground: light-dark(#ffffff, #fee2e2);
+        --destructive: light-dark(#DC2626, #F87171);
+        --destructive-foreground: light-dark(#FFFFFF, #151413);
 
         /* Favorites */
-        --favorite: light-dark(#e11d48, #fb7185);
+        --favorite: light-dark(#E4445E, #F06A80);
         --favorite-foreground: light-dark(#ffffff, #1c1917);
         --favorites: var(--favorite);
         --favorites-foreground: var(--favorite-foreground);
 
         /* Purple */
         --purple: var(--purple-fg);
-        --purple-fg: light-dark(#7e22ce, #c084fc);
+        --purple-fg: light-dark(#4A2E55, #E4DCE7);
         --purple-foreground: var(--purple-bg);
-        --purple-bg: light-dark(#f3e8ff, #2e1065);
+        --purple-bg: light-dark(#E4DCE7, #26192B);
         --purple-background: var(--purple-bg);
 
         /* Green */
         --green: var(--green-fg);
-        --green-fg: light-dark(#15803d, #4ade80);
+        --green-fg: light-dark(#1D4326, #C8E4CA);
         --green-foreground: var(--green-bg);
-        --green-bg: light-dark(#dcfce7, #052e16);
+        --green-bg: light-dark(#C8E4CA, #14281B);
         --green-background: var(--green-bg);
 
         /* Blue */
         --blue: var(--blue-fg);
-        --blue-fg: light-dark(#1d4ed8, #60a5fa);
+        --blue-fg: light-dark(#0F3854, #BAE0F3);
         --blue-foreground: var(--blue-bg);
-        --blue-bg: light-dark(#dbeafe, #172554);
+        --blue-bg: light-dark(#BAE0F3, #122634);
         --blue-background: var(--blue-bg);
+
+        /* Yellow */
+        --yellow: var(--yellow-fg);
+        --yellow-fg: light-dark(#544310, #F4EFC8);
+        --yellow-foreground: var(--yellow-bg);
+        --yellow-bg: light-dark(#F4EFC8, #2B240F);
+        --yellow-background: var(--yellow-bg);
 
         /* Borders, Inputs, Focus Rings */
         --border: light-dark(#e7e5e4, #292524);
         --input: light-dark(#e7e5e4, #292524);
-        --ring: light-dark(#d97706, #f59e0b);
+        --ring: var(--primary);
     }
 
     .dark {
@@ -104,15 +111,15 @@ body {
 @font-palette-values --bungee-culinary {
     font-family: "Bungee Tint";
     override-colors:
-        0 #d97706,
-        1 #fef3c7;
+        0 #FF8D00,
+        1 #F0EEE9;
 }
 
 @font-palette-values --bungee-culinary-dark {
     font-family: "Bungee Tint";
     override-colors:
-        0 #f59e0b,
-        1 #451a03;
+        0 #FFA02E,
+        1 #151413;
 }
 
 @layer utilities {

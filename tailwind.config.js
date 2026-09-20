@@ -75,6 +75,11 @@ export default {
                     foreground: withOpacity('--blue-foreground'),
                     bg: withOpacity('--blue-bg'),
                 },
+                yellow: {
+                    DEFAULT: withOpacity('--yellow'),
+                    foreground: withOpacity('--yellow-foreground'),
+                    bg: withOpacity('--yellow-bg'),
+                },
                 border: withOpacity('--border'),
                 input: withOpacity('--input'),
                 ring: withOpacity('--ring'),

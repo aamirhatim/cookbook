@@ -100,18 +100,18 @@ export function getButtonVariantClasses(
             if (isActive) {
                 switch (normalizedColor) {
                     case 'favorite':
-                        return 'bg-surface text-favorite border-2 border-favorite hover:bg-surface-hover hover:text-favorite active:bg-surface-hover shadow-sm focus:ring-favorite/30';
+                        return 'bg-surface text-favorite border-1 border-favorite hover:bg-surface-hover hover:text-favorite active:bg-surface-hover shadow-sm focus:ring-favorite/30';
                     case 'destructive':
-                        return 'bg-surface text-destructive border-2 border-destructive hover:bg-surface-hover hover:text-destructive active:bg-surface-hover shadow-sm focus:ring-destructive/30';
+                        return 'bg-surface text-destructive border-1 border-destructive hover:bg-surface-hover hover:text-destructive active:bg-surface-hover shadow-sm focus:ring-destructive/30';
                     case 'accent':
-                        return 'bg-surface text-accent border-2 border-accent hover:bg-surface-hover hover:text-accent active:bg-surface-hover shadow-sm focus:ring-accent/30';
+                        return 'bg-surface text-accent border-1 border-accent hover:bg-surface-hover hover:text-accent active:bg-surface-hover shadow-sm focus:ring-accent/30';
                     case 'secondary':
-                        return 'bg-secondary text-secondary-foreground border-2 border-secondary hover:bg-secondary/90 shadow-sm active:bg-secondary/80';
+                        return 'bg-secondary text-secondary-foreground border-1 border-secondary hover:bg-secondary/90 shadow-sm active:bg-secondary/80';
                     case 'muted':
-                        return 'bg-muted text-foreground border-2 border-border hover:bg-muted/80 shadow-sm active:bg-muted/70';
+                        return 'bg-muted text-foreground border-1 border-border hover:bg-muted/80 shadow-sm active:bg-muted/70';
                     case 'primary':
                     default:
-                        return 'bg-surface text-primary border-2 border-primary hover:bg-surface-hover hover:text-primary active:bg-surface-hover shadow-sm';
+                        return 'bg-surface text-primary border-1 border-primary hover:bg-surface-hover hover:text-primary active:bg-surface-hover shadow-sm';
                 }
             }
             return 'bg-surface text-muted-foreground border-border hover:bg-surface-hover hover:text-foreground active:bg-surface-hover';
@@ -140,18 +140,18 @@ export function getButtonVariantClasses(
             if (isActive) {
                 switch (normalizedColor) {
                     case 'favorite':
-                        return 'bg-surface text-favorite border-2 border-favorite/40 hover:bg-surface-hover hover:text-favorite active:bg-surface-hover shadow-xs focus:ring-favorite/30';
+                        return 'bg-surface text-favorite border-1 border-favorite/40 hover:bg-surface-hover hover:text-favorite active:bg-surface-hover shadow-xs focus:ring-favorite/30';
                     case 'destructive':
-                        return 'bg-surface text-destructive border-2 border-destructive/40 hover:bg-surface-hover hover:text-destructive active:bg-surface-hover shadow-xs focus:ring-destructive/30';
+                        return 'bg-surface text-destructive border-1 border-destructive/40 hover:bg-surface-hover hover:text-destructive active:bg-surface-hover shadow-xs focus:ring-destructive/30';
                     case 'accent':
-                        return 'bg-surface text-accent border-2 border-accent/40 hover:bg-surface-hover hover:text-accent active:bg-surface-hover shadow-xs focus:ring-accent/30';
+                        return 'bg-surface text-accent border-1 border-accent/40 hover:bg-surface-hover hover:text-accent active:bg-surface-hover shadow-xs focus:ring-accent/30';
                     case 'secondary':
-                        return 'bg-secondary/50 text-secondary-foreground border-2 border-secondary/60 hover:bg-secondary/70 active:bg-secondary/80 shadow-xs';
+                        return 'bg-secondary/50 text-secondary-foreground border-1 border-secondary/60 hover:bg-secondary/70 active:bg-secondary/80 shadow-xs';
                     case 'muted':
-                        return 'bg-surface text-muted-foreground border-2 border-border hover:bg-surface-hover active:bg-surface-hover shadow-xs';
+                        return 'bg-surface text-muted-foreground border-1 border-border hover:bg-surface-hover active:bg-surface-hover shadow-xs';
                     case 'primary':
                     default:
-                        return 'bg-surface text-primary border-2 border-primary/40 hover:bg-surface-hover hover:text-primary active:bg-surface-hover shadow-xs';
+                        return 'bg-surface text-primary border-1 border-primary/40 hover:bg-surface-hover hover:text-primary active:bg-surface-hover shadow-xs';
                 }
             }
             switch (normalizedColor) {
@@ -193,14 +193,14 @@ export function getButtonVariantClasses(
             if (isActive) {
                 switch (normalizedColor) {
                     case 'favorite':
-                        return 'bg-transparent text-favorite border-2 border-favorite hover:bg-surface-hover hover:text-favorite active:bg-surface-hover';
+                        return 'bg-transparent text-favorite border-1 border-favorite hover:bg-surface-hover hover:text-favorite active:bg-surface-hover';
                     case 'destructive':
-                        return 'bg-transparent text-destructive border-2 border-destructive hover:bg-surface-hover hover:text-destructive active:bg-surface-hover';
+                        return 'bg-transparent text-destructive border-1 border-destructive hover:bg-surface-hover hover:text-destructive active:bg-surface-hover';
                     case 'accent':
-                        return 'bg-transparent text-accent border-2 border-accent hover:bg-surface-hover hover:text-accent active:bg-surface-hover';
+                        return 'bg-transparent text-accent border-1 border-accent hover:bg-surface-hover hover:text-accent active:bg-surface-hover';
                     case 'primary':
                     default:
-                        return 'bg-transparent text-primary border-2 border-primary hover:bg-surface-hover hover:text-primary active:bg-surface-hover';
+                        return 'bg-transparent text-primary border-1 border-primary hover:bg-surface-hover hover:text-primary active:bg-surface-hover';
                 }
             }
             switch (normalizedColor) {
