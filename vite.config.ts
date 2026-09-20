@@ -13,7 +13,7 @@ export default defineConfig({
                 name: 'The Cookbook',
                 short_name: 'Cookbook',
                 description: 'A personal collection of delicious recipes, meal plans, and cooking inspirations.',
-                theme_color: '#FF8D00',
+                theme_color: '#F0EEE9',
                 background_color: '#F0EEE9',
                 display: 'standalone',
                 orientation: 'portrait-primary',
