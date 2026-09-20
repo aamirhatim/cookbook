@@ -31,8 +31,8 @@ export const RecipeDietaryBadges: React.FC<RecipeDietaryBadgesProps> = ({
                 <Chip
                     icon={IconWorldMap}
                     text={cuisine}
-                    color="yellow"
-                    bgColor="yellow-bg"
+                    color="purple"
+                    bgColor="purple-bg"
                     capitalize
                 />
             )}

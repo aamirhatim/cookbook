@@ -54,8 +54,8 @@ export const InstructionViewerItem: React.FC<InstructionViewerItemProps> = ({
 
             {/* Chef Tip Callout */}
             {step.tip && (
-                <div className="ml-10 flex items-start gap-2 p-2.5 rounded-xl bg-secondary/40 border border-secondary/60 text-secondary-foreground text-xs">
-                    <IconBulb className="w-4 h-4 shrink-0 mt-0.5 text-primary" stroke={1.5} />
+                <div className="ml-10 flex items-start gap-2 p-2.5 rounded-xl bg-yellow-bg border border-yellow/30 text-yellow text-xs">
+                    <IconBulb className="w-4 h-4 shrink-0 mt-0.5 text-yellow" stroke={1.5} />
                     <div className="leading-snug">
                         <span className="font-semibold">Tip: </span>
                         <span>{step.tip}</span>

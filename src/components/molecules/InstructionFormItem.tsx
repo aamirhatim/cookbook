@@ -67,7 +67,7 @@ export const InstructionFormItem: React.FC<InstructionFormItemProps> = ({
 
             {step.tip !== undefined ? (
                 <div className="flex gap-2 items-start mt-0.5 relative w-full min-w-0">
-                    <div className="pt-2 text-primary">
+                    <div className="pt-2 text-yellow">
                         <IconBulb className="w-5 h-5" stroke={1.5} />
                     </div>
                     <Textarea
@@ -89,7 +89,7 @@ export const InstructionFormItem: React.FC<InstructionFormItemProps> = ({
                 <button
                     type="button"
                     onClick={() => onChangeTip('')}
-                    className="self-start text-xs font-medium text-primary hover:text-primary/80 flex items-center gap-1.5"
+                    className="self-start text-xs font-medium text-yellow hover:text-yellow/80 flex items-center gap-1.5"
                 >
                     <IconBulb className="w-4 h-4" stroke={1.5} />
                     <span>Add Chef Tip</span>

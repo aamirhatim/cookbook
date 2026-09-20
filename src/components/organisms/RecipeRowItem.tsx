@@ -94,8 +94,8 @@ export const RecipeRowItem: React.FC<RecipeRowItemProps> = ({
                             <Chip
                                 icon={IconGlobe}
                                 text={recipe.cuisine}
-                                color="yellow"
-                                bgColor="yellow-bg"
+                                color="purple"
+                                bgColor="purple-bg"
                                 capitalize
                                 className="shrink-0"
                             />

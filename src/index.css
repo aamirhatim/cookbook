@@ -45,9 +45,9 @@
 
         /* Purple */
         --purple: var(--purple-fg);
-        --purple-fg: light-dark(#4A2E55, #E4DCE7);
+        --purple-fg: light-dark(#4E216A, #EDE0F7);
         --purple-foreground: var(--purple-bg);
-        --purple-bg: light-dark(#E4DCE7, #26192B);
+        --purple-bg: light-dark(#EDE0F7, #4E216A);
         --purple-background: var(--purple-bg);
 
         /* Green */
