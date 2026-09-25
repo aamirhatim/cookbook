@@ -118,6 +118,7 @@ recipe-book/
 ## Domain Conventions: Recipes
 - **Ingredients**: Represented as structured objects `{ name: string, amount: number, unit: string, notes?: string }`.
 - **Instructions**: Represented as ordered steps `{ stepNumber: number, instruction: string, tip?: string }`.
+- **Tips**: Represented as an ordered array of strings `string[]` containing global recipe chef tips, substitutions, and culinary advice.
 - **Metadata**: Every recipe includes `prepTimeMinutes`, `cookTimeMinutes`, `servings`, `difficulty`, `tags`, and `authorId`.
 - **Security**: Public recipes can be read by anyone; create/edit/delete permissions are restricted to admin users (via Auth custom claims `role == 'admin'`).
 

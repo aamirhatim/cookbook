@@ -10,6 +10,7 @@ import { RecipeMetadataForm } from '../components/molecules/RecipeMetadataForm';
 import { CollapsibleSection } from '../components/molecules/CollapsibleSection';
 import { IngredientsFormList } from '../components/organisms/IngredientsFormList';
 import { InstructionsFormList } from '../components/organisms/InstructionsFormList';
+import { TipsFormList } from '../components/organisms/TipsFormList';
 import { useRecipeForm } from '../hooks/useRecipeForm';
 import { useToast } from '../hooks/useToast';
 import { publishRecipe, unpublishRecipe } from '../services/recipes';
@@ -37,6 +38,7 @@ export function RecipeEditor() {
     } = useRecipeForm(recipeId, initialRecipe);
 
     const [publishing, setPublishing] = useState(false);
+    const [isTipsCollapsed, setIsTipsCollapsed] = useState(false);
     const [isIngredientsCollapsed, setIsIngredientsCollapsed] = useState(false);
     const [isInstructionsCollapsed, setIsInstructionsCollapsed] = useState(false);
 
@@ -130,6 +132,22 @@ export function RecipeEditor() {
                             onRemoveImage={handleImageRemove}
                             disabled={saving}
                         />
+
+                        <div className="h-px bg-border my-6" />
+
+                        {/* Tips Section */}
+                        <CollapsibleSection
+                            title="Tips"
+                            isCollapsed={isTipsCollapsed}
+                            onToggle={() => setIsTipsCollapsed(!isTipsCollapsed)}
+                            className="w-full min-w-0"
+                        >
+                            <TipsFormList
+                                tips={formData.tips || []}
+                                onChange={(tips) => handleChange('tips', tips)}
+                                disabled={saving}
+                            />
+                        </CollapsibleSection>
 
                         <div className="h-px bg-border my-6" />
 

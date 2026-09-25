@@ -182,6 +182,13 @@ export function normalizeRecipe(id: string, data: DocumentData): Recipe {
               }
             : undefined;
 
+    const rawTips = data.tips;
+    const tips: string[] = Array.isArray(rawTips)
+        ? rawTips
+              .map((t) => (typeof t === 'string' ? t.trim() : ''))
+              .filter((t) => t.length > 0)
+        : [];
+
     return {
         ...data,
         id,
@@ -191,7 +198,8 @@ export function normalizeRecipe(id: string, data: DocumentData): Recipe {
         equipment: Array.isArray(data.equipment) ? data.equipment : [],
         tags: Array.isArray(data.tags) ? data.tags : [],
         ingredients,
-        instructions
+        instructions,
+        tips
     } as Recipe;
 }
 
@@ -219,6 +227,7 @@ export async function createRecipe(
         id: recipeId,
         isPublished: input.isPublished ?? false,
         protein: input.protein || [],
+        tips: input.tips || [],
         imageUrl: imageUrl ?? null,
         imageStoragePath: imageStoragePath ?? null,
         createdAt: serverTimestamp(),

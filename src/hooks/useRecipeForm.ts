@@ -24,6 +24,7 @@ const DEFAULT_FORM_DATA: Partial<Recipe> = {
     equipment: [],
     ingredients: [{ title: '', items: [] }],
     instructions: [{ title: '', steps: [] }],
+    tips: [],
     isPublished: false,
     protein: [],
     urls: {
@@ -99,6 +100,7 @@ export function useRecipeForm(recipeId?: string, initialRecipe?: Recipe | null) 
         if (recipe) {
             setFormData({
                 ...recipe,
+                tips: recipe.tips || [],
                 urls: recipe.urls || { label: '', video: '', website: '' },
             });
         }
@@ -178,6 +180,10 @@ export function useRecipeForm(recipeId?: string, initialRecipe?: Recipe | null) 
                 ? sanitizedInstructions
                 : [{ title: '', steps: [] }];
 
+            const sanitizedTips: string[] = (formData.tips || [])
+                .map((tip) => (typeof tip === 'string' ? tip.trim() : ''))
+                .filter((tip) => tip.length > 0);
+
             if (isNew) {
                 const newRecipeInput: CreateRecipeInput = {
                     title: formData.title || 'Untitled Recipe',
@@ -192,6 +198,7 @@ export function useRecipeForm(recipeId?: string, initialRecipe?: Recipe | null) 
                     equipment: formData.equipment || [],
                     ingredients: finalIngredients,
                     instructions: finalInstructions,
+                    tips: sanitizedTips,
                     authorId: user.uid,
                     authorName: user.displayName || 'Unknown Author',
                     isPublished: formData.isPublished ?? false,
@@ -219,6 +226,7 @@ export function useRecipeForm(recipeId?: string, initialRecipe?: Recipe | null) 
                     equipment: formData.equipment ?? [],
                     ingredients: finalIngredients,
                     instructions: finalInstructions,
+                    tips: sanitizedTips,
                     isPublished: formData.isPublished ?? false,
                     protein: formData.protein || [],
                     urls: formData.urls

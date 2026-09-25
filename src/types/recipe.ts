@@ -48,6 +48,7 @@ export interface Recipe {
     tags: string[];
     ingredients: IngredientSection[];
     instructions: InstructionSection[];
+    tips?: string[];
     imageUrl?: string;
     imageStoragePath?: string;
     authorId: string;
@@ -76,6 +77,7 @@ export interface CreateRecipeInput {
     tags: string[];
     ingredients: IngredientSection[];
     instructions: InstructionSection[];
+    tips?: string[];
     authorId: string;
     authorName?: string;
     isPublished?: boolean;

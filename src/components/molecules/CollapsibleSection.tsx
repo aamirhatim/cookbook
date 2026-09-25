@@ -3,7 +3,7 @@ import { IconChevronDown } from '@tabler/icons-react';
 
 export interface CollapsibleSectionProps {
     title: string;
-    count: number;
+    count?: number;
     isCollapsed: boolean;
     onToggle: () => void;
     children: React.ReactNode;
@@ -30,9 +30,11 @@ export const CollapsibleSection: React.FC<CollapsibleSectionProps> = ({
                 <span className="text-sm font-bold text-foreground group-hover:text-primary transition-colors">
                     {title}
                 </span>
-                <span className="text-xs px-2 py-0.5 rounded-full bg-surface-hover text-muted-foreground font-medium">
-                    {count}
-                </span>
+                {count !== undefined && (
+                    <span className="text-xs px-2 py-0.5 rounded-full bg-surface-hover text-muted-foreground font-medium">
+                        {count}
+                    </span>
+                )}
                 <IconChevronDown
                     className={`w-4 h-4 text-muted-foreground group-hover:text-foreground transition-transform duration-200 ${
                         isCollapsed ? '-rotate-90' : 'rotate-0'

@@ -7,6 +7,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { RecipeViewerHero } from '../components/organisms/RecipeViewerHero';
 import { RecipeViewerIngredients, type RecipeViewerIngredientsHandle } from '../components/organisms/RecipeViewerIngredients';
 import { RecipeViewerInstructions, type RecipeViewerInstructionsHandle } from '../components/organisms/RecipeViewerInstructions';
+import { RecipeViewerTips } from '../components/organisms/RecipeViewerTips';
 import { RecipeScrollController } from '../components/molecules/RecipeScrollController';
 
 export function RecipeViewer() {
@@ -148,7 +149,7 @@ export function RecipeViewer() {
                 ) : (
                     /* Responsive Layout: Stacked on mobile, 2-column on large screens */
                     <div className="space-y-6 lg:space-y-0 lg:grid lg:grid-cols-12 lg:gap-8 items-start">
-                        {/* Left Column: Hero & Ingredients */}
+                        {/* Left Column: Hero & Ingredients (with mobile Tips above ingredients) */}
                         <div className="space-y-6 lg:col-span-5">
                             <RecipeViewerHero
                                 recipe={recipe}
@@ -156,14 +157,26 @@ export function RecipeViewer() {
                                 onServingsChange={setServings}
                                 onEdit={isAdmin ? handleEdit : undefined}
                             />
+                            {recipe.tips && recipe.tips.length > 0 && (
+                                <RecipeViewerTips
+                                    tips={recipe.tips}
+                                    className="lg:hidden"
+                                />
+                            )}
                             <RecipeViewerIngredients
                                 ref={ingredientsRef}
                                 ingredients={scaledIngredients}
                             />
                         </div>
 
-                        {/* Right Column: Instructions */}
+                        {/* Right Column: Tips (desktop) & Instructions */}
                         <div className="space-y-6 lg:col-span-7">
+                            {recipe.tips && recipe.tips.length > 0 && (
+                                <RecipeViewerTips
+                                    tips={recipe.tips}
+                                    className="hidden lg:block"
+                                />
+                            )}
                             <RecipeViewerInstructions
                                 ref={instructionsRef}
                                 instructions={recipe.instructions || []}
