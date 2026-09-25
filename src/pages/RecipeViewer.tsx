@@ -7,7 +7,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { RecipeViewerHero } from '../components/organisms/RecipeViewerHero';
 import { RecipeViewerIngredients, type RecipeViewerIngredientsHandle } from '../components/organisms/RecipeViewerIngredients';
 import { RecipeViewerInstructions, type RecipeViewerInstructionsHandle } from '../components/organisms/RecipeViewerInstructions';
-import { RecipeViewerTips } from '../components/organisms/RecipeViewerTips';
+import { RecipeViewerTips, type RecipeViewerTipsHandle } from '../components/organisms/RecipeViewerTips';
 import { RecipeScrollController } from '../components/molecules/RecipeScrollController';
 
 export function RecipeViewer() {
@@ -68,6 +68,7 @@ export function RecipeViewer() {
 
     const ingredientsRef = useRef<RecipeViewerIngredientsHandle>(null);
     const instructionsRef = useRef<RecipeViewerInstructionsHandle>(null);
+    const tipsRef = useRef<RecipeViewerTipsHandle>(null);
 
     const baseServings = recipe?.servings && recipe.servings > 0 ? recipe.servings : 1;
     const currentServings = servings > 0 ? servings : baseServings;
@@ -106,6 +107,18 @@ export function RecipeViewer() {
             instructionsRef.current.scrollToFirstUncheckedStep();
         } else {
             const el = document.getElementById('recipe-instructions');
+            if (el) {
+                const y = el.getBoundingClientRect().top + window.scrollY - 20;
+                window.scrollTo({ top: y, behavior: 'smooth' });
+            }
+        }
+    };
+
+    const handleScrollToTips = () => {
+        if (tipsRef.current) {
+            tipsRef.current.scrollToTips();
+        } else {
+            const el = document.getElementById('recipe-tips');
             if (el) {
                 const y = el.getBoundingClientRect().top + window.scrollY - 20;
                 window.scrollTo({ top: y, behavior: 'smooth' });
@@ -159,6 +172,7 @@ export function RecipeViewer() {
                             />
                             {recipe.tips && recipe.tips.length > 0 && (
                                 <RecipeViewerTips
+                                    ref={tipsRef}
                                     tips={recipe.tips}
                                     className="lg:hidden"
                                 />
@@ -186,12 +200,13 @@ export function RecipeViewer() {
                 )}
             </main>
 
-            {/* Floating Mobile 3-Option Scroll Controller */}
+            {/* Floating Mobile Scroll Controller */}
             {recipe && !loading && !error && (
                 <RecipeScrollController
                     onScrollToTop={handleScrollToTop}
                     onScrollToIngredients={handleScrollToIngredients}
                     onScrollToInstructions={handleScrollToInstructions}
+                    onScrollToTips={recipe.tips && recipe.tips.length > 0 ? handleScrollToTips : undefined}
                 />
             )}
         </div>
