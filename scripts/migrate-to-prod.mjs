@@ -27,9 +27,6 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const projectRoot = path.resolve(__dirname, '..');
 
-const JAVA_HOME =
-    process.env.JAVA_HOME ||
-    '/Library/Java/JavaVirtualMachines/temurin-25.jdk/Contents/Home';
 
 const projectId = process.env.GCLOUD_PROJECT || 'recipe-book-f7e7f';
 const storageBucketName = 'recipe-book-f7e7f.firebasestorage.app';
@@ -66,10 +63,7 @@ async function startFirestoreEmulator() {
         ['emulators:start', '--only', 'firestore', '--import=./emulator-data'],
         {
             cwd: projectRoot,
-            env: {
-                ...process.env,
-                JAVA_HOME
-            },
+            env: process.env,
             stdio: ['ignore', 'pipe', 'pipe']
         }
     );

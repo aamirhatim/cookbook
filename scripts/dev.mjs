@@ -1,9 +1,6 @@
 import { spawn } from 'node:child_process';
 import process from 'node:process';
 
-const JAVA_HOME =
-    process.env.JAVA_HOME ||
-    '/Library/Java/JavaVirtualMachines/temurin-25.jdk/Contents/Home';
 
 const yellow = (text) => `\x1b[33;1m${text}\x1b[0m`;
 const cyan = (text) => `\x1b[36;1m${text}\x1b[0m`;
@@ -34,10 +31,7 @@ const firebase = spawn(
         '--export-on-exit=./emulator-data',
     ],
     {
-        env: {
-            ...process.env,
-            JAVA_HOME,
-        },
+        env: process.env,
         stdio: ['inherit', 'pipe', 'pipe'],
     }
 );
