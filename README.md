@@ -111,7 +111,7 @@ recipe-book/
 │   └── main.tsx             # React DOM entry point
 ├── emulator-data/           # Exported local emulator test database (ignored in git)
 ├── .env.example             # Environment variable template
-├── .firebaserc              # Firebase project configuration
+├── .firebaserc.example      # Firebase project alias template
 ├── firebase.json            # Emulator ports and hosting configuration
 ├── firestore.indexes.json   # Firestore query index definitions
 ├── firestore.rules          # Firestore database security rules

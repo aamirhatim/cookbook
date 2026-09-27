@@ -9,6 +9,7 @@ lerna-debug.log*
 
 # Firebase & Local Emulator
 .firebase/
+.firebaserc
 *-debug.log
 firebase-debug.log*
 firestore-debug.log*
