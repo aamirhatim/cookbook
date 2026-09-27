@@ -67,7 +67,7 @@ export async function setUserCustomClaim(uid: string, role: string = 'user'): Pr
 
     if (isEmulator) {
         try {
-            const projectId = import.meta.env.VITE_FIREBASE_PROJECT_ID || 'recipe-book-f7e7f';
+            const projectId = import.meta.env.VITE_FIREBASE_PROJECT_ID || 'your-project-id';
             const res = await fetch(
                 `http://127.0.0.1:9099/identitytoolkit.googleapis.com/v1/projects/${projectId}/accounts:update?key=fake-api-key`,
                 {

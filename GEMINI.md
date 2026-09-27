@@ -106,7 +106,7 @@ recipe-book/
 ├── firestore.rules          # Firestore database security rules
 ├── storage.rules            # Firebase Storage security rules
 ├── firestore.indexes.json   # Firestore query index definitions
-├── .firebaserc              # Active Firebase project alias (recipe-book-f7e7f)
+├── .firebaserc              # Active Firebase project alias
 ├── .env.example             # Public environment variables template
 ├── .env.local               # Local environment variables with emulator flags
 ├── vite.config.ts           # Vite bundler configuration
