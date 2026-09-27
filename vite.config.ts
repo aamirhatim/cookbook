@@ -11,6 +11,26 @@ const appVersion = packageJson.version || '1.0.0';
 function versionJsonPlugin(): Plugin {
     return {
         name: 'generate-version-json',
+        configureServer(server) {
+            server.middlewares.use((req, res, next) => {
+                if (req.url && (req.url === '/version.json' || req.url.startsWith('/version.json?'))) {
+                    res.setHeader('Content-Type', 'application/json');
+                    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+                    res.end(
+                        JSON.stringify(
+                            {
+                                version: appVersion,
+                                buildTime: Date.now(),
+                            },
+                            null,
+                            4
+                        )
+                    );
+                    return;
+                }
+                next();
+            });
+        },
         generateBundle() {
             this.emitFile({
                 type: 'asset',
