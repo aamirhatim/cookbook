@@ -1,6 +1,9 @@
 /// <reference types="vite/client" />
 /// <reference types="vite-plugin-pwa/client" />
 
+declare const __APP_VERSION__: string;
+declare const __BUILD_TIME__: number;
+
 interface ImportMetaEnv {
     readonly VITE_FIREBASE_API_KEY: string;
     readonly VITE_FIREBASE_AUTH_DOMAIN: string;

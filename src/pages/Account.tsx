@@ -8,6 +8,7 @@ import { useUserProfile } from '../hooks/useUserProfile';
 import { useToast } from '../hooks/useToast';
 import { deleteUserAccount } from '../services/users';
 import { AccountDetailsCard } from '../components/molecules/AccountDetailsCard';
+import { AppVersionCard } from '../components/molecules/AppVersionCard';
 import { SectionHeader } from '../components/molecules/SectionHeader';
 
 export function Account() {
@@ -67,6 +68,9 @@ export function Account() {
                     onDeleteAccount={handleDeleteAccount}
                     isDeletingAccount={isDeleting}
                 />
+
+                {/* Application Version & PWA Card */}
+                <AppVersionCard />
 
                 {/* Status Card: Local Emulators */}
                 <div className="p-4 rounded-xl border border-secondary bg-secondary/40 text-secondary-foreground text-xs sm:text-sm flex items-start space-x-3">

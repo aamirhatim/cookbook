@@ -1,13 +1,45 @@
-import { defineConfig } from 'vite';
+import fs from 'node:fs';
+import { defineConfig, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 
+const packageJson = JSON.parse(
+    fs.readFileSync(new URL('./package.json', import.meta.url), 'utf-8')
+);
+const appVersion = packageJson.version || '1.0.0';
+
+function versionJsonPlugin(): Plugin {
+    return {
+        name: 'generate-version-json',
+        generateBundle() {
+            this.emitFile({
+                type: 'asset',
+                fileName: 'version.json',
+                source: JSON.stringify(
+                    {
+                        version: appVersion,
+                        buildTime: Date.now(),
+                    },
+                    null,
+                    4
+                ),
+            });
+        },
+    };
+}
+
 // https://vite.dev/config/
 export default defineConfig({
+    define: {
+        __APP_VERSION__: JSON.stringify(appVersion),
+        __BUILD_TIME__: JSON.stringify(Date.now()),
+    },
     plugins: [
         react(),
+        versionJsonPlugin(),
         VitePWA({
             registerType: 'autoUpdate',
+            injectRegister: null,
             includeAssets: ['icons/*.png'],
             manifest: {
                 name: 'The Cookbook',

@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import { ToastProvider } from './contexts/ToastContext';
+import { VersionProvider } from './contexts/VersionContext';
 import { AuthModalProvider } from './contexts/AuthModalContext';
 import { FavoritesProvider } from './contexts/FavoritesContext';
 import { MainLayout } from './components/layout/MainLayout';
@@ -31,42 +32,44 @@ export default function App() {
     return (
         <AuthProvider>
             <ToastProvider>
-                <AuthModalProvider>
-                    <FavoritesProvider>
-                        <ScrollToTop />
-                        <div className="max-w-lg md:max-w-4xl lg:max-w-6xl xl:max-w-7xl mx-auto min-h-screen flex flex-col justify-between px-4 pt-safe pb-safe">
-                            <main className="flex-1 min-w-0 w-full">
-                                <Suspense fallback={<RouteLoadingFallback />}>
-                                    <Routes>
+                <VersionProvider>
+                    <AuthModalProvider>
+                        <FavoritesProvider>
+                            <ScrollToTop />
+                            <div className="max-w-lg md:max-w-4xl lg:max-w-6xl xl:max-w-7xl mx-auto min-h-screen flex flex-col justify-between px-4 pt-safe pb-safe">
+                                <main className="flex-1 min-w-0 w-full">
+                                    <Suspense fallback={<RouteLoadingFallback />}>
+                                        <Routes>
 
-                                        {/* Persistent MainLayout routes */}
-                                        <Route element={<MainLayout />}>
-                                            <Route path="/" element={<Home />} />
-                                            <Route path="/recipes" element={<RecipesList />} />
-                                            <Route path="/recipes/:recipeId" element={<RecipeViewer />} />
+                                            {/* Persistent MainLayout routes */}
+                                            <Route element={<MainLayout />}>
+                                                <Route path="/" element={<Home />} />
+                                                <Route path="/recipes" element={<RecipesList />} />
+                                                <Route path="/recipes/:recipeId" element={<RecipeViewer />} />
 
-                                            {/* Protected member routes within MainLayout */}
-                                            <Route element={<ProtectedRoute />}>
-                                                <Route path="/account" element={<Account />} />
+                                                {/* Protected member routes within MainLayout */}
+                                                <Route element={<ProtectedRoute />}>
+                                                    <Route path="/account" element={<Account />} />
+                                                </Route>
                                             </Route>
-                                        </Route>
 
-                                        {/* Protected admin routes */}
-                                        <Route element={<ProtectedRoute requireAdmin />}>
-                                            <Route path="/admin" element={<RecipeManager />}>
-                                                <Route index element={<Navigate to="/admin/recipes" replace />} />
-                                                <Route path="recipes" element={<AdminRecipesList />} />
-                                                <Route path="inspirations" element={<AdminInspirations />} />
-                                                <Route path="inpspirations" element={<Navigate to="/admin/inspirations" replace />} />
+                                            {/* Protected admin routes */}
+                                            <Route element={<ProtectedRoute requireAdmin />}>
+                                                <Route path="/admin" element={<RecipeManager />}>
+                                                    <Route index element={<Navigate to="/admin/recipes" replace />} />
+                                                    <Route path="recipes" element={<AdminRecipesList />} />
+                                                    <Route path="inspirations" element={<AdminInspirations />} />
+                                                    <Route path="inpspirations" element={<Navigate to="/admin/inspirations" replace />} />
+                                                </Route>
+                                                <Route path="/admin/recipes/:recipeId" element={<RecipeEditor />} />
                                             </Route>
-                                            <Route path="/admin/recipes/:recipeId" element={<RecipeEditor />} />
-                                        </Route>
-                                    </Routes>
-                                </Suspense>
-                            </main>
-                        </div>
-                    </FavoritesProvider>
-                </AuthModalProvider>
+                                        </Routes>
+                                    </Suspense>
+                                </main>
+                            </div>
+                        </FavoritesProvider>
+                    </AuthModalProvider>
+                </VersionProvider>
             </ToastProvider>
         </AuthProvider>
     );
