@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
 import { IconUser } from '@tabler/icons-react';
-import { auth } from '../lib/firebase';
+import { auth, isUsingEmulators } from '../lib/firebase';
 import { useAuth } from '../contexts/AuthContext';
 import { useUserProfile } from '../hooks/useUserProfile';
 import { useToast } from '../hooks/useToast';
@@ -72,16 +72,18 @@ export function Account() {
                 {/* Application Version & PWA Card */}
                 <AppVersionCard />
 
-                {/* Status Card: Local Emulators */}
-                <div className="p-4 rounded-xl border border-secondary bg-secondary/40 text-secondary-foreground text-xs sm:text-sm flex items-start space-x-3">
-                    <div className="text-lg">🔥</div>
-                    <div className="space-y-1">
-                        <p className="font-semibold text-foreground">Firebase Local Backend Configured</p>
-                        <p className="text-muted-foreground leading-relaxed">
-                            Connected to local Firebase emulators: Firestore (8080), Auth (9099), Storage (9199), and UI (4000).
-                        </p>
+                {/* Status Card: Local Emulators (only rendered in local development against emulators) */}
+                {isUsingEmulators() && (
+                    <div className="p-4 rounded-xl border border-secondary bg-secondary/40 text-secondary-foreground text-xs sm:text-sm flex items-start space-x-3">
+                        <div className="text-lg">🔥</div>
+                        <div className="space-y-1">
+                            <p className="font-semibold text-foreground">Firebase Local Backend Configured</p>
+                            <p className="text-muted-foreground leading-relaxed">
+                                Connected to local Firebase emulators: Firestore (8080), Auth (9099), Storage (9199), and UI (4000).
+                            </p>
+                        </div>
                     </div>
-                </div>
+                )}
             </main>
         </div>
     );

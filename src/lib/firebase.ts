@@ -43,10 +43,18 @@ const storage = getStorage(app);
 // Flag to prevent re-attaching emulators across Hot Module Replacement (HMR)
 let emulatorsConnected = false;
 
+export function isUsingEmulators(): boolean {
+    return emulatorsConnected;
+}
+
 export function initEmulators() {
+    const isLocalhost =
+        typeof window !== 'undefined' &&
+        (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+
     const shouldUseEmulators =
-        import.meta.env.VITE_USE_FIREBASE_EMULATORS === 'true' ||
-        (typeof window !== 'undefined' && window.location.hostname === 'localhost');
+        import.meta.env.DEV &&
+        (import.meta.env.VITE_USE_FIREBASE_EMULATORS === 'true' || isLocalhost);
 
     if (shouldUseEmulators && !emulatorsConnected) {
         emulatorsConnected = true;

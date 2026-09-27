@@ -1,6 +1,6 @@
 import { doc, setDoc, getDoc, deleteDoc, serverTimestamp, arrayUnion, arrayRemove } from 'firebase/firestore';
 import { deleteUser, signOut, User } from 'firebase/auth';
-import { db, auth } from '../lib/firebase';
+import { db, auth, isUsingEmulators } from '../lib/firebase';
 import type { UserProfile } from '../types/user';
 
 export interface CreateUserProfileInput {
@@ -61,11 +61,7 @@ export async function getUserRole(user: User, forceRefresh = false): Promise<str
  * When running against the Auth emulator, calls the emulator API directly and forces token refresh.
  */
 export async function setUserCustomClaim(uid: string, role: string = 'user'): Promise<void> {
-    const isEmulator =
-        import.meta.env.VITE_USE_FIREBASE_EMULATORS === 'true' ||
-        (typeof window !== 'undefined' && window.location.hostname === 'localhost');
-
-    if (isEmulator) {
+    if (isUsingEmulators()) {
         try {
             const projectId = import.meta.env.VITE_FIREBASE_PROJECT_ID || 'your-project-id';
             const res = await fetch(
